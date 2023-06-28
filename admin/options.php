@@ -74,7 +74,7 @@ if (!class_exists('ppws_password_protected_store_settings')) {
                                     <a href="?page=ppws-option-page&tab=form-content" class="nav-tab <?php if ($tab === 'form-content') : ?>nav-tab-active<?php endif; ?>"><?php _e('Form Content', 'password-protected-store-for-woocommerce'); ?></a>
                                 </li>
                                 <li>
-                                    <a href="?page=ppws-option-page&tab=form-desgin" class="nav-tab <?php if ($tab === 'form-desgin') : ?>nav-tab-active<?php endif; ?>"><?php _e('Form Desgin', 'password-protected-store-for-woocommerce'); ?></a>
+                                    <a href="?page=ppws-option-page&tab=form-desgin" class="nav-tab <?php if ($tab === 'form-desgin') : ?>nav-tab-active<?php endif; ?>"><?php _e('Form Design', 'password-protected-store-for-woocommerce'); ?></a>
                                 </li>
                             </ul>
                         </div>

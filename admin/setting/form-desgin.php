@@ -25,6 +25,9 @@ if ( !class_exists( 'ppws_form_style_settings' ) ) {
                 <div class="ppws-section">
                     <?php do_settings_sections( 'ppws-form-background-settings-section' ); ?>
                 </div>
+                <div class="ppws-section">
+                    <?php do_settings_sections( 'ppws-form-additional-style-settings-section' ); ?>
+                </div>
                 <div class="ppws-submit-btn">
                     
                     <?php submit_button( 'Save Setting' ); 
@@ -147,8 +150,31 @@ if ( !class_exists( 'ppws_form_style_settings' ) ) {
 
             add_settings_field('ppws_form_background_opacity_color_textbox', __( 'Form Background Opacity Color', 'password-protected-store-for-woocommerce' ), array( $this, 'ppws_form_background_opacity_style_settings_fun' ), 'ppws-form-background-settings-section', 'ppws_form_background_settings_section', [ 'type' => 'color', 'label_for' => 'ppws_form_background_opacity_color', 'description' => 'Set form background opacity color for password form shown on frontend .' ]);
 
-     
-            /* Form background opacity end */
+
+            /**
+             * Additional style section start
+             */
+            add_settings_section(
+                'ppws_form_additional_style_settings_section', // Section ID
+                __('Additional Style', 'password-protected-store-for-woocommerce'), // Section title
+                array(), // Callback function (optional)
+                'ppws-form-additional-style-settings-section' // Page slug
+            );
+
+            // Add the settings field for custom CSS textarea
+            add_settings_field(
+                'ppws_form_additional_style_textarea', // Field ID
+                __('Custom CSS', 'password-protected-store-for-woocommerce'), // Field title
+                array($this, 'ppws_form_additional_style_textarea_fun'), // Callback function to render the field
+                'ppws-form-additional-style-settings-section', // Page slug
+                'ppws_form_additional_style_settings_section', // Section ID
+                array(
+                    'type' => 'textarea',
+                    'label_for' => 'ppws_form_additional_style_field_textarea',
+                    'description' => 'Enter your additional CSS for the form popup.'
+                ) // Additional arguments for the field
+            );
+
         }
 
         public function ppws_form_settings_radio( $args ) {
@@ -348,8 +374,25 @@ if ( !class_exists( 'ppws_form_style_settings' ) ) {
                 <?php
             }
         }
+        
+        // Additional style textarea field callback function
+        public function ppws_form_additional_style_textarea_fun($args) {
+            global $ppws_form_style_settings_option;
+            
+            // Get the current value of the textarea field
+            $value = isset($ppws_form_style_settings_option[$args['label_for']]) ? $ppws_form_style_settings_option[$args['label_for']] : '';
+            ?>
+            <label>
+                <textarea name="ppws_form_desgin_settings[<?php esc_attr_e($args['label_for']) ?>]" class="ppws-textbox" cols="50" rows="4"><?php esc_attr_e($value); ?></textarea>
+            </label>
+            <p class="ppws-note"><?php esc_attr_e($args['description']) ?></p>
+            <?php
+        }
+
+
         public function sanitize_settings( $input ) {
             $new_input = array();
+
 
             if( isset( $input[ 'ppws_form_title_color_field_textbox' ] ) && !empty( $input[ 'ppws_form_title_color_field_textbox' ] ) ) {
                 $new_input[ 'ppws_form_title_color_field_textbox' ] = sanitize_text_field( $input[ 'ppws_form_title_color_field_textbox' ] );
@@ -462,6 +505,15 @@ if ( !class_exists( 'ppws_form_style_settings' ) ) {
             if( isset( $input[ 'ppws_page_page_background_opacity_color' ] ) && !empty( $input[ 'ppws_page_page_background_opacity_color' ] ) ) {
                 $new_input[ 'ppws_page_page_background_opacity_color' ] = sanitize_text_field( $input[ 'ppws_page_page_background_opacity_color' ] );
             }
+
+            if( isset( $input[ 'ppws_form_additional_style' ] ) && !empty( $input[ 'ppws_form_additional_style' ] ) ) {
+                $new_input[ 'ppws_form_additional_style' ] = sanitize_text_field( $input[ 'ppws_form_additional_style' ] );
+            }
+
+            if( isset( $input[ 'ppws_form_additional_style_field_textarea' ] ) && !empty( $input[ 'ppws_form_additional_style_field_textarea' ] ) ) {
+                $new_input[ 'ppws_form_additional_style_field_textarea' ] = htmlspecialchars( $input[ 'ppws_form_additional_style_field_textarea' ] );
+            }
+
 
             return $new_input;
         }
