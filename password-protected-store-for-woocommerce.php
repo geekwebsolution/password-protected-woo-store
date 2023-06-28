@@ -17,7 +17,7 @@ if (!defined("WPPS_PLUGIN_DIR_PATH"))
 if (!defined("WPPS_PLUGIN_URL"))
     define("WPPS_PLUGIN_URL", plugins_url() . '/' . basename(dirname(__FILE__)));
 
-    // demo test
+
 define("ppws_BUILD", '1.4');
 $plugin = plugin_basename(__FILE__); //plugin_action_links_password-protected-store-for-woocommerce/password-protected-store-for-woocommerce.php
 /* Plugin load hook */
