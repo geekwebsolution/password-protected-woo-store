@@ -177,6 +177,9 @@ if (isset($_POST['ppws_submit'])) {
         if(isset($ppws_style_option['ppws_form_button_border_color_field_textbox']) && !empty($ppws_style_option['ppws_form_button_border_color_field_textbox']) ){
             $popup_button_border_color = $ppws_style_option['ppws_form_button_border_color_field_textbox'];
         }
+        if(isset($ppws_style_option['ppws_form_additional_style_field_textarea']) && !empty($ppws_style_option['ppws_form_additional_style_field_textarea']) ){
+            $popup_additional_style = $ppws_style_option['ppws_form_additional_style_field_textarea'];
+        }
         /* Button Style End */
 
         /* Background Start */
@@ -300,6 +303,10 @@ if (isset($_POST['ppws_submit'])) {
             <?php _e($ppws_form_background);
             ?>
         }
+
+        <?php _e($popup_additional_style); ?>
+
+
     </style>
 </head>
 

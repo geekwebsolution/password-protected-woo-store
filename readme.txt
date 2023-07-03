@@ -5,8 +5,8 @@ Tags: WooCommerce protected categories, woo protect, product protected, woocomme
 Requires PHP: 5.2.4
 Requires at least: 3.0.1
 Tested up to: 6.2.2
-WC tested up to: 7.7.0
-Stable tag: 1.4
+WC tested up to: 7.8.0
+Stable tag: 1.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -57,6 +57,9 @@ After Plugin Active go to Woocommerce-> Password Protected
 
 
 == Changelog ==
+= 1.5 =
+- Added additional style option (Under Form Design tab).
+
 = 1.4 =
 - Added: Hide product from shop/loop for specific product category.
 - Added: Set option for incorrect password message.
