@@ -59,6 +59,7 @@ After Plugin Active go to Woocommerce-> Password Protected
 == Changelog ==
 = 1.5 =
 - Added additional style option (Under Form Design tab).
+- Fixed cache issue.
 
 = 1.4 =
 - Added: Hide product from shop/loop for specific product category.

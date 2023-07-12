@@ -4,6 +4,13 @@ $ppws_page_options = get_option( 'ppws_page_settings' );
 $ppws_product_categories_options = get_option( 'ppws_product_categories_settings' );
 if (isset($_POST['ppws_submit'])) {
 
+    $referer       = wp_get_referer();
+    if ( $referer ) {
+        $secure = ( 'https' === parse_url( $referer, PHP_URL_SCHEME ) );
+    } else {
+        $secure = false;
+    }
+
     $ppws_current_pass = sanitize_text_field($_POST['ppws_password']);
     
     if (isset($ppws_whole_site_options['ppws_enable_password_field_checkbox']) == 'on') {
@@ -12,7 +19,8 @@ if (isset($_POST['ppws_submit'])) {
         $ppws_set_password_expiry = $ppws_whole_site_options['ppws_set_password_expiry_field_textbox'];
         if (ppws_decrypted_password($ppws_main_password) == $ppws_current_pass) {
 
-            setcookie('ppws_cookie', $ppws_main_password, time() + ($ppws_set_password_expiry * 60 * 60 * 24 ), "/");
+            setcookie( 'ppws_cookie', $ppws_main_password, time() + ($ppws_set_password_expiry * 60 * 60 * 24 ), COOKIEPATH, COOKIE_DOMAIN, $secure );
+            // setcookie( self::COOKIE_PREFIX . COOKIEHASH, $cookie_value, $cookie_expiry, COOKIEPATH, COOKIE_DOMAIN, $secure );
             ppws_whole_site_disable_password_end();
     
         } else {
@@ -27,7 +35,8 @@ if (isset($_POST['ppws_submit'])) {
                     $ppws_main_password = $ppws_page_options['ppws_page_set_password_field_textbox'];
                     $ppws_set_password_expiry = $ppws_page_options['ppws_page_set_password_expiry_field_textbox'];
                     if (ppws_decrypted_password($ppws_main_password) == $ppws_current_pass) {
-                        setcookie('ppws_page_cookie', $ppws_main_password, time() + ($ppws_set_password_expiry * 60 * 60 * 24), "/");
+                        // setcookie('ppws_page_cookie', $ppws_main_password, time() + ($ppws_set_password_expiry * 60 * 60 * 24), "/");
+                        setcookie( 'ppws_page_cookie', $ppws_main_password, time() + ($ppws_set_password_expiry * 60 * 60 * 24 ), COOKIEPATH, COOKIE_DOMAIN, $secure );
                         ppws_whole_site_disable_password_end();    
                     } else {
                         $pwd_err = 'password not match';
@@ -41,7 +50,8 @@ if (isset($_POST['ppws_submit'])) {
                         $ppws_main_password = $ppws_product_categories_options['ppws_product_categories_password'];
                         $ppws_set_password_expiry = $ppws_product_categories_options['ppws_product_categories_password_expiry_day'];
                         if (ppws_decrypted_password($ppws_main_password) == $ppws_current_pass) {
-                            setcookie('ppws_categories_cookie', $ppws_main_password, time() + ($ppws_set_password_expiry * 60 * 60 * 24), "/");
+                            // setcookie('ppws_categories_cookie', $ppws_main_password, time() + ($ppws_set_password_expiry * 60 * 60 * 24), "/");
+                            setcookie( 'ppws_categories_cookie', $ppws_main_password, time() + ($ppws_set_password_expiry * 60 * 60 * 24 ), COOKIEPATH, COOKIE_DOMAIN, $secure );
                             ppws_whole_site_disable_password_end();    
                         } else {
                             $pwd_err = 'password not match';
@@ -51,30 +61,20 @@ if (isset($_POST['ppws_submit'])) {
                 }
             }
         }
-        
-        
-        
 
     }
-}
-
-?>
-
-
-
+} ?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-
+    <meta name="robots" content="noindex, nofollow" />
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>
         <?php _e('Password Protected Store for WooCommerce | Geek Code Lab','password-protected-store-for-woocommerce') ?>
     </title>
-
-
     <?php
         /* Form settings options */
         $ppws_form_settings_option = get_option('ppws_form_content_option');
@@ -217,9 +217,7 @@ if (isset($_POST['ppws_submit'])) {
             $ppws_page_bg_opacity_color = $ppws_style_option['ppws_page_page_background_opacity_color'];
         }
         /* Background End */
-
     ?>
-
     <style>
         *{margin:0;padding:0;box-sizing:border-box}body{margin:0;overflow-x:hidden}.ppws_modal{width:100%;min-height:100vh;height:100%;display:flex;align-items:center;padding:15px;background-size:cover;background-position:center;background-repeat:no-repeat;overflow-x:auto}.ppws_modal_box{display:flex;justify-content:center;flex-direction:column;max-width:600px;width:100%;padding:30px 30px;margin-inline:auto;font-family:sans-serif;box-shadow:10px 10px 30px rgba(0,0,0,.2);position:relative;isolation:isolate;border-radius:10px;z-index:99999999999}.ppws_modal_box_text{position:relative;z-index:2}.ppws_modal_title{text-transform:capitalize;margin-bottom:15px;font-size:28px;position:relative}.ppws_modal_box p{font-size:15px;line-height:1.5}.ppws_modal_box form{display:flex;margin-block:20px 7px}.ppws_modal_box form .ppws_input{flex:1;height:46px;outline:0!important;border-radius:8px 0 0 8px;padding-inline:20px;font-size:16px;padding-top:3px;border-style:solid;border-width:2px;border-right-width:0}.ppws_modal_box form .ppws_form_button{width:100px;border:1px solid transparent;cursor:pointer;background-color:#000;color:#fff;transition:.3s;border-radius:0 8px 8px 0}.ppws_modal_box form .ppws_form_button:hover{background:#ccc;color:#000}.ppws_error_msg{color:red;font-size:14px}.ppws_modal_bottom_text{margin-top:18px}.ppws_modal_box_bg{position:absolute;top:0;left:0;width:100%;height:100%;background-color:#fff;z-index:-1;border-radius:10px;background-size:cover;background-position:center}.ppws_modal_overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:#000;opacity:.65;z-index:999999999}.ppws_form_overlay{position:absolute;top:0;left:0;width:100%;height:100%;background:#fff;opacity:.65;border-radius:10px}.ppws_input::placeholder{color:#000}@media (max-width:400px){.ppws_modal_box{padding:20px;text-align:center}.ppws_modal_box form{flex-direction:column;align-items:center}.ppws_modal_box form .ppws_input{min-height:38px;width:100%;border-radius:8px;margin-bottom:12px;border-right-width:1px}.ppws_modal_box form .ppws_form_button{border-radius:8px;height:40px}}
 
@@ -318,56 +316,38 @@ if (isset($_POST['ppws_submit'])) {
             <div class="ppws_modal_box_bg"></div>
             <div class="ppws_modal_box_text">
                 <?php
-                if(isset($ppws_form_settings_option['ppws_form_mian_title'])){
-                    ?>
-
-                <h2 class="ppws_modal_title"><?php _e($ppws_form_settings_option['ppws_form_mian_title']); ?></h2>
-                <?php
-                }
-                ?>
-                <?php 
-                if(isset($ppws_form_settings_option['ppws_form_above_content'])){
-                    ?>
-                <div class="ppws_modal_top_text ppws_modal_text">
+                if(isset($ppws_form_settings_option['ppws_form_mian_title'])){ ?>
+                    <h2 class="ppws_modal_title"><?php _e($ppws_form_settings_option['ppws_form_mian_title']); ?></h2>
                     <?php
-                   
-                    _e(htmlspecialchars_decode(esc_html__($ppws_form_settings_option['ppws_form_above_content']))); 
-                    ?>
-                </div>
-
-                <?php
-                }
-
-                ?>
+                } ?>
+                <?php 
+                if(isset($ppws_form_settings_option['ppws_form_above_content'])){ ?>
+                    <div class="ppws_modal_top_text ppws_modal_text">
+                        <?php _e(htmlspecialchars_decode(esc_html__($ppws_form_settings_option['ppws_form_above_content']))); ?>
+                    </div>
+                    <?php
+                } ?>
                 <form method="POST">
                     <input type="password" name="ppws_password" class="ppws_input" <?php if(isset($ppws_form_settings_option['ppws_form_pwd_placeholder'])){?> placeholder="<?php esc_attr_e($ppws_form_settings_option['ppws_form_pwd_placeholder']) ?>" <?php } ?>>
                     <input type="submit" name="ppws_submit" value="<?php if(isset($ppws_form_settings_option['ppws_form_submit_btn_text'])){ esc_attr_e($ppws_form_settings_option['ppws_form_submit_btn_text']); }else{ esc_attr_e('Submit'); } ?>" class="ppws_form_button">
                 </form>
                 <?php 
                 if(isset($pwd_err) && !empty($pwd_err)){
-                    $incorrect_pass_message = (isset($ppws_form_settings_option['ppws_incorrect_password_message']) && !empty($ppws_form_settings_option['ppws_incorrect_password_message'])) ? $ppws_form_settings_option['ppws_incorrect_password_message']: 'Password mismatch!';
-                    ?>
-                <span class="ppws_error_msg"><?php _e($incorrect_pass_message,'password-protected-store-for-woocommerce') ?></span>
-                <?php
-                }
-                ?>
-                <?php 
-                if(isset($ppws_form_settings_option['ppws_form_below_content'])){
-                    ?>
-
-                <div class="ppws_modal_bottom_text ppws_modal_text">
+                    $incorrect_pass_message = (isset($ppws_form_settings_option['ppws_incorrect_password_message']) && !empty($ppws_form_settings_option['ppws_incorrect_password_message'])) ? $ppws_form_settings_option['ppws_incorrect_password_message']: 'Password mismatch!'; ?>
+                    <span class="ppws_error_msg"><?php _e($incorrect_pass_message,'password-protected-store-for-woocommerce') ?></span>
                     <?php
-                        _e(htmlspecialchars_decode(esc_html__($ppws_form_settings_option['ppws_form_below_content']))); 
-                      
-                    ?>
-                   
-                </div>
-                <?php
                 }
-                ?>
+                
+                if(isset($ppws_form_settings_option['ppws_form_below_content'])) { ?>
+                    <div class="ppws_modal_bottom_text ppws_modal_text">
+                        <?php
+                            _e(htmlspecialchars_decode(esc_html__($ppws_form_settings_option['ppws_form_below_content'])));   
+                        ?>                   
+                    </div>
+                    <?php
+                } ?>
             </div>
         </div>
     </div>
 </body>
-
 </html>
