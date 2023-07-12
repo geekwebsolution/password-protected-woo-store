@@ -13,18 +13,14 @@ function ppws_get_child_pages($per_id, $marg, $value){
     if(isset($pages) && !empty($pages)){ ?>
         <div class="ppws_all_user_list ppws_sub_category_list" >
             <?php
-            foreach( $pages as $mpage ) {
-                ?>
+            foreach( $pages as $mpage ) { ?>
                 <div class="ppws_all_user_list_input">        
                     <input type="checkbox" class="ppws-checkbox" name="ppws_page_settings[<?php esc_attr_e( $marg ) ?>][]" id="<?php esc_attr_e( $marg ) ?>" value="<?php esc_attr_e($mpage->post_title); ?>" <?php if(in_array($mpage->post_title,$value)){ esc_attr_e('checked'); } ?>>
                     <label for="<?php esc_attr_e( $marg ) ?>"><?php esc_attr_e($mpage->post_title); ?></label>
-                    <?php
-                    ppws_get_child_pages($mpage->ID, $marg, $value);
-                    ?>
+                    <?php ppws_get_child_pages($mpage->ID, $marg, $value); ?>
                 </div>
                 <?php
-            }
-            ?>
+            } ?>
         </div>
         <?php
     }
@@ -44,9 +40,9 @@ function ppws_get_woocommerce_product_categories( $category_id, $args, $value ){
     );
     $sub_cats = get_categories($args2);
     if ($sub_cats) { ?>
-        <div class="ppws_all_user_list ppws_sub_category_list" > <?php
+        <div class="ppws_all_user_list ppws_sub_category_list"> <?php
         foreach ($sub_cats as $sub_category) {
-            $sub_category_id = $sub_category->term_id;   
+            $sub_category_id = $sub_category->term_id;
             ?>
             <div class="ppws_all_user_list_input">
             
@@ -82,8 +78,12 @@ function ppws_decrypted_password($ppws_pass){
 
 /* Get cookie on form submit */
 function ppws_get_cookie($ppws_cookie_name){
-    if(isset($_COOKIE[$ppws_cookie_name])){
-        $ppws_cookie = sanitize_text_field($_COOKIE[$ppws_cookie_name]);
+    if ( ! isset( $_COOKIE[ $ppws_cookie_name ] ) ) {
+        return false;
+    }
+
+    if( isset( $_COOKIE[ $ppws_cookie_name ] ) ){
+        $ppws_cookie = sanitize_text_field($_COOKIE[ $ppws_cookie_name ]);
         return $ppws_cookie;
     }
 }
