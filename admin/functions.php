@@ -87,3 +87,53 @@ function ppws_get_cookie($ppws_cookie_name){
         return $ppws_cookie;
     }
 }
+
+
+/**
+ * Recursively retrieves all parent categories of a given category.
+ *
+ * @param int   $category_id       The ID of the category.
+ * @param array $parent_categories An array to store parent category IDs.
+ */
+function ppws_get_all_parent_categories($category_id, &$parent_categories) {
+    // Retrieve the term (category) based on its ID
+    $category = get_term($category_id, 'product_cat');
+    
+    // Check if the term was successfully retrieved and is not an error
+    if ($category && !is_wp_error($category)) {
+        // If the category has a parent, add its parent to the list and recursively search for more parents
+        if ($category->parent !== 0) {
+            array_push($parent_categories, $category->parent);
+            ppws_get_all_parent_categories($category->parent, $parent_categories);
+        }
+    }
+}
+
+/**
+ * Retrieves all parent categories of the given product.
+ *
+ * @param int $ppws_product_id The ID of the product.
+ * @return array An array of unique parent category IDs.
+ */
+function ppws_get_product_categories($ppws_product_id) {
+    // Array to store unique parent category IDs
+    $ppws_product_categories_args = array();
+    
+    // Get all the categories assigned to the product
+    $ppws_product_categories = wp_get_post_terms($ppws_product_id, 'product_cat');
+    
+    // Loop through each product category
+    foreach ($ppws_product_categories as $ppws_product_category) {
+        // Add the current category to the list
+        array_push($ppws_product_categories_args, $ppws_product_category->term_id);
+        
+        // Recursively find and add all parent categories
+        ppws_get_all_parent_categories($ppws_product_category->term_id, $ppws_product_categories_args);
+    }
+    
+    // Remove duplicates from the array of parent category IDs
+    $ppws_product_categories_args = array_unique($ppws_product_categories_args);
+    
+    return $ppws_product_categories_args;
+}
+

@@ -2,8 +2,12 @@
 include(WPPS_PLUGIN_DIR_PATH . 'admin/setting/general-setting.php');
 include(WPPS_PLUGIN_DIR_PATH . 'admin/setting/page-setting.php');
 include(WPPS_PLUGIN_DIR_PATH . 'admin/setting/product-categories-setting.php');
+
+include(WPPS_PLUGIN_DIR_PATH . 'admin/setting/single-product-setting.php');
+include(WPPS_PLUGIN_DIR_PATH . 'admin/setting/single-categories-setting.php');
+
 include(WPPS_PLUGIN_DIR_PATH . 'admin/setting/form-content.php');
-include(WPPS_PLUGIN_DIR_PATH . 'admin/setting/form-desgin.php');
+include(WPPS_PLUGIN_DIR_PATH . 'admin/setting/form-design.php');
 
 $default_tab = null;
 $tab = "";
@@ -26,12 +30,22 @@ if (!class_exists('ppws_password_protected_store_settings')) {
         add_action('admin_init', array($ppws_product_categories_class, 'ppws_product_categories_register_settings_init'));
     }
 
+    if ($tab == 'single-product-setting') {
+        $ppws_single_product_class = new ppws_single_product_setting();
+        add_action('admin_init', array($ppws_single_product_class, 'ppws_single_product_register_settings_init'));
+    }
+
+    if ($tab == 'single-categories-setting') {
+        $ppws_single_categories_class = new ppws_single_categories_setting();
+        add_action('admin_init', array($ppws_single_categories_class, 'ppws_single_categories_register_settings_init'));
+    }
+
     if ($tab == 'form-content') {        
         $ppws_form_class = new ppws_form_settings();
         add_action('admin_init', array($ppws_form_class, 'ppws_form_settings_register_settings_init'));
     }
 
-    if ($tab == 'form-desgin') {
+    if ($tab == 'form-design') {
         $ppws_form_style_class = new ppws_form_style_settings();
         add_action('admin_init', array($ppws_form_style_class, 'ppws_form_style_settings_register_settings_init'));
     }
@@ -71,10 +85,16 @@ if (!class_exists('ppws_password_protected_store_settings')) {
                                     <a href="?page=ppws-option-page&tab=page-setting" class="nav-tab <?php if ($tab === 'page-setting') : ?>nav-tab-active<?php endif; ?>"><?php _e('Page Setting', 'password-protected-store-for-woocommerce'); ?></a>
                                 </li>
                                 <li>
+                                    <a href="?page=ppws-option-page&tab=single-product-setting" class="nav-tab <?php if ($tab === 'single-product-setting') : ?>nav-tab-active<?php endif; ?>"><?php _e('Single Product Setting', 'password-protected-store-for-woocommerce'); ?></a>
+                                </li>
+                                <li>
+                                    <a href="?page=ppws-option-page&tab=single-categories-setting" class="nav-tab <?php if ($tab === 'single-categories-setting') : ?>nav-tab-active<?php endif; ?>"><?php _e('Single Categories Setting', 'password-protected-store-for-woocommerce'); ?></a>
+                                </li>
+                                <li>
                                     <a href="?page=ppws-option-page&tab=form-content" class="nav-tab <?php if ($tab === 'form-content') : ?>nav-tab-active<?php endif; ?>"><?php _e('Form Content', 'password-protected-store-for-woocommerce'); ?></a>
                                 </li>
                                 <li>
-                                    <a href="?page=ppws-option-page&tab=form-desgin" class="nav-tab <?php if ($tab === 'form-desgin') : ?>nav-tab-active<?php endif; ?>"><?php _e('Form Design', 'password-protected-store-for-woocommerce'); ?></a>
+                                    <a href="?page=ppws-option-page&tab=form-design" class="nav-tab <?php if ($tab === 'form-design') : ?>nav-tab-active<?php endif; ?>"><?php _e('Form Design', 'password-protected-store-for-woocommerce'); ?></a>
                                 </li>
                             </ul>
                         </div>
@@ -95,12 +115,22 @@ if (!class_exists('ppws_password_protected_store_settings')) {
                                 $ppws_product_categories_class->ppws_product_categories_callback();
                             }
 
+                            if ($tab == 'single-product-setting') {
+                                $ppws_single_product_class = new ppws_single_product_setting();
+                                $ppws_single_product_class->ppws_single_product_callback();
+                            }
+
+                            if ($tab == 'single-categories-setting') {
+                                $ppws_single_categories_class = new ppws_single_categories_setting();
+                                $ppws_single_categories_class->ppws_single_categories_callback();
+                            }
+
                             if ($tab == 'form-content') {
                                 $ppws_form_class = new ppws_form_settings();
                                 $ppws_form_class->ppws_form_settings_callback();
                             }
 
-                            if ($tab == 'form-desgin') {
+                            if ($tab == 'form-design') {
                                 $ppws_form_style_class = new ppws_form_style_settings();
                                 $ppws_form_style_class->ppws_form_style_settings_callback();
                             }

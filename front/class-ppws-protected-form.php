@@ -1,7 +1,81 @@
 <?php
-$ppws_whole_site_options = get_option('ppws_general_settings');
-$ppws_page_options = get_option( 'ppws_page_settings' );
-$ppws_product_categories_options = get_option( 'ppws_product_categories_settings' );
+global $product;
+
+$ppws_whole_site_options            = get_option('ppws_general_settings');
+$ppws_page_options                  = get_option('ppws_page_settings' );
+$ppws_product_categories_options    = get_option('ppws_product_categories_settings' );
+$ppws_single_product_settings       = get_option('ppws_single_product_settings');
+$ppws_single_categories_settings    = get_option('ppws_single_categories_settings');
+
+$ppws_single_product_meta           = array();
+$ppws_single_product_cookie         = array();
+$ppws_single_product_password_arg   = array();
+
+$ppws_product_category_password_arg = array();
+$ppws_product_categories_args       = array();
+$ppws_single_product_category_meta  = array();
+$ppws_single_product_cookie_value   = '';
+$ppws_single_category_flag          = false;
+
+// Get the product object and its password settings.
+$ppws_single_product_obj = get_page_by_path($product, OBJECT, 'product');
+if(is_product() && isset($ppws_single_product_obj)){
+    $ppws_single_product_meta       = get_post_meta($ppws_single_product_obj->ID, 'ppws_single_product_password_setting', true);
+    $ppws_product_categories_args   = ppws_get_product_categories($ppws_single_product_obj->ID);
+}
+
+// Check if password protection is enabled for single categories and if it's a product page
+if (
+    isset($ppws_single_categories_settings['ppws_single_categories_enable_password_field_checkbox'])
+    && 'on' === $ppws_single_categories_settings['ppws_single_categories_enable_password_field_checkbox']
+    && is_product()
+) {
+    // Get stored category access cookie
+    $ppws_single_categories_cookie = ppws_get_cookie("ppws_product_categories_cookie");
+    $ppws_single_categories_cookie = json_decode(stripslashes($ppws_single_categories_cookie), true);
+
+    // Check if the cookie prevents access for any category
+    if (isset($ppws_single_categories_cookie) && !empty($ppws_single_categories_cookie)) {
+        foreach ($ppws_product_categories_args as $ppws_product_category) {
+            if (array_key_exists('ppws-' . $ppws_product_category, $ppws_single_categories_cookie)) {
+                $ppws_single_category_flag = false; // Access denied
+            }
+        }
+    }
+
+    // Loop through each product category
+    foreach ($ppws_product_categories_args as $ppws_product_category) {
+        // Get the password setting for the category
+        $ppws_single_product_category_meta = get_term_meta($ppws_product_category, 'ppws_single_categories_password_setting', true);
+        if (isset($ppws_single_product_category_meta) && !empty($ppws_single_product_category_meta)) {
+            // Check if the category is set as Private
+            if (
+                $ppws_single_product_category_meta['ppws_single_categories_password_setting_radio']
+                && 'Private' === $ppws_single_product_category_meta['ppws_single_categories_password_setting_radio']
+            ) {
+                // Get the password for the category
+                $ppws_product_category_password = isset($ppws_single_product_category_meta['ppws_single_categories_password_setting_textbox']) 
+                    ? $ppws_single_product_category_meta['ppws_single_categories_password_setting_textbox'] 
+                    : '';
+                // Check if the password is correct
+                if (!empty($ppws_product_category_password)) {
+                    if (isset($ppws_single_categories_cookie) && !empty($ppws_single_categories_cookie)) {
+                        
+                        if (ppws_decrypted_password($ppws_single_categories_cookie['ppws-' . $ppws_product_category])
+                        !== ppws_decrypted_password($ppws_product_category_password)
+                        ) {
+                            $ppws_single_category_flag = true;
+                        }
+                    }else{
+                        $ppws_single_category_flag = true;
+                    }
+                }
+            }
+        }
+    }
+}
+
+
 if (isset($_POST['ppws_submit'])) {
 
     $referer       = wp_get_referer();
@@ -12,9 +86,102 @@ if (isset($_POST['ppws_submit'])) {
     }
 
     $ppws_current_pass = sanitize_text_field($_POST['ppws_password']);
-    
-    if (isset($ppws_whole_site_options['ppws_enable_password_field_checkbox']) == 'on') {
 
+    // Check if password protection is enabled for a private product and if it's a product page
+    if (
+        isset($ppws_single_product_meta['ppws_single_product_password_setting_radio'])
+        && 'Private' === $ppws_single_product_meta['ppws_single_product_password_setting_radio']
+        && isset($ppws_single_product_settings['ppws_single_product_enable_password_field_checkbox'])
+        && 'on' === $ppws_single_product_settings['ppws_single_product_enable_password_field_checkbox']
+        && is_product()
+    ) {
+        // Check if the product password is set and correct
+        if (
+            isset($ppws_single_product_meta['ppws_single_product_password_setting_textbox'])
+            && !empty($ppws_single_product_meta['ppws_single_product_password_setting_textbox'])
+            && $ppws_current_pass === ppws_decrypted_password($ppws_single_product_password)
+        ) {
+            // Get product password settings and expiry
+            $ppws_single_product_password = $ppws_single_product_meta['ppws_single_product_password_setting_textbox'];
+            $ppws_single_product_set_password_expiry = isset($ppws_single_product_settings['ppws_single_product_set_password_expiry_field_textbox'])
+                ? $ppws_single_product_settings['ppws_single_product_set_password_expiry_field_textbox']
+                : 1;
+
+            // Update the product password cookie
+            $ppws_single_product_cookie = ppws_get_cookie("ppws_single_product_cookie");
+            $ppws_single_product_cookie = json_decode(stripslashes($ppws_single_product_cookie), true);
+
+            $ppws_single_product_password_arg = array(
+                $product => $ppws_single_product_password
+            );
+
+            if (isset($ppws_single_product_cookie) && !empty($ppws_single_product_cookie)) {
+                if (isset($ppws_single_product_cookie[$product])) {
+                    $ppws_single_product_cookie[$product] = $ppws_single_product_password;
+                    $ppws_single_product_cookie_value = $ppws_single_product_cookie;
+                } else {
+                    $ppws_single_product_cookie_value = array_merge($ppws_single_product_password_arg, $ppws_single_product_cookie);
+                }
+            } else {
+                $ppws_single_product_cookie_value = $ppws_single_product_password_arg;
+            }
+
+            // Set the updated product password cookie
+            setcookie("ppws_single_product_cookie", json_encode($ppws_single_product_cookie_value), time() + ($ppws_single_product_set_password_expiry * 60 * 60 * 24), COOKIEPATH, COOKIE_DOMAIN, $secure);
+
+            // End the password protection for the whole site
+            ppws_whole_site_disable_password_end();
+        } else {
+            $pwd_err = 'Password not match.';
+        }
+
+    } elseif ($ppws_single_category_flag) {
+        // Get category password protection settings and expiry
+        $ppws_product_Category_set_password_expiry = isset($ppws_single_categories_settings['ppws_single_categories_set_password_expiry_field_textbox'])
+            ? $ppws_single_categories_settings['ppws_single_categories_set_password_expiry_field_textbox']
+            : 1;
+
+        // Update the category password cookie
+        $ppws_single_categories_cookie = ppws_get_cookie("ppws_product_categories_cookie");
+        $ppws_single_categories_cookie = json_decode(stripslashes($ppws_single_categories_cookie), true);
+
+        // Loop through each product category
+        foreach ($ppws_product_categories_args as $ppws_product_category) {
+            // Get the password setting for the category
+            $ppws_single_product_category_meta = get_term_meta($ppws_product_category, 'ppws_single_categories_password_setting', true);
+
+            if (isset($ppws_single_product_category_meta) && !empty($ppws_single_product_category_meta)) {
+                $ppws_product_category_password = $ppws_single_product_category_meta['ppws_single_categories_password_setting_textbox'];
+
+                // Check if the category password is correct
+                if ($ppws_current_pass === ppws_decrypted_password($ppws_product_category_password)) {
+                    $ppws_product_category_password_arg = array(
+                        'ppws-' . $ppws_product_category => $ppws_product_category_password
+                    );
+
+                    if (isset($ppws_single_categories_cookie) && !empty($ppws_single_categories_cookie)) {
+                        if (isset($ppws_single_categories_cookie['ppws-' . $ppws_product_category])) {
+                            $ppws_single_categories_cookie['ppws-' . $ppws_product_category] = $ppws_product_category_password;
+                            $ppws_single_categories_cookie_value = $ppws_single_categories_cookie;
+                        } else {
+                            $ppws_single_categories_cookie_value = array_merge($ppws_product_category_password_arg, $ppws_single_categories_cookie);
+                        }
+                    } else {
+                        $ppws_single_categories_cookie_value = $ppws_product_category_password_arg;
+                    }
+
+                    // Set the updated category password cookie
+                    if (isset($ppws_single_categories_cookie_value) && !empty($ppws_single_categories_cookie_value)) {
+                        setcookie("ppws_product_categories_cookie", json_encode($ppws_single_categories_cookie_value), time() + ($ppws_product_Category_set_password_expiry * 60 * 60 * 24), COOKIEPATH, COOKIE_DOMAIN, $secure);
+                        ppws_whole_site_disable_password_end();
+                    } else {
+                        $pwd_err = 'Password not match.';
+                    }
+                }
+            }
+        }
+    }elseif(isset($ppws_whole_site_options['ppws_enable_password_field_checkbox']) == 'on') {
+        
         $ppws_main_password = $ppws_whole_site_options['ppws_set_password_field_textbox'];
         $ppws_set_password_expiry = $ppws_whole_site_options['ppws_set_password_expiry_field_textbox'];
         if (ppws_decrypted_password($ppws_main_password) == $ppws_current_pass) {
@@ -22,13 +189,12 @@ if (isset($_POST['ppws_submit'])) {
             setcookie( 'ppws_cookie', $ppws_main_password, time() + ($ppws_set_password_expiry * 60 * 60 * 24 ), COOKIEPATH, COOKIE_DOMAIN, $secure );
             // setcookie( self::COOKIE_PREFIX . COOKIEHASH, $cookie_value, $cookie_expiry, COOKIEPATH, COOKIE_DOMAIN, $secure );
             ppws_whole_site_disable_password_end();
-    
+            
         } else {
             $pwd_err =  'Password not match.';
         }
-
-    } elseif (isset($ppws_page_options['ppws_page_enable_password_field_checkbox']) == 'on' || isset($ppws_product_categories_options['ppws_product_categories_enable_password_field_checkbox']) == 'on') {
         
+    } elseif (isset($ppws_page_options['ppws_page_enable_password_field_checkbox']) == 'on' || isset($ppws_product_categories_options['ppws_product_categories_enable_password_field_checkbox']) == 'on') {
         if(is_page() || is_shop() ){
             if(isset($ppws_page_options['ppws_page_enable_password_field_checkbox'])){
                 if($ppws_page_options['ppws_page_enable_password_field_checkbox'] == 'on'){
@@ -111,6 +277,7 @@ if (isset($_POST['ppws_submit'])) {
         $ppws_page_background_opacity       =   "0.65";
         $ppws_page_bg_opacity_color         =   "#000";
         $ppws_style_option                  =   get_option( 'ppws_form_desgin_settings' );
+        $popup_additional_style             =   '';
 
 
         /** Form Title Start */

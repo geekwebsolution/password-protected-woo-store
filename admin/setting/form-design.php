@@ -8,7 +8,7 @@ if ( !class_exists( 'ppws_form_style_settings' ) ) {
 
         function ppws_form_style_settings_callback() {
             ?>
-            <form action="options.php?tab=form-desgin" method="post">
+            <form action="options.php?tab=form-design" method="post">
                 <?php settings_fields( 'ppws-settings-options' ); ?>
                 <div class="ppws-section">
                     <?php do_settings_sections( 'ppws-form-title-style-settings-section' ); ?>

@@ -265,6 +265,21 @@ jQuery(document).ready(function ($) {
         }
     });
     
+    $('input[id="ppws_single_product_enable_password_field_checkbox"]').click(function () {
+        if ($(this).prop("checked") == true) {
+            $(".ppws-single-product-enable-password-section, .ppws-section-user,.ppws-note-info").removeClass("ppws-hide-section");
+        } else if ($(this).prop("checked") == false) {
+            $(".ppws-single-product-enable-password-section, .ppws-section-user,.ppws-note-info").addClass("ppws-hide-section");
+        }
+    });
+
+    $('input[id="ppws_single_categories_enable_password_field_checkbox"]').click(function () {
+        if ($(this).prop("checked") == true) {
+            $(".ppws-single-categories-enable-password-section, .ppws-section-user, .ppws-note-info").removeClass("ppws-hide-section");
+        } else if ($(this).prop("checked") == false) {
+            $(".ppws-single-categories-enable-password-section, .ppws-section-user, .ppws-note-info").addClass("ppws-hide-section");
+        }
+    });
     
     setInterval(function () {
         var isAllChecked = 0;
@@ -299,5 +314,24 @@ jQuery(document).ready(function ($) {
           $(".editable_roles_all").prop("checked", false);
         }
       });
+
+
+
+    // Delegate the change event to a static parent element for better performance.
+    jQuery(document).on('change', 'input[type=radio][name=ppws_single_categories_password_setting_radio], input[type=radio][name=ppws_single_product_password_setting_radio]', function() {
+        
+        // Cache the jQuery selectors for better performance.
+        var $passwordSettingRadio = jQuery(this);
+        var $passwordSettingTextboxField = jQuery(".ppws-toggle-textbox");
+        
+        if ('Private' === $passwordSettingRadio.prop('value')) {
+            // If 'Private' is selected, fade in the password textbox field.
+            $passwordSettingTextboxField.fadeIn();
+        }
+        else if ('Public' === $passwordSettingRadio.prop('value')) {
+            // If 'Public' is selected, fade out the password textbox field.
+            $passwordSettingTextboxField.fadeOut();
+        }
+    });
 
 });

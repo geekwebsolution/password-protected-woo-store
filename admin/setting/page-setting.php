@@ -161,11 +161,7 @@ if (!class_exists('ppws_page_settings')) {
            
             $value = isset($ppws_page_options[$args['label_for']]) ? $ppws_page_options[$args['label_for']] : '';
 
-            if ($args['type'] == 'checkbox') {
-                /*echo "<pre>";
-                echo $ppws_page_options[$args['label_for']];
-                echo "</pre>";*/
-            ?>
+            if ($args['type'] == 'checkbox') {?>
                 <label class="ppws-switch">
                     <input type="checkbox" 
                     class="ppws-checkbox <?php if (isset($args['custom_class'])) { esc_attr_e($args['custom_class']); }  ?> " 
@@ -176,20 +172,18 @@ if (!class_exists('ppws_page_settings')) {
                     <span class="ppws-slider ppws-round"></span>
                 </label>
                 <p class="ppws-note"> <?php
-                                        $allowed_html = array('br'     => array(),);
-                                        echo wp_kses($args['description'], $allowed_html); ?> </p>
-            <?php
-            } elseif ($args['type'] == 'text') {
-            ?>
+                $allowed_html = array('br'     => array(),);
+                echo wp_kses($args['description'], $allowed_html); ?> </p>
+                <?php
+            } elseif ($args['type'] == 'text') {?>
                 <input type="text" class="ppws-textbox ppws-pwd-input" name="ppws_page_settings[<?php esc_attr_e($args['label_for']) ?>]" id="<?php esc_attr_e($args['label_for']) ?>" placeholder="<?php esc_attr_e($args['placeholder']) ?>" value="<?php esc_attr_e(ppws_decrypted_password($value)); ?>">
                 <p class="ppws-note"><?php esc_attr_e($args['description']) ?></p>
-            <?php
-            } elseif ($args['type'] == 'number') {
-            ?>
+                <?php
+            } elseif ($args['type'] == 'number') {?>
                 <!-- Numberbox -->
                 <input type="number" class="ppws-numberbox" min="1" max="400" name="ppws_page_settings[<?php esc_attr_e($args['label_for']); ?>]" id="<?php esc_attr_e($args['label_for']) ?>" value="<?php esc_attr_e($value) ?>" placeholder="<?php esc_attr_e($args['placeholder']) ?>">
                 <p class="ppws-note"><?php esc_attr_e($args['description']) ?></p>
-            <?php
+                <?php
             }
         }
 
@@ -199,7 +193,7 @@ if (!class_exists('ppws_page_settings')) {
             $value = "";
             $blank_arr = array();
             $value = isset($ppws_page_options[$args['label_for']]) ? $ppws_page_options[$args['label_for']] : $blank_arr;
-            if (isset($ppws_page_options[$args['label_for']]) && !empty($ppws_page_options[$args['label_for']]))            $value = explode(",", $ppws_page_options[$args['label_for']]);
+            if (isset($ppws_page_options[$args['label_for']]) && !empty($ppws_page_options[$args['label_for']])) $value = explode(",", $ppws_page_options[$args['label_for']]);
 
             if ($args['type'] == 'checkbox') {
                 global $wp_roles;
@@ -214,11 +208,7 @@ if (!class_exists('ppws_page_settings')) {
                         ?>
                         <div class="ppws_all_user_list_input">
                             <label>
-                                <input type="checkbox" class="ppws-checkbox editable_roles_single" name="ppws_page_settings[<?php esc_attr_e($args['label_for']) ?>][]" value="<?php esc_attr_e($role['name']); ?>" <?php if (is_array($value)) {
-                                                                                                                                                                                                    if (in_array($role['name'], $value)) {
-                                                                                                                                                                                                        esc_attr_e('checked');
-                                                                                                                                                                                                    }
-                                                                                                                                                                                                } ?>><?php esc_attr_e($role['name']); ?>
+                                <input type="checkbox" class="ppws-checkbox editable_roles_single" name="ppws_page_settings[<?php esc_attr_e($args['label_for']) ?>][]" value="<?php esc_attr_e($role['name']); ?>" <?php if (is_array($value)) { if (in_array($role['name'], $value)) { esc_attr_e('checked'); } } ?>><?php esc_attr_e($role['name']); ?>
                             </label>
                         </div>
                         <?php

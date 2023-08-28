@@ -10,8 +10,7 @@ if (!class_exists('ppws_whole_site_settings')) {
 
         function ppws_whole_site_callback()
         {
-            global $ppws_whole_site_options;
-?>
+            global $ppws_whole_site_options;?>
             <form action="options.php" class="ppws-general-setting-form" method="post">
                 <?php 
                 settings_fields('ppws-settings-options'); 

@@ -304,3 +304,11 @@ p.ppws-note-info svg , .ppws-note.ppws-userrole-error svg{ margin-right: 5px; }
     pointer-events: none;
     user-select: none;
 }
+
+.ppws_category_title h2.ppws_h2_title {
+    margin: 0;
+}
+
+.ppws_category_title td {
+    padding: 0;
+}

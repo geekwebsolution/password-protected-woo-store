@@ -81,6 +81,19 @@ function ppws_plugin_active_woocommerce_password_protected_store()
     }
     /** Product Categories Setting End */    
 
+    /** Single Product Setting Start */
+
+    $single_product_expiry_day      = "1";
+    $single_product_option          = array();
+    $ppws_single_product_settings   = get_option('ppws_single_product_settings');
+
+    if(!isset($ppws_single_product_settings['ppws_single_product_set_password_expiry_field_textbox'])){
+        $single_product_option ['ppws_single_product_set_password_expiry_field_textbox'] = $single_product_expiry_day;
+    }
+    if(isset($single_product_option) && !empty($single_product_option)){
+        if(count($single_product_option) > 0)	update_option('ppws_single_product_settings', $single_product_option);
+    }
+    /** Single Product Setting End */  
 
     /** Content Setting Start */
 
@@ -192,6 +205,8 @@ function ppws_plugin_active_woocommerce_password_protected_store()
 /* Adding options.php */
 require_once(WPPS_PLUGIN_DIR_PATH . 'admin/options.php');
 require_once(WPPS_PLUGIN_DIR_PATH . 'admin/functions.php');
+require_once(WPPS_PLUGIN_DIR_PATH . 'admin/ppws-product-meta.php');
+require_once(WPPS_PLUGIN_DIR_PATH . 'admin/ppws-categories-meta.php');
 require_once(WPPS_PLUGIN_DIR_PATH . 'front/class-ppws-public.php');
  
 /* Add admin style and script file only to admin side */
@@ -249,44 +264,88 @@ function ppws_wp() {
     }
 }
 
+/**
+ * Start the password protection process for protected pages, product categories, and single products.
+ */
 add_action('template_redirect', 'ppws_enable_password_start');
 function ppws_enable_password_start() {
-    if( is_protected_whole_site() || is_protected_page() || is_protected_product_categories() ) {
+    global $product;
+
+    // Initialize variables.
+    $ppws_single_product_cookie_value   = '';
+    $ppws_single_product_cookie         = array();
+    $ppws_single_product_meta           = array();
+
+    // Check if the whole site, page, or product categories are protected, and prevent indexing and caching if required.
+    if (is_protected_whole_site() || is_protected_page() || is_protected_product_categories() || is_protected_single_product()) {
         ppws_prevent_indexing();
         ppws_nocache_headers();
     }
 
-    $ppws_whole_site_options = get_option('ppws_general_settings');
-    $ppws_page_options = get_option('ppws_page_settings');
-    $ppws_product_categories_options = get_option('ppws_product_categories_settings');
+    // Get options for various protection settings.
+    $ppws_whole_site_options            = get_option('ppws_general_settings');
+    $ppws_page_options                  = get_option('ppws_page_settings');
+    $ppws_product_categories_options    = get_option('ppws_product_categories_settings');
+    $ppws_single_product_settings       = get_option('ppws_single_product_settings');
+
+    // Get the product object and its password settings.
+    $ppws_product_obj = get_page_by_path($product, OBJECT, 'product');
+    if (is_product() && isset($ppws_product_obj)) {
+        $ppws_single_product_meta = get_post_meta($ppws_product_obj->ID, 'ppws_single_product_password_setting', true);
         
-    if(is_protected_whole_site()) {
+    }
+  
+    // Check if the single product is password-protected.
+    if (isset($ppws_single_product_meta['ppws_single_product_password_setting_radio']) && 'Private' === $ppws_single_product_meta['ppws_single_product_password_setting_radio'] && isset($ppws_single_product_settings['ppws_single_product_enable_password_field_checkbox']) && 'on' === $ppws_single_product_settings['ppws_single_product_enable_password_field_checkbox']) {
+        
+        // Check if the single product is protected and show password form if needed.
+        if (is_protected_single_product()) {
+            $ppws_single_product_password   = $ppws_single_product_meta['ppws_single_product_password_setting_textbox'];
+            $ppws_single_product_cookie     = ppws_get_cookie("ppws_single_product_cookie");
+            $ppws_single_product_cookie     = json_decode(stripslashes($ppws_single_product_cookie), true);
+
+            $ppws_single_product_cookie_value = (!empty($ppws_single_product_cookie)) ? $ppws_single_product_cookie[$product] : '';
+
+            if (ppws_decrypted_password($ppws_single_product_cookie_value) != ppws_decrypted_password($ppws_single_product_password)) {
+                include_once(WPPS_PLUGIN_DIR_PATH . 'front/class-ppws-protected-form.php');
+                die;
+            }
+        }
+    }elseif(is_protected_single_category()){
+        include_once(WPPS_PLUGIN_DIR_PATH . 'front/class-ppws-protected-form.php');
+        die;
+
+    }elseif (is_protected_whole_site()) {
+        // Check if the whole site is protected and show password form if needed.
         $ppws_cookie = ppws_get_cookie('ppws_cookie');
         $ppws_main_password = $ppws_whole_site_options['ppws_set_password_field_textbox'];
-        if(ppws_decrypted_password($ppws_cookie) != ppws_decrypted_password($ppws_main_password)) {
+        if (ppws_decrypted_password($ppws_cookie) != ppws_decrypted_password($ppws_main_password)) {
             include_once(WPPS_PLUGIN_DIR_PATH . 'front/class-ppws-protected-form.php');
             die;
         }
-    }else if (is_protected_page() || is_protected_product_categories()) {
-        if(is_protected_page()) {
+    } else if (is_protected_page() || is_protected_product_categories()) {
+        // Check if a protected page or product categories are protected and show password form if needed.
+
+        if (is_protected_page()) {
             $ppws_page_cookie = (ppws_get_cookie('ppws_page_cookie') != '') ? ppws_get_cookie('ppws_page_cookie') : 'ddd';
             $ppws_page_main_password = $ppws_page_options['ppws_page_set_password_field_textbox'];
-            if(ppws_decrypted_password($ppws_page_cookie) != ppws_decrypted_password($ppws_page_main_password)) {
+            if (ppws_decrypted_password($ppws_page_cookie) != ppws_decrypted_password($ppws_page_main_password)) {
                 include_once(WPPS_PLUGIN_DIR_PATH . 'front/class-ppws-protected-form.php');
                 die;
             }
         }   
-        
-        if(is_protected_product_categories()) {
+
+        if (is_protected_product_categories()) {
             $ppws_categories_cookie = ppws_get_cookie('ppws_categories_cookie');
             $ppws_categories_main_password = $ppws_product_categories_options['ppws_product_categories_password'];
-            if(ppws_decrypted_password($ppws_categories_cookie) != ppws_decrypted_password($ppws_categories_main_password)) {
+            if (ppws_decrypted_password($ppws_categories_cookie) != ppws_decrypted_password($ppws_categories_main_password)) {
                 include_once(WPPS_PLUGIN_DIR_PATH . 'front/class-ppws-protected-form.php');
                 die;
             }
         }
     }
 }
+
 /* End Enable Password */
 
 add_action('end_whole_site_pass', 'ppws_whole_site_disable_password_end');
