@@ -48,11 +48,13 @@ if (!class_exists('ppws_admin_single_product_page_meta_box')) {
             
             // Retrieve previous values from the database if they exist
             $ppws_post_meta_value  = get_post_meta($post->ID, 'ppws_single_product_password_setting', true);
-            
-             if(isset($ppws_post_meta_value) && !empty($ppws_post_meta_value)){
-                 $ppws_single_product_password_setting_radio = $ppws_post_meta_value['ppws_single_product_password_setting_radio'];
-                 $ppws_single_product_password_setting_text  = ppws_decrypted_password($ppws_post_meta_value['ppws_single_product_password_setting_textbox']);
-             }
+
+            echo '<pre>'; print_r( $ppws_post_meta_value ); echo '</pre>';
+
+            if(isset($ppws_post_meta_value) && !empty($ppws_post_meta_value)){
+                $ppws_single_product_password_setting_radio = $ppws_post_meta_value['ppws_single_product_password_setting_radio'];
+                $ppws_single_product_password_setting_text  = isset($ppws_post_meta_value['ppws_single_product_password_setting_textbox']) ? ppws_decrypted_password($ppws_post_meta_value['ppws_single_product_password_setting_textbox']) : "";
+            }
             ?>
 
             <div>
