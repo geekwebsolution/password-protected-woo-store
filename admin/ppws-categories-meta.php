@@ -25,8 +25,8 @@ if (!class_exists('Product_Category_Meta_Box')) {
          * @param object $term The category term object.
          */
         public function custom_category_meta_box_callback($term) {
-            global $ppws_single_categories_options;
-           
+            $ppws_term_meta_value = array();
+
             // if(is_object($term)){
 
                 // Get the existing term meta values, if any.
@@ -80,9 +80,9 @@ if (!class_exists('Product_Category_Meta_Box')) {
             if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE)
             return;
             
-            if (!current_user_can('edit_post', $term_id))
+            if (!current_user_can('edit_term', $term_id))
             return;
-        
+            
             $ppws_single_categories_post_meta              = array();
             $ppws_single_categories_password_setting_radio = '';
             $ppws_single_categories_password_setting_text  = '';
