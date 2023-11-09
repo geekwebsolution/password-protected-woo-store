@@ -4,9 +4,9 @@ Donate link: https://paypal.me/rvadhel
 Tags: WooCommerce protected categories, woo protect, product protected, woocommerce store protected
 Requires PHP: 5.2.4
 Requires at least: 3.0.1
-Tested up to: 6.2.2
-WC tested up to: 7.8.0
-Stable tag: 1.5
+Tested up to: 6.4.1
+WC tested up to: 8.2.2
+Stable tag: 1.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -57,6 +57,10 @@ After Plugin Active go to Woocommerce-> Password Protected
 
 
 == Changelog ==
+= 1.6 =
+- Added woocommerce HPOS support
+- Tested up to 6.4 wordpress version.
+
 = 1.5 =
 - Added additional style option (Under Form Design tab).
 - Fixed cache issue.
