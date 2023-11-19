@@ -58,7 +58,8 @@ After Plugin Active go to Woocommerce-> Password Protected
 
 == Changelog ==
 = 1.6 =
-- Added woocommerce HPOS support
+- Fixed bugs.
+- Added woocommerce HPOS support.
 - Tested up to 6.4 wordpress version.
 
 = 1.5 =
