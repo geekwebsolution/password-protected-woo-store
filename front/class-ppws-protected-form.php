@@ -303,8 +303,6 @@ if (isset($_POST['ppws_submit'])) {
         }
 
         <?php _e($popup_additional_style); ?>
-
-
     </style>
 </head>
 
@@ -328,7 +326,7 @@ if (isset($_POST['ppws_submit'])) {
                     <?php
                 } ?>
                 <form method="POST">
-                    <input type="password" name="ppws_password" class="ppws_input" <?php if(isset($ppws_form_settings_option['ppws_form_pwd_placeholder'])){?> placeholder="<?php esc_attr_e($ppws_form_settings_option['ppws_form_pwd_placeholder']) ?>" <?php } ?>>
+                    <input type="password" name="ppws_password" class="ppws_input" <?php if(isset($ppws_form_settings_option['ppws_form_pwd_placeholder'])){?> placeholder="<?php esc_attr_e($ppws_form_settings_option['ppws_form_pwd_placeholder']) ?>" <?php } ?> autofocus>
                     <input type="submit" name="ppws_submit" value="<?php if(isset($ppws_form_settings_option['ppws_form_submit_btn_text'])){ esc_attr_e($ppws_form_settings_option['ppws_form_submit_btn_text']); }else{ esc_attr_e('Submit'); } ?>" class="ppws_form_button">
                 </form>
                 <?php 

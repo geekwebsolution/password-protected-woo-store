@@ -102,16 +102,12 @@ function is_protected_product_categories() {
                     
                                 if (in_array(ucfirst($final), $selected_user)) {
                                     /* If yes then show Password Page */
-                                    // include_once(WPPS_PLUGIN_DIR_PATH . 'front/index.php');
-                                    // die;
                                     return true;
                                 }
                             }
                         }
                     } else {
                         if(!current_user_can( 'administrator' )){
-                            // include_once(WPPS_PLUGIN_DIR_PATH . 'front/index.php');
-                            // die;
                             return true;
                         }
                     }

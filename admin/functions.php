@@ -1,11 +1,11 @@
 <?php
 /* Get Whole Site Options */
-
 function ppws_get_whole_site_password(){
     return get_option( 'ppws_general_settings' );
 }
 /* Get child pages */
-function ppws_get_child_pages($per_id, $marg, $value){
+function ppws_get_child_pages($per_id, $marg, $value = array()){
+    if(empty($value))   $value = array();
     $arg = array(
         'child_of' => $per_id,
     );

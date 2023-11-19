@@ -252,9 +252,7 @@ if (!class_exists('ppws_page_settings')) {
         public function ppws_page_create_list_settings($args)
         {
             global $ppws_page_options;
-            $value = "";
-            $value = isset($ppws_page_options[$args['label_for']]) ? $ppws_page_options[$args['label_for']] : "";
-            $value = explode(",", $ppws_page_options[$args['label_for']] ?? null);
+            $value = isset($ppws_page_options[$args['label_for']]) ? explode(",",$ppws_page_options[$args['label_for']]) : array();
 
             if ($args['type'] == 'checkbox') {
                 $arg = array(
@@ -267,11 +265,8 @@ if (!class_exists('ppws_page_settings')) {
                         foreach ($pages as $mpage) { ?>
                             <div class="ppws_all_user_list_input">
                                 <label>
-                                    <input type="checkbox" class="ppws-checkbox" name="ppws_page_settings[<?php esc_attr_e($args['label_for']) ?>][]" value="<?php esc_attr_e($mpage->ID) ?>" <?php if (in_array($mpage->ID, $value)) {
-                                                                                                                                                                                                    esc_attr_e('checked');
-                                                                                                                                                                                                } ?>><?php esc_attr_e($mpage->post_title); ?>
+                                    <input type="checkbox" class="ppws-checkbox" name="ppws_page_settings[<?php esc_attr_e($args['label_for']) ?>][]" value="<?php esc_attr_e($mpage->ID) ?>" <?php if (in_array($mpage->ID, $value)) { esc_attr_e('checked'); } ?>><?php esc_attr_e($mpage->post_title); ?>
                                 </label>
-
                                 <?php
                                 $fun_args = $args['label_for'];
                                 ppws_get_child_pages($mpage->ID, $fun_args, $value);
