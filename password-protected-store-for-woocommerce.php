@@ -4,7 +4,7 @@ Plugin Name: Password Protected Store for WooCommerce
 Description: Password Protected Store for WooCommerce is an excellent plugin to set Password Protected Store for WooCommerce. It allows you to set password in yore store. Password can be set on whole site, on category, on pages, and on user role.
 Author: Geek Code Lab
 Version: 1.6
-WC tested up to: 8.2.2
+WC tested up to: 8.3.0
 Author URI: https://geekcodelab.com/
 Text Domain : password-protected-store-for-woocommerce
 */
@@ -19,20 +19,7 @@ if (!defined("WPPS_PLUGIN_URL"))
 
 
 define("PPWS_BUILD", '1.6');
-$plugin = plugin_basename(__FILE__); //plugin_action_links_password-protected-store-for-woocommerce/password-protected-store-for-woocommerce.php
-/* Plugin load hook */
-add_action('plugins_loaded', 'ppws_plugin_load_woocommerce_password_protected_store');
-function ppws_plugin_load_woocommerce_password_protected_store() {
-    if (!class_exists('WooCommerce')) {
-        add_action(
-            'admin_notices',
-            function() {
-                echo '<div class="error"><p><strong>' . sprintf( esc_html__( 'Password Protected Store for WooCommerce to be installed and active. You can download %s here.', 'password-protected-store-for-woocommerce' ), '<a href="https://woocommerce.com/" target="_blank">WooCommerce</a>' ) . '</strong></p></div>';
-            }
-        );
-    }
-    add_filter("plugin_action_links_" . plugin_basename(__FILE__), 'ppws_plugin_add_settings_link');
-}
+
 /* Plugin active/deactive hook */
 register_activation_hook(__FILE__, 'ppws_plugin_active_woocommerce_password_protected_store');
 function ppws_plugin_active_woocommerce_password_protected_store()
@@ -188,6 +175,35 @@ function ppws_plugin_active_woocommerce_password_protected_store()
     }
    /** Form Style End */
 }
+
+if ( ! function_exists( 'ppws_install_woocommerce_admin_notice' ) ) {
+	/**
+	 * Trigger an admin notice if WooCommerce is not installed.
+	 */
+	function ppws_install_woocommerce_admin_notice() {
+		?>
+		<div class="error">
+			<p>
+				<?php
+				// translators: %s is the plugin name.
+				echo esc_html( sprintf( __( '%s is enabled but not effective. It requires WooCommerce in order to work.', 'password-protected-store-for-woocommerce' ), 'Password Protected Store for WooCommerce' ) );
+				?>
+			</p>
+		</div>
+		<?php
+	}
+}
+
+
+function ppws_woocommerce_constructor() {
+    // Check WooCommerce installation
+	if ( ! function_exists( 'WC' ) ) {
+		add_action( 'admin_notices', 'ppws_install_woocommerce_admin_notice' );
+		return;
+	}
+
+}
+add_action( 'plugins_loaded', 'ppws_woocommerce_constructor' );
 
 /* Adding options.php */
 require_once(WPPS_PLUGIN_DIR_PATH . 'admin/options.php');
