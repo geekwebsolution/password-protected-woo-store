@@ -57,6 +57,9 @@ After Plugin Active go to Woocommerce-> Password Protected
 
 
 == Changelog ==
+= 1.7 =
+- Fixed expiry days field defaults to No expiry.
+
 = 1.6 =
 - Fixed bugs.
 - Added woocommerce HPOS support.
