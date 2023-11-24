@@ -3,8 +3,8 @@
 Plugin Name: Password Protected Store for WooCommerce
 Description: Password Protected Store for WooCommerce is an excellent plugin to set Password Protected Store for WooCommerce. It allows you to set password in yore store. Password can be set on whole site, on category, on pages, and on user role.
 Author: Geek Code Lab
-Version: 1.6
-WC tested up to: 8.3.0
+Version: 1.7
+WC tested up to: 8.3.1
 Author URI: https://geekcodelab.com/
 Text Domain : password-protected-store-for-woocommerce
 */
@@ -18,7 +18,7 @@ if (!defined("WPPS_PLUGIN_URL"))
     define("WPPS_PLUGIN_URL", plugins_url() . '/' . basename(dirname(__FILE__)));
 
 
-define("PPWS_BUILD", '1.6');
+define("PPWS_BUILD", '1.7');
 
 /* Plugin active/deactive hook */
 register_activation_hook(__FILE__, 'ppws_plugin_active_woocommerce_password_protected_store');
@@ -27,7 +27,7 @@ function ppws_plugin_active_woocommerce_password_protected_store()
 
     /** General Setting Start */
     $general_pwd        = "";
-    $general_expiry_day = "1";
+    $general_expiry_day = "";
     $general_option     = array();
     $general_option_settings        = get_option('ppws_general_settings');
 
@@ -42,7 +42,7 @@ function ppws_plugin_active_woocommerce_password_protected_store()
 
     /** Page Setting Start */
     $page_pwd        = "";
-    $page_expiry_day = "1";
+    $page_expiry_day = "";
     $page_option     = array();
     $page_option_settings        = get_option('ppws_page_settings');
 
@@ -56,7 +56,7 @@ function ppws_plugin_active_woocommerce_password_protected_store()
 
     /** Product Categories Setting Start */
     $product_cat_pwd        = "";
-    $product_cat_expiry_day = "1";
+    $product_cat_expiry_day = "";
     $product_cat_option     = array();
     $product_cat_option_settings        = get_option('ppws_product_categories_settings');
 
@@ -229,6 +229,8 @@ function ppws_admin_style() {
 /* Front side css file */
 
 /* Plugin page plugin setting, active/deactive links  */
+$plugin = plugin_basename( __FILE__ );
+add_filter( "plugin_action_links_$plugin", 'ppws_plugin_add_settings_link');
 function ppws_plugin_add_settings_link($links)
 {
     $support_link = '<a href="https://geekcodelab.com/contact/"  target="_blank" >' . __('Support', 'password-protected-store-for-woocommerce') . '</a>';

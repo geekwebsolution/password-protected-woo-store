@@ -10,8 +10,7 @@ if (!class_exists('ppws_whole_site_settings')) {
 
         function ppws_whole_site_callback()
         {
-            global $ppws_whole_site_options;
-?>
+            global $ppws_whole_site_options; ?>
             <form action="options.php" class="ppws-general-setting-form" method="post">
                 <?php 
                 settings_fields('ppws-settings-options'); 
@@ -118,7 +117,7 @@ if (!class_exists('ppws_whole_site_settings')) {
                     'type' => 'number',
                     'label_for' => 'ppws_set_password_expiry_field_textbox',
                     'placeholder' => 'Enter Password Expiry Day',
-                    'description' => 'Set expiry time of password for whole site.',
+                    'description' => 'Set expiry time of password for whole site. **Default: No Expiry.**',
                     'class' => "$ppws_whole_site_enable_password_class ppws-whole-site-password-section"
                 ]
             );
@@ -287,7 +286,7 @@ if (!class_exists('ppws_whole_site_settings')) {
             if (isset($input['ppws_set_password_expiry_field_textbox']) && !empty($input['ppws_set_password_expiry_field_textbox'])) {
                 $new_input['ppws_set_password_expiry_field_textbox'] = sanitize_text_field($input['ppws_set_password_expiry_field_textbox']);
             }else{
-                $new_input[ 'ppws_set_password_expiry_field_textbox' ] = 1;
+                $new_input[ 'ppws_set_password_expiry_field_textbox' ] = "";
             }
 
             if (isset($input['enable_user_role'])) {

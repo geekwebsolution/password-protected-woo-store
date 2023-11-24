@@ -13,8 +13,7 @@ if (!class_exists('ppws_page_settings')) {
         function ppws_page_callback()
         {
             global $ppws_whole_site_options;
-            global $ppws_page_options;
-?>
+            global $ppws_page_options; ?>
             <form action="options.php?tab=page-setting" method="post" class="ppws-page-setting-form">
                 <?php 
                 settings_fields('ppws-settings-options'); 
@@ -102,7 +101,7 @@ if (!class_exists('ppws_page_settings')) {
                 array($this, 'ppws_page_password_settings'),
                 'ppws-page-password-settings-section',
                 'ppws_page_password_settings_section',
-                ['type' => 'number', 'label_for' => 'ppws_page_set_password_expiry_field_textbox', 'description' => 'Set expiry time of password for pages.', 'placeholder' => 'Set password expiry', 'class' => "$ppws_page_enable_password_class ppws-page-enable-password-section"]
+                ['type' => 'number', 'label_for' => 'ppws_page_set_password_expiry_field_textbox', 'description' => 'Set expiry time of password for pages. **Default: No Expiry.**', 'placeholder' => 'Set password expiry', 'class' => "$ppws_page_enable_password_class ppws-page-enable-password-section"]
             );
 
             add_settings_field(
@@ -301,7 +300,7 @@ if (!class_exists('ppws_page_settings')) {
             if (isset($input['ppws_page_set_password_expiry_field_textbox']) && !empty($input['ppws_page_set_password_expiry_field_textbox'])) {
                 $new_input['ppws_page_set_password_expiry_field_textbox'] = sanitize_text_field($input['ppws_page_set_password_expiry_field_textbox']);
             } else {
-                $new_input['ppws_page_set_password_expiry_field_textbox'] = 1;
+                $new_input['ppws_page_set_password_expiry_field_textbox'] = "";
             }
 
             if (isset($input['ppws_page_select_page_field_checkbox'])) {

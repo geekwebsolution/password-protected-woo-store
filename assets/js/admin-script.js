@@ -1,7 +1,4 @@
 jQuery(document).ready(function ($) {
-
-
-
     wp.editor.initialize("ppws_form_above_content", {
         mediaButtons: true,
         tinymce: {
@@ -101,9 +98,6 @@ jQuery(document).ready(function ($) {
 
 
     jQuery("body").on('submit', '.ppws-procat-setting-form,.ppws-general-setting-form,.ppws-page-setting-form', function () {
-
-
-
         if (jQuery("body .ppws_password_checkbox_validation").prop("checked") == true) {
             
             var wp_number = jQuery(".ppws-pwd-input").val();
@@ -115,7 +109,6 @@ jQuery(document).ready(function ($) {
                 jQuery(".ppws-pwd-input").removeClass('ppws-error-border');
                 return true;
             }
-
         }
 
     });
@@ -152,7 +145,6 @@ jQuery(document).ready(function ($) {
 
 
     $(".ppws-color-field").wpColorPicker();
-
 
     /** Pages JS */
 
@@ -191,7 +183,6 @@ jQuery(document).ready(function ($) {
 
     /** Pages JS END */
 
-
     // if ($("input[id='ppws_select_user_role_field_radio_non_logged_in_user']").is(":checked")) {
     //     $(".ppws-logged-in-user-section").addClass("ppws-hide-section");
     // }
@@ -203,9 +194,6 @@ jQuery(document).ready(function ($) {
     // $("body").on("click", "input[id='ppws_select_user_role_field_radio_non_logged_in_user']", function () {
     //     $(".ppws-logged-in-user-section").addClass("ppws-hide-section");
     // });
-
-
-
 
     /* Form Background */
 
@@ -263,8 +251,7 @@ jQuery(document).ready(function ($) {
         } else if ($(this).prop("checked") == false) {
             $(".ppws-product-categories-enable-password-section,.ppws-section-user,.ppws-note-info").addClass("ppws-hide-section");
         }
-    });
-    
+    });    
     
     setInterval(function () {
         var isAllChecked = 0;

@@ -17,10 +17,10 @@ if (isset($_POST['ppws_submit'])) {
 
         $ppws_main_password = $ppws_whole_site_options['ppws_set_password_field_textbox'];
         $ppws_set_password_expiry = $ppws_whole_site_options['ppws_set_password_expiry_field_textbox'];
+        $ppws_expiry = (!empty($ppws_set_password_expiry)) ? ($ppws_set_password_expiry * 60 * 60 * 24) : (10 * 365 * 24 * 60 * 60);
         if (ppws_decrypted_password($ppws_main_password) == $ppws_current_pass) {
 
-            setcookie( 'ppws_cookie', $ppws_main_password, time() + ($ppws_set_password_expiry * 60 * 60 * 24 ), COOKIEPATH, COOKIE_DOMAIN, $secure );
-            // setcookie( self::COOKIE_PREFIX . COOKIEHASH, $cookie_value, $cookie_expiry, COOKIEPATH, COOKIE_DOMAIN, $secure );
+            setcookie( 'ppws_cookie', $ppws_main_password, time() + ($ppws_expiry), COOKIEPATH, COOKIE_DOMAIN, $secure );
             ppws_whole_site_disable_password_end();
     
         } else {
@@ -34,9 +34,9 @@ if (isset($_POST['ppws_submit'])) {
                 if($ppws_page_options['ppws_page_enable_password_field_checkbox'] == 'on'){
                     $ppws_main_password = $ppws_page_options['ppws_page_set_password_field_textbox'];
                     $ppws_set_password_expiry = $ppws_page_options['ppws_page_set_password_expiry_field_textbox'];
+                    $ppws_expiry = (!empty($ppws_set_password_expiry)) ? ($ppws_set_password_expiry * 60 * 60 * 24) : (10 * 365 * 24 * 60 * 60);
                     if (ppws_decrypted_password($ppws_main_password) == $ppws_current_pass) {
-                        // setcookie('ppws_page_cookie', $ppws_main_password, time() + ($ppws_set_password_expiry * 60 * 60 * 24), "/");
-                        setcookie( 'ppws_page_cookie', $ppws_main_password, time() + ($ppws_set_password_expiry * 60 * 60 * 24 ), COOKIEPATH, COOKIE_DOMAIN, $secure );
+                        setcookie( 'ppws_page_cookie', $ppws_main_password, time() + ($ppws_expiry), COOKIEPATH, COOKIE_DOMAIN, $secure );
                         ppws_whole_site_disable_password_end();    
                     } else {
                         $pwd_err = 'password not match';
@@ -49,9 +49,9 @@ if (isset($_POST['ppws_submit'])) {
                     if($ppws_product_categories_options['ppws_product_categories_enable_password_field_checkbox'] == 'on'){
                         $ppws_main_password = $ppws_product_categories_options['ppws_product_categories_password'];
                         $ppws_set_password_expiry = $ppws_product_categories_options['ppws_product_categories_password_expiry_day'];
+                        $ppws_expiry = (!empty($ppws_set_password_expiry)) ? ($ppws_set_password_expiry * 60 * 60 * 24) : (10 * 365 * 24 * 60 * 60);
                         if (ppws_decrypted_password($ppws_main_password) == $ppws_current_pass) {
-                            // setcookie('ppws_categories_cookie', $ppws_main_password, time() + ($ppws_set_password_expiry * 60 * 60 * 24), "/");
-                            setcookie( 'ppws_categories_cookie', $ppws_main_password, time() + ($ppws_set_password_expiry * 60 * 60 * 24 ), COOKIEPATH, COOKIE_DOMAIN, $secure );
+                            setcookie( 'ppws_categories_cookie', $ppws_main_password, time() + ($ppws_expiry), COOKIEPATH, COOKIE_DOMAIN, $secure );
                             ppws_whole_site_disable_password_end();    
                         } else {
                             $pwd_err = 'password not match';

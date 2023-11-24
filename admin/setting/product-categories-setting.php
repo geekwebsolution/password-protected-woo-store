@@ -94,7 +94,7 @@ if (!class_exists('ppws_product_categories_settings')) {
                 array($this, 'ppws_product_categories_password_settings'),
                 'ppws-product-categories-password-settings-section',
                 'ppws_product_categories_password_settings_section',
-                ['type' => 'number', 'label_for' => 'ppws_product_categories_password_expiry_day', 'description' => 'Set expiry time of password for the category pages.', 'placeholder' => 'Set password expiry', 'class' => "$ppws_product_categories_enable_password_class ppws-product-categories-enable-password-section"]
+                ['type' => 'number', 'label_for' => 'ppws_product_categories_password_expiry_day', 'description' => 'Set expiry time of password for the category pages. **Default: No Expiry.**', 'placeholder' => 'Set password expiry', 'class' => "$ppws_product_categories_enable_password_class ppws-product-categories-enable-password-section"]
             );
 
             add_settings_field(
@@ -310,7 +310,7 @@ if (!class_exists('ppws_product_categories_settings')) {
             if (isset($input['ppws_product_categories_password_expiry_day']) && !empty($input['ppws_product_categories_password_expiry_day'])) {
                 $new_input['ppws_product_categories_password_expiry_day'] = sanitize_text_field($input['ppws_product_categories_password_expiry_day']);
             } else {
-                $new_input['ppws_product_categories_password_expiry_day'] = 1;
+                $new_input['ppws_product_categories_password_expiry_day'] = "";
             }
 
             if (isset($input['ppws_product_categories_select_page_field_checkbox'])) {
