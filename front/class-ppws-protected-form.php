@@ -3,7 +3,6 @@ $ppws_whole_site_options = get_option('ppws_general_settings');
 $ppws_page_options = get_option( 'ppws_page_settings' );
 $ppws_product_categories_options = get_option( 'ppws_product_categories_settings' );
 if (isset($_POST['ppws_submit'])) {
-
     $referer       = wp_get_referer();
     if ( $referer ) {
         $secure = ( 'https' === parse_url( $referer, PHP_URL_SCHEME ) );
@@ -12,57 +11,115 @@ if (isset($_POST['ppws_submit'])) {
     }
 
     $ppws_current_pass = sanitize_text_field($_POST['ppws_password']);
-    
-    if (isset($ppws_whole_site_options['ppws_enable_password_field_checkbox']) == 'on') {
 
-        $ppws_main_password = $ppws_whole_site_options['ppws_set_password_field_textbox'];
-        $ppws_set_password_expiry = $ppws_whole_site_options['ppws_set_password_expiry_field_textbox'];
-        $ppws_expiry = (!empty($ppws_set_password_expiry)) ? ($ppws_set_password_expiry * 60 * 60 * 24) : (10 * 365 * 24 * 60 * 60);
-        if (ppws_decrypted_password($ppws_main_password) == $ppws_current_pass) {
-
-            setcookie( 'ppws_cookie', $ppws_main_password, time() + ($ppws_expiry), COOKIEPATH, COOKIE_DOMAIN, $secure );
-            ppws_whole_site_disable_password_end();
-    
-        } else {
-            $pwd_err =  'Password not match.';
-        }
-
-    } elseif (isset($ppws_page_options['ppws_page_enable_password_field_checkbox']) == 'on' || isset($ppws_product_categories_options['ppws_product_categories_enable_password_field_checkbox']) == 'on') {
-        
-        if(is_page() || is_shop() ){
-            if(isset($ppws_page_options['ppws_page_enable_password_field_checkbox'])){
-                if($ppws_page_options['ppws_page_enable_password_field_checkbox'] == 'on'){
-                    $ppws_main_password = $ppws_page_options['ppws_page_set_password_field_textbox'];
-                    $ppws_set_password_expiry = $ppws_page_options['ppws_page_set_password_expiry_field_textbox'];
-                    $ppws_expiry = (!empty($ppws_set_password_expiry)) ? ($ppws_set_password_expiry * 60 * 60 * 24) : (10 * 365 * 24 * 60 * 60);
-                    if (ppws_decrypted_password($ppws_main_password) == $ppws_current_pass) {
-                        setcookie( 'ppws_page_cookie', $ppws_main_password, time() + ($ppws_expiry), COOKIEPATH, COOKIE_DOMAIN, $secure );
-                        ppws_whole_site_disable_password_end();    
-                    } else {
-                        $pwd_err = 'password not match';
-                    }
-                }
-            } 
-        } else {
-            if(is_category() || is_archive() || is_single() ){
-                if (isset($ppws_product_categories_options['ppws_product_categories_enable_password_field_checkbox'])) {
-                    if($ppws_product_categories_options['ppws_product_categories_enable_password_field_checkbox'] == 'on'){
-                        $ppws_main_password = $ppws_product_categories_options['ppws_product_categories_password'];
-                        $ppws_set_password_expiry = $ppws_product_categories_options['ppws_product_categories_password_expiry_day'];
+    do {
+        if (isset($ppws_page_options['ppws_page_enable_password_field_checkbox']) == 'on' || isset($ppws_product_categories_options['ppws_product_categories_enable_password_field_checkbox']) == 'on') {
+            if(is_page() || is_shop() ) {
+                if(isset($ppws_page_options['ppws_page_enable_password_field_checkbox'])) {
+                    if($ppws_page_options['ppws_page_enable_password_field_checkbox'] == 'on'){
+                        $ppws_main_password = $ppws_page_options['ppws_page_set_password_field_textbox'];
+                        $ppws_set_password_expiry = $ppws_page_options['ppws_page_set_password_expiry_field_textbox'];
                         $ppws_expiry = (!empty($ppws_set_password_expiry)) ? ($ppws_set_password_expiry * 60 * 60 * 24) : (10 * 365 * 24 * 60 * 60);
                         if (ppws_decrypted_password($ppws_main_password) == $ppws_current_pass) {
-                            setcookie( 'ppws_categories_cookie', $ppws_main_password, time() + ($ppws_expiry), COOKIEPATH, COOKIE_DOMAIN, $secure );
-                            ppws_whole_site_disable_password_end();    
+                            setcookie( 'ppws_page_cookie', $ppws_main_password, time() + ($ppws_expiry), COOKIEPATH, COOKIE_DOMAIN, $secure );
+                            ppws_whole_site_disable_password_end();
+                            break;
                         } else {
                             $pwd_err = 'password not match';
+                            break;
                         }
                     }
-            
+                }
+            } else {
+                if(is_category() || is_archive() || is_single() ){
+                    if (isset($ppws_product_categories_options['ppws_product_categories_enable_password_field_checkbox'])) {
+                        if($ppws_product_categories_options['ppws_product_categories_enable_password_field_checkbox'] == 'on'){
+                            $ppws_main_password = $ppws_product_categories_options['ppws_product_categories_password'];
+                            $ppws_set_password_expiry = $ppws_product_categories_options['ppws_product_categories_password_expiry_day'];
+                            $ppws_expiry = (!empty($ppws_set_password_expiry)) ? ($ppws_set_password_expiry * 60 * 60 * 24) : (10 * 365 * 24 * 60 * 60);
+                            if (ppws_decrypted_password($ppws_main_password) == $ppws_current_pass) {
+                                setcookie( 'ppws_categories_cookie', $ppws_main_password, time() + ($ppws_expiry), COOKIEPATH, COOKIE_DOMAIN, $secure );
+                                ppws_whole_site_disable_password_end();
+                                break;
+                            } else {
+                                $pwd_err = 'password not match';
+                                break;
+                            }
+                        }
+                
+                    }
                 }
             }
+    
         }
 
-    }
+        if (isset($ppws_whole_site_options['ppws_enable_password_field_checkbox']) == 'on') {
+            $ppws_main_password = $ppws_whole_site_options['ppws_set_password_field_textbox'];
+            $ppws_set_password_expiry = $ppws_whole_site_options['ppws_set_password_expiry_field_textbox'];
+            $ppws_expiry = (!empty($ppws_set_password_expiry)) ? ($ppws_set_password_expiry * 60 * 60 * 24) : (10 * 365 * 24 * 60 * 60);
+            if (ppws_decrypted_password($ppws_main_password) == $ppws_current_pass) {
+    
+                setcookie( 'ppws_cookie', $ppws_main_password, time() + ($ppws_expiry), COOKIEPATH, COOKIE_DOMAIN, $secure );
+                ppws_whole_site_disable_password_end();
+                break;
+            } else {
+                $pwd_err =  'Password not match.';
+                break;
+            }
+    
+        }
+    } while (0);
+    
+    // if (isset($ppws_whole_site_options['ppws_enable_password_field_checkbox']) == 'on') {
+
+    //     $ppws_main_password = $ppws_whole_site_options['ppws_set_password_field_textbox'];
+    //     $ppws_set_password_expiry = $ppws_whole_site_options['ppws_set_password_expiry_field_textbox'];
+    //     $ppws_expiry = (!empty($ppws_set_password_expiry)) ? ($ppws_set_password_expiry * 60 * 60 * 24) : (10 * 365 * 24 * 60 * 60);
+    //     if (ppws_decrypted_password($ppws_main_password) == $ppws_current_pass) {
+
+    //         setcookie( 'ppws_cookie', $ppws_main_password, time() + ($ppws_expiry), COOKIEPATH, COOKIE_DOMAIN, $secure );
+    //         ppws_whole_site_disable_password_end();
+    
+    //     } else {
+    //         $pwd_err =  'Password not match.';
+    //     }
+
+    // } elseif (isset($ppws_page_options['ppws_page_enable_password_field_checkbox']) == 'on' || isset($ppws_product_categories_options['ppws_product_categories_enable_password_field_checkbox']) == 'on') {
+        
+    //     if(is_page() || is_shop() ){
+    //         if(isset($ppws_page_options['ppws_page_enable_password_field_checkbox'])) {
+    //             if($ppws_page_options['ppws_page_enable_password_field_checkbox'] == 'on'){
+    //                 $ppws_main_password = $ppws_page_options['ppws_page_set_password_field_textbox'];
+    //                 $ppws_set_password_expiry = $ppws_page_options['ppws_page_set_password_expiry_field_textbox'];
+    //                 $ppws_expiry = (!empty($ppws_set_password_expiry)) ? ($ppws_set_password_expiry * 60 * 60 * 24) : (10 * 365 * 24 * 60 * 60);
+    //                 if (ppws_decrypted_password($ppws_main_password) == $ppws_current_pass) {
+    //                     setcookie( 'ppws_page_cookie', $ppws_main_password, time() + ($ppws_expiry), COOKIEPATH, COOKIE_DOMAIN, $secure );
+    //                     ppws_whole_site_disable_password_end();    
+    //                 } else {
+    //                     $pwd_err = 'password not match';
+    //                 }
+    //             }
+    //         } 
+    //     } else {
+    //         if(is_category() || is_archive() || is_single() ){
+    //             if (isset($ppws_product_categories_options['ppws_product_categories_enable_password_field_checkbox'])) {
+    //                 if($ppws_product_categories_options['ppws_product_categories_enable_password_field_checkbox'] == 'on'){
+    //                     $ppws_main_password = $ppws_product_categories_options['ppws_product_categories_password'];
+    //                     $ppws_set_password_expiry = $ppws_product_categories_options['ppws_product_categories_password_expiry_day'];
+    //                     $ppws_expiry = (!empty($ppws_set_password_expiry)) ? ($ppws_set_password_expiry * 60 * 60 * 24) : (10 * 365 * 24 * 60 * 60);
+    //                     if (ppws_decrypted_password($ppws_main_password) == $ppws_current_pass) {
+    //                         setcookie( 'ppws_categories_cookie', $ppws_main_password, time() + ($ppws_expiry), COOKIEPATH, COOKIE_DOMAIN, $secure );
+    //                         ppws_whole_site_disable_password_end();    
+    //                     } else {
+    //                         $pwd_err = 'password not match';
+    //                     }
+    //                 }
+            
+    //             }
+    //         }
+    //     }
+
+    // }
 } ?>
 <!DOCTYPE html>
 <html lang="en">

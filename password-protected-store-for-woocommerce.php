@@ -1,10 +1,10 @@
 <?php
 /*
 Plugin Name: Password Protected Store for WooCommerce
-Description: Password Protected Store for WooCommerce is an excellent plugin to set Password Protected Store for WooCommerce. It allows you to set password in yore store. Password can be set on whole site, on category, on pages, and on user role.
+Description: Password Protected Store for WooCommerce is an excellent plugin to set Password Protected Store for WooCommerce. It allows you to set password in your store. Password can be set on whole site, on category, on pages, and on user role.
 Author: Geek Code Lab
-Version: 1.7
-WC tested up to: 8.3.1
+Version: 1.8
+WC tested up to: 8.4.0
 Author URI: https://geekcodelab.com/
 Text Domain : password-protected-store-for-woocommerce
 */
@@ -18,12 +18,16 @@ if (!defined("WPPS_PLUGIN_URL"))
     define("WPPS_PLUGIN_URL", plugins_url() . '/' . basename(dirname(__FILE__)));
 
 
-define("PPWS_BUILD", '1.7');
+define("PPWS_BUILD", '1.8');
 
 /* Plugin active/deactive hook */
 register_activation_hook(__FILE__, 'ppws_plugin_active_woocommerce_password_protected_store');
 function ppws_plugin_active_woocommerce_password_protected_store()
 {
+    /** Deactivate Pro Plugin if active */
+    if (is_plugin_active( 'password-protected-woo-store-pro/password-protected-store-for-woocommerce-pro.php' ) ) {
+		deactivate_plugins('password-protected-woo-store-pro/password-protected-store-for-woocommerce-pro.php');
+    }
 
     /** General Setting Start */
     $general_pwd        = "";
@@ -58,10 +62,12 @@ function ppws_plugin_active_woocommerce_password_protected_store()
     $product_cat_pwd        = "";
     $product_cat_expiry_day = "";
     $product_cat_option     = array();
+    $product_cat_protect_archive = "on";
     $product_cat_option_settings        = get_option('ppws_product_categories_settings');
 
     if(!isset($product_cat_option_settings['ppws_product_categories_password']))                $product_cat_option['ppws_product_categories_password']                 = $product_cat_pwd;
     if(!isset($product_cat_option_settings['ppws_product_categories_password_expiry_day']))     $product_cat_option['ppws_product_categories_password_expiry_day']      = $product_cat_expiry_day;
+    if(!isset($product_cat_option_settings['ppws_protect_archive_checkbox_field_checkbox']))    $product_cat_option['ppws_protect_archive_checkbox_field_checkbox']     = $product_cat_protect_archive;
 
     if(isset($product_cat_option) && !empty($product_cat_option)){
         if(count($product_cat_option) > 0)	update_option('ppws_product_categories_settings', $product_cat_option);
@@ -209,21 +215,26 @@ add_action( 'plugins_loaded', 'ppws_woocommerce_constructor' );
 require_once(WPPS_PLUGIN_DIR_PATH . 'admin/options.php');
 require_once(WPPS_PLUGIN_DIR_PATH . 'admin/functions.php');
 require_once(WPPS_PLUGIN_DIR_PATH . 'front/class-ppws-public.php');
- 
-/* Add admin style and script file only to admin side */
-add_action('admin_print_styles', 'ppws_admin_style');
-function ppws_admin_style() {
-    if (is_admin()) {
-        $js = WPPS_PLUGIN_URL . '/assets/js/admin-script.js';
-        wp_enqueue_style('ppws_admin_style', WPPS_PLUGIN_URL . '/assets/css/admin-style.css',PPWS_BUILD);
-        wp_enqueue_style('wp-color-picker');
 
+add_action( 'admin_enqueue_scripts', 'ppws_add_scripts_enqueue_script');
+function ppws_add_scripts_enqueue_script( $hook ) {
+    wp_enqueue_style('ppws-select2-css', WPPS_PLUGIN_URL . '/assets/css/select2.min.css', array(), PPWS_BUILD );
+    wp_enqueue_style('ppws-admin-style', WPPS_PLUGIN_URL . '/assets/css/admin-style.css', PPWS_BUILD );
+
+    wp_enqueue_script('jquery');
+
+    if($hook == 'woocommerce_page_ppws-option-page') {
+        wp_enqueue_style('wp-color-picker');
         wp_enqueue_script('wp-color-picker');
-        wp_enqueue_script('jquery');
+        
         wp_enqueue_editor();
         wp_enqueue_media();
-        wp_enqueue_script('ppws_admin_js', $js,  array('jquery','media-upload'), PPWS_BUILD);
     }
+
+    wp_enqueue_script( 'ppws-select2-js', WPPS_PLUGIN_URL . '/assets/js/select2.min.js', array( 'jquery' ), PPWS_BUILD, true );
+    $js = WPPS_PLUGIN_URL . '/assets/js/admin-script.js';
+    wp_enqueue_script('ppws-admin-js', $js,  array('jquery','media-upload'), PPWS_BUILD);
+    wp_localize_script('ppws-admin-js', 'ppwsObj', [ 'ajaxurl' => admin_url('admin-ajax.php') ] );
 }
 
 /* Front side css file */
@@ -241,6 +252,9 @@ function ppws_plugin_add_settings_link($links)
         array_unshift($links, $settings_link);
     }
 
+    $pro_link = '<a href="https://geekcodelab.com/wordpress-plugins/password-protected-store-for-woocommerce-pro/"  target="_blank" style="color:#46b450;font-weight: 600;">' . __( 'Premium Upgrade', 'password-protected-store-for-woocommerce' ) . '</a>'; 
+	array_unshift( $links, $pro_link );
+    
     return $links;
 }
 
@@ -278,32 +292,70 @@ function ppws_enable_password_start() {
     $ppws_page_options = get_option('ppws_page_settings');
     $ppws_product_categories_options = get_option('ppws_product_categories_settings');
         
-    if(is_protected_whole_site()) {
-        $ppws_cookie = ppws_get_cookie('ppws_cookie');
-        $ppws_main_password = $ppws_whole_site_options['ppws_set_password_field_textbox'];
-        if(ppws_decrypted_password($ppws_cookie) != ppws_decrypted_password($ppws_main_password)) {
-            include_once(WPPS_PLUGIN_DIR_PATH . 'front/class-ppws-protected-form.php');
-            die;
+
+    do {
+        if (is_protected_page() || is_protected_product_categories()) {
+            if(is_protected_page()) {
+                $ppws_page_cookie = (ppws_get_cookie('ppws_page_cookie') != '') ? ppws_get_cookie('ppws_page_cookie') : 'ddd';
+                $ppws_page_main_password = $ppws_page_options['ppws_page_set_password_field_textbox'];
+                if(ppws_decrypted_password($ppws_page_cookie) != ppws_decrypted_password($ppws_page_main_password)) {
+                    include_once(WPPS_PLUGIN_DIR_PATH . 'front/class-ppws-protected-form.php');
+                    die;
+                }else{
+                    break;
+                }
+            }   
+            
+            if(is_protected_product_categories()) {
+                $ppws_categories_cookie = ppws_get_cookie('ppws_categories_cookie');
+                $ppws_categories_main_password = $ppws_product_categories_options['ppws_product_categories_password'];
+                if(ppws_decrypted_password($ppws_categories_cookie) != ppws_decrypted_password($ppws_categories_main_password)) {
+                    include_once(WPPS_PLUGIN_DIR_PATH . 'front/class-ppws-protected-form.php');
+                    die;
+                }else{
+                    break;
+                }
+            }
         }
-    }else if (is_protected_page() || is_protected_product_categories()) {
-        if(is_protected_page()) {
-            $ppws_page_cookie = (ppws_get_cookie('ppws_page_cookie') != '') ? ppws_get_cookie('ppws_page_cookie') : 'ddd';
-            $ppws_page_main_password = $ppws_page_options['ppws_page_set_password_field_textbox'];
-            if(ppws_decrypted_password($ppws_page_cookie) != ppws_decrypted_password($ppws_page_main_password)) {
+
+        if(is_protected_whole_site()) {
+            $ppws_cookie = ppws_get_cookie('ppws_cookie');
+            $ppws_main_password = $ppws_whole_site_options['ppws_set_password_field_textbox'];
+            if(ppws_decrypted_password($ppws_cookie) != ppws_decrypted_password($ppws_main_password)) {
                 include_once(WPPS_PLUGIN_DIR_PATH . 'front/class-ppws-protected-form.php');
                 die;
+            }else{
+                break;
             }
-        }   
+        }
+    } while (0);
+
+    // if(is_protected_whole_site()) {
+    //     $ppws_cookie = ppws_get_cookie('ppws_cookie');
+    //     $ppws_main_password = $ppws_whole_site_options['ppws_set_password_field_textbox'];
+    //     if(ppws_decrypted_password($ppws_cookie) != ppws_decrypted_password($ppws_main_password)) {
+    //         include_once(WPPS_PLUGIN_DIR_PATH . 'front/class-ppws-protected-form.php');
+    //         die;
+    //     }
+    // }else if (is_protected_page() || is_protected_product_categories()) {
+    //     if(is_protected_page()) {
+    //         $ppws_page_cookie = (ppws_get_cookie('ppws_page_cookie') != '') ? ppws_get_cookie('ppws_page_cookie') : 'ddd';
+    //         $ppws_page_main_password = $ppws_page_options['ppws_page_set_password_field_textbox'];
+    //         if(ppws_decrypted_password($ppws_page_cookie) != ppws_decrypted_password($ppws_page_main_password)) {
+    //             include_once(WPPS_PLUGIN_DIR_PATH . 'front/class-ppws-protected-form.php');
+    //             die;
+    //         }
+    //     }   
         
-        if(is_protected_product_categories()) {
-            $ppws_categories_cookie = ppws_get_cookie('ppws_categories_cookie');
-            $ppws_categories_main_password = $ppws_product_categories_options['ppws_product_categories_password'];
-            if(ppws_decrypted_password($ppws_categories_cookie) != ppws_decrypted_password($ppws_categories_main_password)) {
-                include_once(WPPS_PLUGIN_DIR_PATH . 'front/class-ppws-protected-form.php');
-                die;
-            }
-        }
-    }
+    //     if(is_protected_product_categories()) {
+    //         $ppws_categories_cookie = ppws_get_cookie('ppws_categories_cookie');
+    //         $ppws_categories_main_password = $ppws_product_categories_options['ppws_product_categories_password'];
+    //         if(ppws_decrypted_password($ppws_categories_cookie) != ppws_decrypted_password($ppws_categories_main_password)) {
+    //             include_once(WPPS_PLUGIN_DIR_PATH . 'front/class-ppws-protected-form.php');
+    //             die;
+    //         }
+    //     }
+    // }
 }
 /* End Enable Password */
 
@@ -324,66 +376,91 @@ function ppws_whole_site_disable_password_end()
 }
 
 /**
- * Exclude products from a particular category on the shop page
+ * Hide / Exclude products from a particular category on the shop page
  */
-function custom_query_exclude_taxonomy( $q ) {
-    $ppws_product_categories_options = get_option('ppws_product_categories_settings');
+add_action( 'woocommerce_product_query', 'ppsw_custom_query_exclude_taxonomy' );
 
-    $tax_query = (array) $q->get( 'tax_query' );
+function ppsw_custom_query_exclude_taxonomy() {
+    if(is_admin())  return;
 
-    $tax_query[] = array(
-           'taxonomy' => 'product_cat',
-           'field' => 'id',
-           'terms' => explode( ',', $ppws_product_categories_options['ppws_product_categories_all_categories_field_checkbox'] ), // Don't display products in the clothing category on the shop page.
-           'operator' => 'NOT IN'
-    );
+    ppws_nocache_headers();
 
-    $q->set( 'tax_query', $tax_query );
-}
+    $hide_protected_cat_products = false;
 
-add_action('init', 'ppws_on_init');
+    $ppws_product_categories_options = get_option('ppws_product_categories_settings');    
 
-/**
- * Hide category products from wc query/loop/shop
- */
-function ppws_on_init() {
+    if(isset($ppws_product_categories_options) && !empty($ppws_product_categories_options)) {
 
-    $ppws_product_categories_options = get_option('ppws_product_categories_settings');
+        $dfa_product_categories_protect_enable = (isset($ppws_product_categories_options["ppws_product_categories_enable_password_field_checkbox_for_admin"]) && $ppws_product_categories_options["ppws_product_categories_enable_password_field_checkbox_for_admin"] == "on") ? true : false;
 
-    if(isset($ppws_product_categories_options['ppws_product_categories_enable_password_field_checkbox']) && $ppws_product_categories_options['ppws_product_categories_enable_password_field_checkbox'] === 'on'){
-        if(isset($ppws_product_categories_options['ppws_hide_products_checkbox_field_checkbox']) && $ppws_product_categories_options['ppws_hide_products_checkbox_field_checkbox'] === 'on'){
-                // get categories_setting cookie
-                $ppws_categories_cookie = ppws_get_cookie('ppws_categories_cookie');
-                $ppws_categories_main_password = $ppws_product_categories_options['ppws_product_categories_password'];
-                // check Disable For Administrator
-                $ppws_password_status_for_admin = isset($ppws_product_categories_options['ppws_product_categories_enable_password_field_checkbox_for_admin']) ? $ppws_product_categories_options['ppws_product_categories_enable_password_field_checkbox_for_admin'] : 'off';
+        $hide_general_product_from_loop = (isset($ppws_product_categories_options['ppws_hide_products_checkbox_field_checkbox']) && !empty($ppws_product_categories_options['ppws_hide_products_checkbox_field_checkbox'])) ? $ppws_product_categories_options['ppws_hide_products_checkbox_field_checkbox']: '';
 
-                if(current_user_can( 'administrator' ) && $ppws_password_status_for_admin != 'on' && ppws_decrypted_password($ppws_categories_cookie) != ppws_decrypted_password($ppws_categories_main_password)){
-                    add_action( 'woocommerce_product_query', 'custom_query_exclude_taxonomy' );  
-                } else if(isset($ppws_product_categories_options['enable_user_role']) && !empty($ppws_product_categories_options['enable_user_role'])){
-                    if($ppws_product_categories_options['ppws_product_categories_select_user_role_field_radio'] === "non-logged-in-user" 
-                            && !is_user_logged_in() && ppws_decrypted_password($ppws_categories_cookie) != ppws_decrypted_password($ppws_categories_main_password)){
-                                add_action( 'woocommerce_product_query', 'custom_query_exclude_taxonomy' );  
-                            }
+        if($hide_general_product_from_loop == 'on') {
+            $enable_categories_password = (isset($ppws_product_categories_options['ppws_product_categories_enable_password_field_checkbox']) && !empty($ppws_product_categories_options['ppws_product_categories_enable_password_field_checkbox'])) ? $ppws_product_categories_options['ppws_product_categories_enable_password_field_checkbox']: '';
+            if($enable_categories_password == 'on') {
 
-                            if ($ppws_product_categories_options['ppws_product_categories_select_user_role_field_radio'] === "logged-in-user" && is_user_logged_in() && isset($ppws_product_categories_options['ppws_product_categories_logged_in_user_field_checkbox'])) {
-                                $current_user = wp_get_current_user();
-                                $current_user_role = $current_user->roles;
-                                $final = ucfirst(str_replace("_", " ", array_shift($current_user_role)));
+                if (isset($ppws_product_categories_options['enable_user_role']) && !empty($ppws_product_categories_options['enable_user_role'])) {
+                    if (isset($ppws_product_categories_options['ppws_product_categories_select_user_role_field_radio']) && "non-logged-in-user" === $ppws_product_categories_options['ppws_product_categories_select_user_role_field_radio'] 
+                    && !is_user_logged_in()) {
+                        $hide_protected_cat_products = true;
+                    } elseif (isset($ppws_product_categories_options['ppws_product_categories_select_user_role_field_radio']) && "logged-in-user" === $ppws_product_categories_options['ppws_product_categories_select_user_role_field_radio'] && is_user_logged_in()) {
 
-                                if(isset($ppws_product_categories_options['ppws_product_categories_logged_in_user_field_checkbox']) && !empty($ppws_product_categories_options['ppws_product_categories_logged_in_user_field_checkbox'])){
-                                    
-                                    $selected_user = explode(",", $ppws_product_categories_options['ppws_product_categories_logged_in_user_field_checkbox']);
-                                    if (in_array(ucfirst($final), $selected_user) && ppws_decrypted_password($ppws_categories_cookie) != ppws_decrypted_password($ppws_categories_main_password)) {
-                                        add_action( 'woocommerce_product_query', 'custom_query_exclude_taxonomy' );  
-                                    }
+                        if (isset($ppws_product_categories_options['ppws_product_categories_logged_in_user_field_checkbox'])) {
+                            $current_user = wp_get_current_user();
+                            $current_user_role = $current_user->roles;
+                            $final = ucfirst(str_replace("_", " ", array_shift($current_user_role)));
+
+                            if (isset($ppws_product_categories_options['ppws_product_categories_logged_in_user_field_checkbox']) && !empty($ppws_product_categories_options['ppws_product_categories_logged_in_user_field_checkbox'])) {
+                                $selected_user = explode(",", $ppws_product_categories_options['ppws_product_categories_logged_in_user_field_checkbox']);
+                            
+                                if (current_user_can('administrator') && $dfa_product_categories_protect_enable) {
+                                    array_push($selected_user, 'Administrator');
+                                }
+                                if (in_array(ucfirst($final), $selected_user)) {
+                                    $hide_protected_cat_products = true;
                                 }
                             }
-                } else {
-                    if(!current_user_can( 'administrator' ) && ppws_decrypted_password($ppws_categories_cookie) != ppws_decrypted_password($ppws_categories_main_password)){
-                        add_action( 'woocommerce_product_query', 'custom_query_exclude_taxonomy' );  
+                        } else {
+                            if (current_user_can('administrator') && $dfa_product_categories_protect_enable) {
+                                $hide_protected_cat_products = true;
+                            }
+                        }
+
+                    }
+                }else{
+                    if (current_user_can('administrator')) {
+                        if(!$dfa_product_categories_protect_enable) {
+                            $hide_protected_cat_products = true;
+                        }
+                    }else{
+                        $hide_protected_cat_products = true;
                     }
                 }
+
+            }
+        }
+    }
+
+    if($hide_protected_cat_products) {
+        // get categories_setting cookie
+        $ppws_categories_cookie = ppws_get_cookie('ppws_categories_cookie');
+        $ppws_categories_main_password = $ppws_product_categories_options['ppws_product_categories_password'];
+
+        if(ppws_decrypted_password($ppws_categories_cookie) != ppws_decrypted_password($ppws_categories_main_password)) {
+            $protected_categories = (isset($ppws_product_categories_options['ppws_product_categories_all_categories_field_checkbox']) && !empty($ppws_product_categories_options['ppws_product_categories_all_categories_field_checkbox'])) ? $ppws_product_categories_options['ppws_product_categories_all_categories_field_checkbox'] : array();
+            if(isset($protected_categories) && !empty($protected_categories)) {
+                $tax_query = (array) $q->get( 'tax_query' );
+
+                $tax_query[] = array(
+                    'taxonomy' => 'product_cat',
+                    'field' => 'id',
+                    'terms' => explode( ',', $protected_categories ), // Don't display products in the clothing category on the shop page.
+                    'operator' => 'NOT IN',
+                    'include_children' => false
+                );
+
+                $q->set( 'tax_query', $tax_query );
+            }
         }
     }
 }
@@ -396,3 +473,67 @@ add_action( 'before_woocommerce_init', function() {
 		\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', __FILE__, true );
 	}
 } );
+
+/**
+ * Select post types to exclude data
+ */
+add_action('wp_ajax_ppws_search_product_categories','ppws_search_product_categories');
+add_action( 'wp_ajax_nopriv_ppws_search_product_categories', 'ppws_search_product_categories' );
+function ppws_search_product_categories() {
+    $all_categories = $result = [];
+    $search = $_POST['search'];
+
+    $fun_args = array(
+        'taxonomy' => 'product_cat',
+        'search' => $search,
+        'orderby' => 'name',
+        'show_count' => 0,
+        'pad_counts' => 0,
+        'hierarchical' => 1,
+        'hide_empty' => 0
+    );
+    $all_categories = get_categories($fun_args);
+
+    if(isset($all_categories) && !empty($all_categories)) {
+        foreach ($all_categories as $cat) {
+            $category_id = $cat->term_id;
+            $cat_name = $cat->name;
+            $result[] = array(
+                'id' => $category_id,
+                'title' => $cat_name." (#".$category_id.")"
+            );
+        }
+    }
+
+    echo json_encode($result);
+	die;
+}
+
+/**
+ * Select post types to exclude data
+ */
+add_action('wp_ajax_ppws_search_pages','ppws_search_pages');
+add_action( 'wp_ajax_nopriv_ppws_search_pages', 'ppws_search_pages' );
+function ppws_search_pages() {
+    $all_pages = $result = [];
+    $search = $_POST['search'];
+
+    $all_pages = get_posts(array(
+		's'					=> $search,
+		'post_type'			=> 'page',
+		'post_status'		=> 'publish',
+		'posts_per_page'	=> -1
+	));
+
+    if(isset($all_pages) && !empty($all_pages)) {
+        foreach ($all_pages as $post) {
+            $result[] = array(
+				'id' => $post->ID,
+				'title' => $post->post_title." (#".$post->ID.")"
+			);
+        }
+    }
+
+    echo json_encode($result);
+	die;
+}

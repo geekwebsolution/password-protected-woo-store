@@ -5,28 +5,28 @@ Tags: WooCommerce protected categories, woo protect, product protected, woocomme
 Requires PHP: 5.2.4
 Requires at least: 3.0.1
 Tested up to: 6.4.1
-WC tested up to: 8.3.1
-Stable tag: 1.7
+WC tested up to: 8.4.0
+Stable tag: 1.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Password Protected WooCommerce Store is an excellent plugin to set Password Protected Woocommerce Store. It allows you to set password in yore store. Password can be set on whole site, on category, on pages, and on user role.
+Password Protected WooCommerce Store is an excellent plugin to set Password Protected Woocommerce Store. It allows you to set password in your store. Password can be set on entire site, on category, on pages, and on user role.
 
 == Description ==
-Do you want a password protected page or a woocommerce password protected store? So here all you need is our wordpress password protected page plugin. The Password Protected WooCommerce Store lets you create product categories, pages, or your whole website password protected.
+Do you want a password protected page or a woocommerce password protected store? So here all you need is our wordpress password protected page plugin. The Password Protected WooCommerce Store lets you create product categories, pages, or your entire website password protected.
 
-Visitors will be asked to login to view protected pages, product categories, or the whole website. Store administrators can select multiple user roles who need to enter a password to view protected pages. 
+Visitors will be asked to login to view protected pages, product categories, or the entire website. Store administrators can select multiple user roles who need to enter a password to view protected pages. 
 
-Here you can protect your store in 3 different ways like on the whole website, on page level, or on product category. Each way is fully secure and dynamic, admin can select specific pages and product categories and also select user roles who need to enter a password to view any protected page or category.
+Here you can protect your store in 3 different ways like on the entire website, on page level, or on product category. Each way is fully secure and dynamic, admin can select specific pages and product categories and also select user roles who need to enter a password to view any protected page or category.
 
-The Password Protected WooCommerce Store can help you to create your private store or password protected store. Admin can enable password and set preferable different passwords, set different password expiry time, select different user roles that all are different for pages, product categories or whole website to prevent direct preview. Admin can also select specific pages and product categories to be password protected or private.
+The Password Protected WooCommerce Store can help you to create your private store or password protected store. Admin can enable password and set preferable different passwords, set different password expiry time, select different user roles that all are different for pages, product categories or entire website to prevent direct preview. Admin can also select specific pages and product categories to be password protected or private.
 
 Using Password Protected WooCommerce Store admin can fully customize password protected page wordpress like form title, form above/below content, Button color, font size, background, etc.
  
-== KEY FEATURES  ==
-🔹 Enable different passwords for the whole site, pages, and product categories.
-🔹 Set different password expiry time for the whole site, pages, and product categories.
-🔹 User role wise protection for each page, product categories and  whole site.
+** Free Features  **
+🔹 Enable different passwords for the entire site, pages, and product categories.
+🔹 Set different password expiry time for the entire site, pages, and product categories.
+🔹 User role wise protection for each page, product categories and  entire site.
 🔹 Also you can set a password for a specific page, specific product categories and hide product from shop/loop for protected product category.
 🔹 Customizable form title and form above/below content.
 🔹 Change title color, size, and alignment.
@@ -37,6 +37,22 @@ Using Password Protected WooCommerce Store admin can fully customize password pr
 🔹 Customize form background image, color or none with custom opacity and opacity color.
 🔹 For the Administrative user, option are available for disable the password, called "Disable For Administrator."
 🔹 Admin can select all users at once.
+
+** Pro Features  **
+🔹 Add a password to specific categories.
+🔹 Set category passwords for specific user types and user roles.
+🔹 Hide protected category products from product loop.
+🔹 Protect specific category archive page.
+🔹 Add a password to specific products.
+🔹 Set product passwords for specific user types and user roles.
+🔹 Users have the option to access products with different category passwords.
+🔹 Timely <a href="https://geekcodelab.com/contact/" target="_blank">support</a> 24/7
+🔹 Regular updates.
+🔹 Well documented.
+
+== GET PRO PLUGIN ==
+<a href="https://geekcodelab.com/wordpress-plugins/password-protected-store-for-woocommerce-pro/" target="_blank"> Buy Premium Version > </a>
+The free version of our plugin works like a charm, but the premium one is an even more powerful tool to prevent unauthorized access, restrict access to certain user roles, or create a private area for your members or clients.
 
 == Installation ==
 
@@ -54,9 +70,14 @@ After Plugin Active go to Woocommerce-> Password Protected
 6. Front side -1
 7. Front side -2
 8. Front side -3
+9. Get Pro
 
 
 == Changelog ==
+= 1.8 =
+- Fixed bugs.
+- Released pro version.
+
 = 1.7 =
 - Fixed expiry days field defaults to No expiry.
 
