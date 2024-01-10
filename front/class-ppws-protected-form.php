@@ -69,58 +69,12 @@ if (isset($_POST['ppws_submit'])) {
     
         }
     } while (0);
-    
-    // if (isset($ppws_whole_site_options['ppws_enable_password_field_checkbox']) == 'on') {
+}
 
-    //     $ppws_main_password = $ppws_whole_site_options['ppws_set_password_field_textbox'];
-    //     $ppws_set_password_expiry = $ppws_whole_site_options['ppws_set_password_expiry_field_textbox'];
-    //     $ppws_expiry = (!empty($ppws_set_password_expiry)) ? ($ppws_set_password_expiry * 60 * 60 * 24) : (10 * 365 * 24 * 60 * 60);
-    //     if (ppws_decrypted_password($ppws_main_password) == $ppws_current_pass) {
-
-    //         setcookie( 'ppws_cookie', $ppws_main_password, time() + ($ppws_expiry), COOKIEPATH, COOKIE_DOMAIN, $secure );
-    //         ppws_whole_site_disable_password_end();
-    
-    //     } else {
-    //         $pwd_err =  'Password not match.';
-    //     }
-
-    // } elseif (isset($ppws_page_options['ppws_page_enable_password_field_checkbox']) == 'on' || isset($ppws_product_categories_options['ppws_product_categories_enable_password_field_checkbox']) == 'on') {
-        
-    //     if(is_page() || is_shop() ){
-    //         if(isset($ppws_page_options['ppws_page_enable_password_field_checkbox'])) {
-    //             if($ppws_page_options['ppws_page_enable_password_field_checkbox'] == 'on'){
-    //                 $ppws_main_password = $ppws_page_options['ppws_page_set_password_field_textbox'];
-    //                 $ppws_set_password_expiry = $ppws_page_options['ppws_page_set_password_expiry_field_textbox'];
-    //                 $ppws_expiry = (!empty($ppws_set_password_expiry)) ? ($ppws_set_password_expiry * 60 * 60 * 24) : (10 * 365 * 24 * 60 * 60);
-    //                 if (ppws_decrypted_password($ppws_main_password) == $ppws_current_pass) {
-    //                     setcookie( 'ppws_page_cookie', $ppws_main_password, time() + ($ppws_expiry), COOKIEPATH, COOKIE_DOMAIN, $secure );
-    //                     ppws_whole_site_disable_password_end();    
-    //                 } else {
-    //                     $pwd_err = 'password not match';
-    //                 }
-    //             }
-    //         } 
-    //     } else {
-    //         if(is_category() || is_archive() || is_single() ){
-    //             if (isset($ppws_product_categories_options['ppws_product_categories_enable_password_field_checkbox'])) {
-    //                 if($ppws_product_categories_options['ppws_product_categories_enable_password_field_checkbox'] == 'on'){
-    //                     $ppws_main_password = $ppws_product_categories_options['ppws_product_categories_password'];
-    //                     $ppws_set_password_expiry = $ppws_product_categories_options['ppws_product_categories_password_expiry_day'];
-    //                     $ppws_expiry = (!empty($ppws_set_password_expiry)) ? ($ppws_set_password_expiry * 60 * 60 * 24) : (10 * 365 * 24 * 60 * 60);
-    //                     if (ppws_decrypted_password($ppws_main_password) == $ppws_current_pass) {
-    //                         setcookie( 'ppws_categories_cookie', $ppws_main_password, time() + ($ppws_expiry), COOKIEPATH, COOKIE_DOMAIN, $secure );
-    //                         ppws_whole_site_disable_password_end();    
-    //                     } else {
-    //                         $pwd_err = 'password not match';
-    //                     }
-    //                 }
-            
-    //             }
-    //         }
-    //     }
-
-    // }
-} ?>
+$site_title = (get_bloginfo('name')) ? get_bloginfo('name') : '';
+$site_description = (get_bloginfo('description')) ? ' - ' . get_bloginfo('description') : '';
+$meta_title = (!empty($site_title) || !empty($site_description)) ? $site_title . $site_description : '';
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -130,7 +84,7 @@ if (isset($_POST['ppws_submit'])) {
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>
-        <?php _e('Password Protected Store for WooCommerce | Geek Code Lab','password-protected-store-for-woocommerce') ?>
+        <?php _e( (!empty($meta_title)) ? $meta_title : 'Password Protected Store for WooCommerce', 'password-protected-store-for-woocommerce' ); ?>
     </title>
     <?php
         /* Form settings options */
