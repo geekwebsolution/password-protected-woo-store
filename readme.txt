@@ -26,8 +26,9 @@ Using Password Protected WooCommerce Store admin can fully customize password pr
 ** Free Features  **
 🔹 Enable different passwords for the entire site, pages, and product categories.
 🔹 Set different password expiry time for the entire site, pages, and product categories.
-🔹 User role wise protection for each page, product categories and  entire site.
-🔹 Also you can set a password for a specific page, specific product categories and hide product from shop/loop for protected product category.
+🔹 User role wise protection for each page, product categories and entire site.
+🔹 Option to Protect archive page of selected categories.
+🔹 Allows to set a password for a specific page, specific product categories and hide product from shop/loop for protected product category.
 🔹 Customizable form title and form above/below content.
 🔹 Change title color, size, and alignment.
 🔹 Admin can set content color, size, and alignment.
@@ -39,13 +40,13 @@ Using Password Protected WooCommerce Store admin can fully customize password pr
 🔹 Admin can select all users at once.
 
 ** Pro Features  **
-🔹 Add a password to specific categories.
-🔹 Set category passwords for specific user types and user roles.
+🔹 Set a password to specific category.
+🔹 Set category password for specific user types and user roles.
 🔹 Hide protected category products from product loop.
 🔹 Protect specific category archive page.
-🔹 Add a password to specific products.
-🔹 Set product passwords for specific user types and user roles.
-🔹 Users have the option to access products with different category passwords.
+🔹 Set a password to specific product.
+🔹 Set product password for specific user types and user roles.
+🔹 Users have the option to access products with different category password.
 🔹 Timely <a href="https://geekcodelab.com/contact/" target="_blank">support</a> 24/7
 🔹 Regular updates.
 🔹 Well documented.
