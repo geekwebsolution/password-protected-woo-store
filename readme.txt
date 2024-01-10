@@ -63,9 +63,9 @@ After Plugin Active go to Woocommerce-> Password Protected
 
 == Screenshots ==
 
-1. General Setting
-2. Product Categories
-3. Page Setting
+1. General
+2. Page
+3. Product Categories
 4. Form Content
 5. Form design
 6. Front side -1
