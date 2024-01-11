@@ -329,33 +329,6 @@ function ppws_enable_password_start() {
             }
         }
     } while (0);
-
-    // if(is_protected_whole_site()) {
-    //     $ppws_cookie = ppws_get_cookie('ppws_cookie');
-    //     $ppws_main_password = $ppws_whole_site_options['ppws_set_password_field_textbox'];
-    //     if(ppws_decrypted_password($ppws_cookie) != ppws_decrypted_password($ppws_main_password)) {
-    //         include_once(WPPS_PLUGIN_DIR_PATH . 'front/class-ppws-protected-form.php');
-    //         die;
-    //     }
-    // }else if (is_protected_page() || is_protected_product_categories()) {
-    //     if(is_protected_page()) {
-    //         $ppws_page_cookie = (ppws_get_cookie('ppws_page_cookie') != '') ? ppws_get_cookie('ppws_page_cookie') : 'ddd';
-    //         $ppws_page_main_password = $ppws_page_options['ppws_page_set_password_field_textbox'];
-    //         if(ppws_decrypted_password($ppws_page_cookie) != ppws_decrypted_password($ppws_page_main_password)) {
-    //             include_once(WPPS_PLUGIN_DIR_PATH . 'front/class-ppws-protected-form.php');
-    //             die;
-    //         }
-    //     }   
-        
-    //     if(is_protected_product_categories()) {
-    //         $ppws_categories_cookie = ppws_get_cookie('ppws_categories_cookie');
-    //         $ppws_categories_main_password = $ppws_product_categories_options['ppws_product_categories_password'];
-    //         if(ppws_decrypted_password($ppws_categories_cookie) != ppws_decrypted_password($ppws_categories_main_password)) {
-    //             include_once(WPPS_PLUGIN_DIR_PATH . 'front/class-ppws-protected-form.php');
-    //             die;
-    //         }
-    //     }
-    // }
 }
 /* End Enable Password */
 
