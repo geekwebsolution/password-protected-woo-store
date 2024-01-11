@@ -117,7 +117,7 @@ if (!class_exists('ppws_whole_site_settings')) {
                     'type' => 'number',
                     'label_for' => 'ppws_set_password_expiry_field_textbox',
                     'placeholder' => 'Enter Password Expiry Day',
-                    'description' => 'Set the password expiry days for the entire site.**Default: No Expiry.**',
+                    'description' => 'Set the password expiry days for the entire site.**Default: 400 days.**',
                     'class' => "$ppws_whole_site_enable_password_class ppws-whole-site-password-section"
                 ]
             );
@@ -294,10 +294,14 @@ if (!class_exists('ppws_whole_site_settings')) {
 					$new_input['ppws_select_user_role_field_radio'] = sanitize_text_field($input['ppws_select_user_role_field_radio']);
 				}
 
-				if (isset($input['ppws_logged_in_user_field_checkbox'])) {
+				if (isset($input['ppws_logged_in_user_field_checkbox']) && !empty($input['ppws_logged_in_user_field_checkbox'])) {
 					$user_role_list = implode(",", $input['ppws_logged_in_user_field_checkbox']);
 					$new_input['ppws_logged_in_user_field_checkbox'] = sanitize_text_field($user_role_list);
-				}
+				}else{
+                    if(isset($new_input['ppws_select_user_role_field_radio']) && $new_input['ppws_select_user_role_field_radio'] == 'logged-in-user') {
+                        $new_input['ppws_select_user_role_field_radio'] = 'non-logged-in-user';
+                    }
+                }
             }
 			
 			if (isset($input['ppws_non_logged_in_user_field_checkbox'])) {

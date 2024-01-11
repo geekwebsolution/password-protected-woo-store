@@ -15,8 +15,9 @@ if (isset($_POST['ppws_submit'])) {
     do {
         if (isset($ppws_page_options['ppws_page_enable_password_field_checkbox']) == 'on' || isset($ppws_product_categories_options['ppws_product_categories_enable_password_field_checkbox']) == 'on') {
             if(is_page() || is_shop() ) {
-                if(isset($ppws_page_options['ppws_page_enable_password_field_checkbox'])) {
-                    if($ppws_page_options['ppws_page_enable_password_field_checkbox'] == 'on'){
+                if(isset($ppws_page_options['ppws_page_enable_password_field_checkbox']) && $ppws_page_options['ppws_page_enable_password_field_checkbox'] == 'on') {
+                    $selected_pages = (isset($ppws_page_options['ppws_page_list_of_page_field_checkbox']) && !empty($ppws_page_options['ppws_page_list_of_page_field_checkbox'])) ? explode(",", $ppws_page_options['ppws_page_list_of_page_field_checkbox']) : array();
+                    if(isset($selected_pages) && !empty($selected_pages)) {
                         $ppws_main_password = $ppws_page_options['ppws_page_set_password_field_textbox'];
                         $ppws_set_password_expiry = $ppws_page_options['ppws_page_set_password_expiry_field_textbox'];
                         $ppws_expiry = (!empty($ppws_set_password_expiry)) ? ($ppws_set_password_expiry * 60 * 60 * 24) : (10 * 365 * 24 * 60 * 60);
@@ -32,8 +33,9 @@ if (isset($_POST['ppws_submit'])) {
                 }
             } else {
                 if(is_category() || is_archive() || is_single() ){
-                    if (isset($ppws_product_categories_options['ppws_product_categories_enable_password_field_checkbox'])) {
-                        if($ppws_product_categories_options['ppws_product_categories_enable_password_field_checkbox'] == 'on'){
+                    if (isset($ppws_product_categories_options['ppws_product_categories_enable_password_field_checkbox']) && $ppws_product_categories_options['ppws_product_categories_enable_password_field_checkbox'] == 'on') {
+                        $all_selected_category = (isset($ppws_product_categories_options['ppws_product_categories_all_categories_field_checkbox']) && !empty($ppws_product_categories_options['ppws_product_categories_all_categories_field_checkbox'])) ? explode(",", $ppws_product_categories_options['ppws_product_categories_all_categories_field_checkbox']) : array();
+                        if(isset($all_selected_category) && !empty($all_selected_category)) {
                             $ppws_main_password = $ppws_product_categories_options['ppws_product_categories_password'];
                             $ppws_set_password_expiry = $ppws_product_categories_options['ppws_product_categories_password_expiry_day'];
                             $ppws_expiry = (!empty($ppws_set_password_expiry)) ? ($ppws_set_password_expiry * 60 * 60 * 24) : (10 * 365 * 24 * 60 * 60);

@@ -94,7 +94,7 @@ if (!class_exists('ppws_product_categories_settings')) {
                 array($this, 'ppws_product_categories_password_settings'),
                 'ppws-product-categories-password-settings-section',
                 'ppws_product_categories_password_settings_section',
-                ['type' => 'number', 'label_for' => 'ppws_product_categories_password_expiry_day', 'description' => 'Set expiry days of the password for the category pages. **Default: No Expiry.**', 'placeholder' => 'Set Password Expiry Day', 'class' => "$ppws_product_categories_enable_password_class ppws-product-categories-enable-password-section"]
+                ['type' => 'number', 'label_for' => 'ppws_product_categories_password_expiry_day', 'description' => 'Set expiry days of the password for the category pages. **Default: 400 days.**', 'placeholder' => 'Set Password Expiry Day', 'class' => "$ppws_product_categories_enable_password_class ppws-product-categories-enable-password-section"]
             );
 
             add_settings_field(
@@ -314,14 +314,14 @@ if (!class_exists('ppws_product_categories_settings')) {
 					$new_input['ppws_product_categories_select_user_role_field_radio'] = sanitize_text_field($input['ppws_product_categories_select_user_role_field_radio']);
 				}
 				
-				if (isset($input['ppws_product_categories_logged_in_user_field_checkbox'])) {
+				if (isset($input['ppws_product_categories_logged_in_user_field_checkbox']) && !empty($input['ppws_product_categories_logged_in_user_field_checkbox'])) {
 					$user_role_list = implode(",", $input['ppws_product_categories_logged_in_user_field_checkbox']);
 					$new_input['ppws_product_categories_logged_in_user_field_checkbox'] = sanitize_text_field($user_role_list);
-				}
-            }
-
-            if (isset($input['ppws_product_categories_non_logged_in_user_field_checkbox'])) {
-                $new_input['ppws_product_categories_non_logged_in_user_field_checkbox'] = sanitize_text_field($input['ppws_product_categories_non_logged_in_user_field_checkbox']);
+				}else{
+                    if(isset($new_input['ppws_product_categories_select_user_role_field_radio']) && $new_input['ppws_product_categories_select_user_role_field_radio'] == 'logged-in-user') {
+                        $new_input['ppws_product_categories_select_user_role_field_radio'] = 'non-logged-in-user';
+                    }
+                }
             }
 
             if (isset($input['ppws_product_categories_all_categories_field_checkbox'])) {

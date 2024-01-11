@@ -83,16 +83,14 @@ function is_protected_product_categories() {
         // Check if password protection is enabled for product categories.
         if (isset($ppws_product_categories_options['ppws_product_categories_enable_password_field_checkbox']) && 'on' === $ppws_product_categories_options['ppws_product_categories_enable_password_field_checkbox']) {
 
+            $all_selected_category = (isset($ppws_product_categories_options['ppws_product_categories_all_categories_field_checkbox']) && !empty($ppws_product_categories_options['ppws_product_categories_all_categories_field_checkbox'])) ? explode(",", $ppws_product_categories_options['ppws_product_categories_all_categories_field_checkbox']) : array();
+
             // Check if password protection is enabled for categories.
-            if (isset($ppws_product_categories_options['ppws_product_categories_all_categories_field_checkbox'])) {
-                
+            if (isset($all_selected_category) && !empty($all_selected_category)) {                
 
                 // Get the status of password protection for admin users.
                 $ppws_password_status_for_admin = isset($ppws_product_categories_options['ppws_product_categories_enable_password_field_checkbox_for_admin']) ? $ppws_product_categories_options['ppws_product_categories_enable_password_field_checkbox_for_admin'] : 'off';
 
-
-                $all_selected_category = $ppws_product_categories_options['ppws_product_categories_all_categories_field_checkbox'];
-                $all_selected_category = explode(",", $ppws_product_categories_options['ppws_product_categories_all_categories_field_checkbox']);
                 
                 $flag_single_product = 0;
                 if (is_product()) {
@@ -182,66 +180,69 @@ function is_protected_page() {
     
     // Check if the page options exist and password protection is enabled.
     if (isset($ppws_page_options['ppws_page_enable_password_field_checkbox']) && $ppws_page_options['ppws_page_enable_password_field_checkbox'] === 'on') {
-        
-        // Get the status of password protection for admin users.
-        $ppws_page_status_for_admin = isset($ppws_page_options['ppws_page_enable_password_field_checkbox_for_admin']) ? $ppws_page_options['ppws_page_enable_password_field_checkbox_for_admin'] : 'off';
-        
-        // Get the current page ID.
-        if (is_home() && !in_the_loop()) {
-            $page_id = get_option('page_for_posts');
-        } elseif (is_post_type_archive('product')) {
-            $page_id = get_option('woocommerce_shop_page_id'); 
-        } else { 
-            $page_id = get_the_ID();
-        }
-        
-        // Get the current page name.
-        $page_name = get_the_title();
-        
-        // Get selected protected pages.
-        $selected_pages = isset($ppws_page_options['ppws_page_list_of_page_field_checkbox']) ? explode(",", $ppws_page_options['ppws_page_list_of_page_field_checkbox']) : array();
-        
-        // Check if the current page ID is in the selected protected pages.
-        if (in_array($page_id, $selected_pages)) {
-            if (isset($ppws_page_options['enable_user_role'])) {
-                if (isset($ppws_page_options['ppws_page_select_user_role_field_radio'])) {
-                    // Check if the page is accessible for non-logged-in users.
-                    if ("non-logged-in-user" === $ppws_page_options['ppws_page_select_user_role_field_radio'] && !is_user_logged_in()) {
-                        return true;
-                    } elseif ("logged-in-user" === $ppws_page_options['ppws_page_select_user_role_field_radio'] && is_user_logged_in()) {
-                        // Check if the page is accessible for logged-in users based on their roles.
-                        $current_user = wp_get_current_user();
-                        $current_user_role = $current_user->roles;
-                        $final = ucfirst(str_replace("_", " ", array_shift($current_user_role)));
-    
-                        $selected_user = isset($ppws_page_options['ppws_page_logged_in_user_field_checkbox']) ? explode(",", $ppws_page_options['ppws_page_logged_in_user_field_checkbox']) : array();
-                            
-                        if (current_user_can('administrator') && $ppws_page_status_for_admin != 'on') {
-                            array_push($selected_user, 'Administrator');
-                        }
 
-                        if (in_array(ucfirst($final), $selected_user) || !is_user_logged_in()) {
+        // Get selected protected pages.
+        $selected_pages = (isset($ppws_page_options['ppws_page_list_of_page_field_checkbox']) && !empty($ppws_page_options['ppws_page_list_of_page_field_checkbox'])) ? explode(",", $ppws_page_options['ppws_page_list_of_page_field_checkbox']) : array();
+
+        if(isset($selected_pages) && !empty($selected_pages)) {
+        
+            // Get the status of password protection for admin users.
+            $ppws_page_status_for_admin = isset($ppws_page_options['ppws_page_enable_password_field_checkbox_for_admin']) ? $ppws_page_options['ppws_page_enable_password_field_checkbox_for_admin'] : 'off';
+            
+            // Get the current page ID.
+            if (is_home() && !in_the_loop()) {
+                $page_id = get_option('page_for_posts');
+            } elseif (is_post_type_archive('product')) {
+                $page_id = get_option('woocommerce_shop_page_id'); 
+            } else { 
+                $page_id = get_the_ID();
+            }
+            
+            // Get the current page name.
+            $page_name = get_the_title();
+            
+            // Check if the current page ID is in the selected protected pages.
+            if (in_array($page_id, $selected_pages)) {
+                if (isset($ppws_page_options['enable_user_role'])) {
+                    if (isset($ppws_page_options['ppws_page_select_user_role_field_radio'])) {
+                        // Check if the page is accessible for non-logged-in users.
+                        if ("non-logged-in-user" === $ppws_page_options['ppws_page_select_user_role_field_radio'] && !is_user_logged_in()) {
+                            return true;
+                        } elseif ("logged-in-user" === $ppws_page_options['ppws_page_select_user_role_field_radio'] && is_user_logged_in()) {
+                            // Check if the page is accessible for logged-in users based on their roles.
+                            $current_user = wp_get_current_user();
+                            $current_user_role = $current_user->roles;
+                            $final = ucfirst(str_replace("_", " ", array_shift($current_user_role)));
+        
+                            $selected_user = isset($ppws_page_options['ppws_page_logged_in_user_field_checkbox']) ? explode(",", $ppws_page_options['ppws_page_logged_in_user_field_checkbox']) : array();
+                                
+                            if (current_user_can('administrator') && $ppws_page_status_for_admin != 'on') {
+                                array_push($selected_user, 'Administrator');
+                            }
+
+                            if (in_array(ucfirst($final), $selected_user) || !is_user_logged_in()) {
+                                return true;
+                            }
+                        }
+                    } else {
+                        // Check if the current user is an administrator and admin bypass is disabled.
+                        if (current_user_can('administrator') && $ppws_page_status_for_admin != 'on') {
                             return true;
                         }
                     }
+
                 } else {
                     // Check if the current user is an administrator and admin bypass is disabled.
-                    if (current_user_can('administrator') && $ppws_page_status_for_admin != 'on') {
+                    if (current_user_can('administrator')) {
+                        if ('on' !== $ppws_page_status_for_admin) {
+                            return true;
+                        }
+                    } else {
                         return true;
-                    }
+                    } 
                 }
 
-            } else {
-                // Check if the current user is an administrator and admin bypass is disabled.
-                if (current_user_can('administrator')) {
-                    if ('on' !== $ppws_page_status_for_admin) {
-                        return true;
-                    }
-                } else {
-                    return true;
-                } 
             }
-
         }
     }
 

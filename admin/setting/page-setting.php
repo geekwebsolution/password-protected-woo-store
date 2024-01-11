@@ -101,7 +101,7 @@ if (!class_exists('ppws_page_settings')) {
                 array($this, 'ppws_page_password_settings'),
                 'ppws-page-password-settings-section',
                 'ppws_page_password_settings_section',
-                ['type' => 'number', 'label_for' => 'ppws_page_set_password_expiry_field_textbox', 'description' => 'Set expiry days for the password of pages. **Default: No Expiry.**', 'placeholder' => 'Set Password Expiry Day', 'class' => "$ppws_page_enable_password_class ppws-page-enable-password-section"]
+                ['type' => 'number', 'label_for' => 'ppws_page_set_password_expiry_field_textbox', 'description' => 'Set expiry days for the password of pages. **Default: 400 days.**', 'placeholder' => 'Set Password Expiry Day', 'class' => "$ppws_page_enable_password_class ppws-page-enable-password-section"]
             );
 
             add_settings_field(
@@ -161,9 +161,6 @@ if (!class_exists('ppws_page_settings')) {
             $value = isset($ppws_page_options[$args['label_for']]) ? $ppws_page_options[$args['label_for']] : '';
 
             if ($args['type'] == 'checkbox') {
-                /*echo "<pre>";
-                echo $ppws_page_options[$args['label_for']];
-                echo "</pre>";*/
             ?>
                 <label class="ppws-switch">
                     <input type="checkbox" 
@@ -329,17 +326,16 @@ if (!class_exists('ppws_page_settings')) {
                     $new_input['ppws_page_select_user_role_field_radio'] = sanitize_text_field($input['ppws_page_select_user_role_field_radio']);
                 }
 				
-				if (isset($input['ppws_page_logged_in_user_field_checkbox'])) {
+				if (isset($input['ppws_page_logged_in_user_field_checkbox']) && !empty($input['ppws_page_logged_in_user_field_checkbox'])) {
 
 					$user_role_list = implode(",", $input['ppws_page_logged_in_user_field_checkbox']);
 					$new_input['ppws_page_logged_in_user_field_checkbox'] = sanitize_text_field($user_role_list);
-				}
+				}else{
+                    if(isset($new_input['ppws_page_select_user_role_field_radio']) && $new_input['ppws_page_select_user_role_field_radio'] == 'logged-in-user') {
+                        $new_input['ppws_page_select_user_role_field_radio'] = 'non-logged-in-user';
+                    }
+                }
             }
-
-			if (isset($input['ppws_page_non_logged_in_user_field_checkbox'])) {
-                $new_input['ppws_page_non_logged_in_user_field_checkbox'] = sanitize_text_field($input['ppws_page_non_logged_in_user_field_checkbox']);
-            }
-
 
             if (isset($input['ppws_page_list_of_page_field_checkbox'])) {
                 $page_list = implode(",", $input['ppws_page_list_of_page_field_checkbox']);
