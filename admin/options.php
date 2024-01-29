@@ -4,6 +4,7 @@ include(WPPS_PLUGIN_DIR_PATH . 'admin/setting/page-setting.php');
 include(WPPS_PLUGIN_DIR_PATH . 'admin/setting/product-categories-setting.php');
 include(WPPS_PLUGIN_DIR_PATH . 'admin/setting/form-content.php');
 include(WPPS_PLUGIN_DIR_PATH . 'admin/setting/form-desgin.php');
+include(WPPS_PLUGIN_DIR_PATH . 'admin/setting/advanced.php');
 
 $default_tab = null;
 $tab = "";
@@ -34,6 +35,11 @@ if (!class_exists('ppws_password_protected_store_settings')) {
     if ($tab == 'form-desgin') {
         $ppws_form_style_class = new ppws_form_style_settings();
         add_action('admin_init', array($ppws_form_style_class, 'ppws_form_style_settings_register_settings_init'));
+    }
+
+    if ($tab == 'advanced') {
+        $ppws_advanced_class = new ppws_advanced_settings();
+        add_action('admin_init', array($ppws_advanced_class, 'ppws_advanced_settings_init'));
     }
 
     class ppws_password_protected_store_settings 
@@ -76,6 +82,9 @@ if (!class_exists('ppws_password_protected_store_settings')) {
                                 <li>
                                     <a href="?page=ppws-option-page&tab=form-desgin" class="nav-tab <?php if ($tab === 'form-desgin') : ?>nav-tab-active<?php endif; ?>"><?php _e('Form Design', 'password-protected-store-for-woocommerce'); ?></a>
                                 </li>
+                                <li>
+                                    <a href="?page=ppws-option-page&tab=advanced" class="nav-tab <?php if ($tab === 'advanced') : ?>nav-tab-active<?php endif; ?>"><?php _e('Advanced', 'password-protected-store-for-woocommerce'); ?></a>
+                                </li>
                                 <li class="ppws-pro-tab">
                                     <a href="javascript:void(0);" class="nav-tab"><?php _e('Single Categories', 'password-protected-store-for-woocommerce'); ?><div class="ppws-pro-tag-wp"><span class="ppws-pro-tag">pro</span></div></a>
                                 </li>
@@ -112,6 +121,11 @@ if (!class_exists('ppws_password_protected_store_settings')) {
                             if ($tab == 'form-desgin') {
                                 $ppws_form_style_class = new ppws_form_style_settings();
                                 $ppws_form_style_class->ppws_form_style_settings_callback();
+                            }
+
+                            if ($tab == 'advanced') {
+                                $ppws_advanced_class = new ppws_advanced_settings();
+                                $ppws_advanced_class->ppws_advanced_settings_callback();
                             }
 
                             if ($tab == 'get-pro') {
