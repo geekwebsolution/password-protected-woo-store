@@ -143,7 +143,11 @@ if (!class_exists('ppws_advanced_settings')) {
         {
             $new_input = array();
 
-            $new_input['enable_isolation_field_checkbox'] = sanitize_text_field($input['enable_isolation_field_checkbox']);
+            if(isset($new_input['enable_isolation_field_checkbox']) && $new_input['enable_isolation_field_checkbox'] == 'on') {
+                $new_input['enable_isolation_field_checkbox'] = 'on';
+            }else{
+                $new_input['enable_isolation_field_checkbox'] = '';
+            }
 
             if( isset( $input['ppws_header_script_content'] ))
                 $new_input['ppws_header_script_content'] = (!isset($input['ppws_header_script_content'])) ? htmlspecialchars($input['ppws_header_script_content']) : $input['ppws_header_script_content'] ;
