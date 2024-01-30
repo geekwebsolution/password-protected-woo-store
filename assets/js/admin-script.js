@@ -173,6 +173,45 @@ jQuery(document).ready(function ($) {
         }
     }
 
+    if (jQuery('#ppws_header_script_content').length) {
+        var editorSettings = wp.codeEditor.defaultSettings ? _.clone(wp.codeEditor.defaultSettings) : {};
+        editorSettings.codemirror = _.extend(
+            {},
+            editorSettings.codemirror,
+            {
+                indentUnit: 2,
+                tabSize: 2
+            }
+        );
+        var editor = wp.codeEditor.initialize(jQuery('#ppws_header_script_content'), editorSettings);
+    }
+
+    if (jQuery('#ppws_body_scripts_content').length) {
+        var editorSettings = wp.codeEditor.defaultSettings ? _.clone(wp.codeEditor.defaultSettings) : {};
+        editorSettings.codemirror = _.extend(
+            {},
+            editorSettings.codemirror,
+            {
+                indentUnit: 2,
+                tabSize: 2
+            }
+        );
+        var editor = wp.codeEditor.initialize(jQuery('#ppws_body_scripts_content'), editorSettings);
+    }
+
+    if (jQuery('#ppws_footer_scripts_content').length) {
+        var editorSettings = wp.codeEditor.defaultSettings ? _.clone(wp.codeEditor.defaultSettings) : {};
+        editorSettings.codemirror = _.extend(
+            {},
+            editorSettings.codemirror,
+            {
+                indentUnit: 2,
+                tabSize: 2
+            }
+        );
+        var editor = wp.codeEditor.initialize(jQuery('#ppws_footer_scripts_content'), editorSettings);
+    }
+
     jQuery("body").on('submit', '.ppws-procat-setting-form,.ppws-general-setting-form,.ppws-page-setting-form', function () {
         if (jQuery("body .ppws_password_checkbox_validation").prop("checked") == true) {
             
@@ -186,7 +225,6 @@ jQuery(document).ready(function ($) {
                 return true;
             }
         }
-
     });
 
 

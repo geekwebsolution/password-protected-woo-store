@@ -3,8 +3,8 @@
 Plugin Name: Password Protected Store for WooCommerce
 Description: Password Protected Store for WooCommerce is an excellent plugin to set Password Protected Store for WooCommerce. It allows you to set password in your store. Password can be set on whole site, on category, on pages, and on user role.
 Author: Geek Code Lab
-Version: 1.9
-WC tested up to: 8.4.0
+Version: 2.0
+WC tested up to: 8.5.2
 Author URI: https://geekcodelab.com/
 Text Domain : password-protected-store-for-woocommerce
 */
@@ -18,7 +18,7 @@ if (!defined("WPPS_PLUGIN_URL"))
     define("WPPS_PLUGIN_URL", plugins_url() . '/' . basename(dirname(__FILE__)));
 
 
-define("PPWS_BUILD", '1.9');
+define("PPWS_BUILD", '2.0');
 
 /* Plugin active/deactive hook */
 register_activation_hook(__FILE__, 'ppws_plugin_active_woocommerce_password_protected_store');
@@ -180,6 +180,18 @@ function ppws_plugin_active_woocommerce_password_protected_store()
         if(count($ppws_form_option) > 0)	update_option('ppws_form_desgin_settings', $ppws_form_option);
     }
    /** Form Style End */
+
+   /** General Setting Start */
+   $isolation_mode      = "on";
+   $advanced_option     = array();
+   $advanced_option_settings  = get_option('ppws_advanced_settings');
+
+   if(!isset($advanced_option_settings['enable_isolation_field_checkbox']))      $advanced_option['enable_isolation_field_checkbox']   = $isolation_mode;
+
+   if(isset($advanced_option) && !empty($advanced_option)){
+       if(count($advanced_option) > 0)	update_option('ppws_advanced_settings', $advanced_option);
+   }
+   /** General Setting End */
 }
 
 if ( ! function_exists( 'ppws_install_woocommerce_admin_notice' ) ) {
@@ -231,6 +243,7 @@ function ppws_add_scripts_enqueue_script( $hook ) {
         wp_enqueue_media();
     }
 
+    wp_enqueue_code_editor( array( 'type' => 'text/html' ) );
     wp_enqueue_script( 'ppws-select2-js', WPPS_PLUGIN_URL . '/assets/js/select2.min.js', array( 'jquery' ), PPWS_BUILD, true );
     $js = WPPS_PLUGIN_URL . '/assets/js/admin-script.js';
     wp_enqueue_script('ppws-admin-js', $js,  array('jquery','media-upload'), PPWS_BUILD);
