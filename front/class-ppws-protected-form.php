@@ -328,7 +328,7 @@ $meta_title = (!empty($site_title) || !empty($site_description)) ? $site_title .
     </style>
 
     <?php
-    if($isolation_mode == 'on') {
+    if($isolation_mode != 'on') {
         wp_enqueue_script( 'jquery' );
 		wp_head();
     }
@@ -391,7 +391,7 @@ $meta_title = (!empty($site_title) || !empty($site_description)) ? $site_title .
     </div>
 
     <?php
-    if($isolation_mode == 'on') {
+    if($isolation_mode != 'on') {
 		wp_footer();
     }
     ?>
