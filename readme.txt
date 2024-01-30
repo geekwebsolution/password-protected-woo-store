@@ -68,10 +68,11 @@ After Plugin Active go to Woocommerce-> Password Protected
 3. Product Categories
 4. Form Content
 5. Form design
-6. Front side -1
-7. Front side -2
-8. Front side -3
-9. Get Pro
+6. Advanced
+7. Front side -1
+8. Front side -2
+9. Front side -3
+10. Get Pro
 
 
 == Changelog ==
