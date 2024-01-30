@@ -37,7 +37,8 @@ Using Password Protected WooCommerce Store admin can fully customize password pr
 🔹 Option to customize page background image, color or none with custom opacity and opacity color.
 🔹 Customize form background image, color or none with custom opacity and opacity color.
 🔹 For the Administrative user, option are available for disable the password, called "Disable For Administrator."
-🔹 Admin can select all users at once.
+🔹 Isolation mode option to prevent conflicts with other plugins or themes that use wp_head or wp_footer
+🔹 Add custom scripts directly to header, body and footer of password protected page
 
 **Pro Features**
 🔹 Set a password to specific category.
