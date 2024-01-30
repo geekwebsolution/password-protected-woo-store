@@ -143,7 +143,7 @@ if (!class_exists('ppws_advanced_settings')) {
         {
             $new_input = array();
 
-            if(isset($new_input['enable_isolation_field_checkbox']) && $new_input['enable_isolation_field_checkbox'] == 'on') {
+            if(isset($input['enable_isolation_field_checkbox']) && $input['enable_isolation_field_checkbox'] == 'on') {
                 $new_input['enable_isolation_field_checkbox'] = 'on';
             }else{
                 $new_input['enable_isolation_field_checkbox'] = '';
