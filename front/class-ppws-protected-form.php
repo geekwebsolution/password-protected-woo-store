@@ -9,7 +9,6 @@ if (isset($_POST['ppws_submit'])) {
     } else {
         $secure = false;
     }
-
     $ppws_current_pass = sanitize_text_field($_POST['ppws_password']);
 
     do {

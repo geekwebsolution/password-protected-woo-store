@@ -30,28 +30,28 @@ function is_protected_whole_site() {
                     } else {
                         // Check if the site is accessible for logged-in users based on their roles.
                         if ("logged-in-user" === $general_setting_user_type && is_user_logged_in()) {
-                                $current_user = wp_get_current_user();
-                                $current_user_role = $current_user->roles;
-                                $final = ucfirst(str_replace("_", " ", array_shift($current_user_role)));
+                            $current_user = wp_get_current_user();
+                            $current_user_role = $current_user->roles;
+                            $final = ucfirst(str_replace("_", " ", array_shift($current_user_role)));
 
-                                $selected_user_roles = (isset($ppws_whole_site_options['ppws_logged_in_user_field_checkbox']) && !empty($ppws_whole_site_options['ppws_logged_in_user_field_checkbox'])) ? $ppws_whole_site_options['ppws_logged_in_user_field_checkbox'] : false;
+                            $selected_user_roles = (isset($ppws_whole_site_options['ppws_logged_in_user_field_checkbox']) && !empty($ppws_whole_site_options['ppws_logged_in_user_field_checkbox'])) ? $ppws_whole_site_options['ppws_logged_in_user_field_checkbox'] : false;
+                            
+                            // Check if the user roles is selected or not.
+                            if($selected_user_roles){
+                                $selected_user     = $selected_user_roles ? explode(",", $selected_user_roles) : array();
                                 
-                                // Check if the user roles is selected or not.
-                                if($selected_user_roles){
-                                    $selected_user     = $selected_user_roles ? explode(",", $selected_user_roles) : array();
-                                    
-                                    
-                                    // Add "Administrator" role to the selected user roles if admin bypass is disabled.
-                                    if (!$dfa_general_settings_protection && current_user_can('administrator')) {
-                                        array_push($selected_user, 'Administrator');
-                                    }
-                                    
-                                    // Check if the current user role is allowed to access the product or the user is not logged in.
-                                    if (in_array(ucfirst($final), $selected_user) || !is_user_logged_in()) {      
-                                        // Product is accessible for logged-in users based on their roles.
-                                        return true;
-                                    }
+                                
+                                // Add "Administrator" role to the selected user roles if admin bypass is disabled.
+                                if (!$dfa_general_settings_protection && current_user_can('administrator')) {
+                                    array_push($selected_user, 'Administrator');
                                 }
+                                
+                                // Check if the current user role is allowed to access the product or the user is not logged in.
+                                if (in_array(ucfirst($final), $selected_user) || !is_user_logged_in()) {      
+                                    // Product is accessible for logged-in users based on their roles.
+                                    return true;
+                                }
+                            }
                         }
                     }
                 }
