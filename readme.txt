@@ -3,10 +3,10 @@ Contributors: rajkakadiya, rvadhel
 Donate link: https://paypal.me/rvadhel
 Tags: WooCommerce protected categories, woo protect, product protected, woocommerce store protected
 Requires PHP: 5.2.4
-Requires at least: 3.0.1
+Requires at least: 5.0.1
 Tested up to: 6.4.3
-WC tested up to: 8.5.2
-Stable tag: 2.1
+WC tested up to: 8.6.0
+Stable tag: 2.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -77,6 +77,9 @@ After Plugin Active go to Woocommerce-> Password Protected
 
 
 == Changelog ==
+= 2.2 =
+- Translate string bug fixed
+
 = 2.1 =
 - Hide protected products from search results.
 
