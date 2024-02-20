@@ -249,7 +249,7 @@ $meta_title = (!empty($site_title) || !empty($site_description)) ? $site_title .
         }
 
 
-        .ppws_modal_text p {
+        .ppws_modal_text {
             color: <?php _e($popup_content_color);
             ?>;
             font-size: <?php _e($popup_content_size);
