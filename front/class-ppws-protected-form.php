@@ -9,7 +9,6 @@ if (isset($_POST['ppws_submit'])) {
     } else {
         $secure = false;
     }
-
     $ppws_current_pass = sanitize_text_field($_POST['ppws_password']);
 
     do {
@@ -357,7 +356,7 @@ $meta_title = (!empty($site_title) || !empty($site_description)) ? $site_title .
             <div class="ppws_modal_box_text">
                 <?php
                 if(isset($ppws_form_settings_option['ppws_form_mian_title'])){ ?>
-                    <h2 class="ppws_modal_title"><?php _e($ppws_form_settings_option['ppws_form_mian_title']); ?></h2>
+                    <h2 class="ppws_modal_title"><?php _e($ppws_form_settings_option['ppws_form_mian_title'],'password-protected-store-for-woocommerce'); ?></h2>
                     <?php
                 } ?>
                 <?php 
@@ -369,7 +368,7 @@ $meta_title = (!empty($site_title) || !empty($site_description)) ? $site_title .
                 } ?>
                 <form method="POST">
                     <input type="password" name="ppws_password" class="ppws_input" <?php if(isset($ppws_form_settings_option['ppws_form_pwd_placeholder'])){?> placeholder="<?php esc_attr_e($ppws_form_settings_option['ppws_form_pwd_placeholder']) ?>" <?php } ?> autofocus>
-                    <input type="submit" name="ppws_submit" value="<?php if(isset($ppws_form_settings_option['ppws_form_submit_btn_text'])){ esc_attr_e($ppws_form_settings_option['ppws_form_submit_btn_text']); }else{ esc_attr_e('Submit'); } ?>" class="ppws_form_button">
+                    <input type="submit" name="ppws_submit" value="<?php if(isset($ppws_form_settings_option['ppws_form_submit_btn_text'])){ esc_attr_e($ppws_form_settings_option['ppws_form_submit_btn_text']); }else{ esc_attr_e('Submit','password-protected-store-for-woocommerce'); } ?>" class="ppws_form_button">
                 </form>
                 <?php 
                 if(isset($pwd_err) && !empty($pwd_err)){
