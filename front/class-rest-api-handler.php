@@ -20,7 +20,6 @@ if ( !class_exists( 'ppws_wp_rest_api_handler' ) ) {
         }
 
         public function page_content_json( $data, $page, $request ) {
-            // print_r( $data ); die;
             global $ppws_page_options;
 
             $page_field_name = "ppws_page_list_of_page_field_checkbox";
