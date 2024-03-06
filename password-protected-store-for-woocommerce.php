@@ -3,8 +3,8 @@
 Plugin Name: Password Protected Store for WooCommerce
 Description: Password Protected Store for WooCommerce is an excellent plugin to set Password Protected Store for WooCommerce. It allows you to set password in your store. Password can be set on whole site, on category, on pages, and on user role.
 Author: Geek Code Lab
-Version: 2.2
-WC tested up to: 8.6.0
+Version: 2.3
+WC tested up to: 8.6.1
 Author URI: https://geekcodelab.com/
 Text Domain : password-protected-store-for-woocommerce
 */
@@ -18,9 +18,11 @@ if (!defined("WPPS_PLUGIN_URL"))
     define("WPPS_PLUGIN_URL", plugins_url() . '/' . basename(dirname(__FILE__)));
 
 
-define("PPWS_BUILD", '2.2');
+define("PPWS_BUILD", '2.3');
 
-/* Plugin active/deactive hook */
+/**
+ * Plugin active/deactive hook
+ */
 register_activation_hook(__FILE__, 'ppws_plugin_active_woocommerce_password_protected_store');
 function ppws_plugin_active_woocommerce_password_protected_store()
 {
@@ -217,12 +219,16 @@ function ppws_woocommerce_constructor() {
 }
 add_action( 'plugins_loaded', 'ppws_woocommerce_constructor' );
 
-/* Adding options.php */
+/* Required files */
 require_once(WPPS_PLUGIN_DIR_PATH . 'admin/options.php');
 require_once(WPPS_PLUGIN_DIR_PATH . 'admin/functions.php');
 require_once(WPPS_PLUGIN_DIR_PATH . 'front/class-ppws-public.php');
 require_once(WPPS_PLUGIN_DIR_PATH . 'inc/class-ppws-functions.php');
+require_once(WPPS_PLUGIN_DIR_PATH . 'front/class-rest-api-handler.php');
 
+/**
+ * Admin enqueue scripts
+ */
 add_action( 'admin_enqueue_scripts', 'ppws_add_scripts_enqueue_script');
 function ppws_add_scripts_enqueue_script( $hook ) {
     wp_enqueue_style('ppws-select2-css', WPPS_PLUGIN_URL . '/assets/css/select2.min.css', array(), PPWS_BUILD );
@@ -244,7 +250,6 @@ function ppws_add_scripts_enqueue_script( $hook ) {
     wp_enqueue_script('ppws-admin-js', $js,  array('jquery','media-upload'), PPWS_BUILD);
     wp_localize_script('ppws-admin-js', 'ppwsObj', [ 'ajaxurl' => admin_url('admin-ajax.php') ] );
 }
-
 /* Front side css file */
 
 /* Plugin page plugin setting, active/deactive links  */
@@ -275,8 +280,8 @@ function ppws_cookie_checker(){
     }
 }
 
-
-add_action( 'wp', 'ppws_wp' );      // before template redirect
+/** After wp load hook */
+add_action( 'wp', 'ppws_wp' );
 function ppws_wp() {
     global $wp_did_header;
 
@@ -289,9 +294,10 @@ function ppws_wp() {
     }
 }
 
+/** Template redirection hook */
 add_action('template_redirect', 'ppws_enable_password_start');
 function ppws_enable_password_start() {
-    if( is_protected_whole_site() || is_protected_page() || is_protected_product_categories() ) {
+    if( ppws_is_protected_whole_site() || ppws_is_protected_page() || ppws_is_protected_product_categories() ) {
         ppws_prevent_indexing();
         ppws_nocache_headers();
     }
@@ -302,8 +308,8 @@ function ppws_enable_password_start() {
         
 
     do {
-        if (is_protected_page() || is_protected_product_categories()) {
-            if(is_protected_page()) {
+        if (ppws_is_protected_page() || ppws_is_protected_product_categories()) {
+            if(ppws_is_protected_page()) {
                 $ppws_page_cookie = (ppws_get_cookie('ppws_page_cookie') != '') ? ppws_get_cookie('ppws_page_cookie') : 'ddd';
                 $ppws_page_main_password = $ppws_page_options['ppws_page_set_password_field_textbox'];
                 if(ppws_decrypted_password($ppws_page_cookie) != ppws_decrypted_password($ppws_page_main_password)) {
@@ -314,7 +320,7 @@ function ppws_enable_password_start() {
                 }
             }   
             
-            if(is_protected_product_categories()) {
+            if(ppws_is_protected_product_categories()) {
                 $ppws_categories_cookie = ppws_get_cookie('ppws_categories_cookie');
                 $ppws_categories_main_password = $ppws_product_categories_options['ppws_product_categories_password'];
                 if(ppws_decrypted_password($ppws_categories_cookie) != ppws_decrypted_password($ppws_categories_main_password)) {
@@ -326,7 +332,7 @@ function ppws_enable_password_start() {
             }
         }
 
-        if(is_protected_whole_site()) {
+        if(ppws_is_protected_whole_site()) {
             $ppws_cookie = ppws_get_cookie('ppws_cookie');
             $ppws_main_password = $ppws_whole_site_options['ppws_set_password_field_textbox'];
             if(ppws_decrypted_password($ppws_cookie) != ppws_decrypted_password($ppws_main_password)) {
@@ -360,7 +366,6 @@ function ppws_whole_site_disable_password_end()
  * Hide / Exclude products from a particular category on the shop page
  */
 add_action( 'woocommerce_product_query', 'ppsw_custom_query_exclude_taxonomy' );
-
 function ppsw_custom_query_exclude_taxonomy($q) {
     if(is_admin())  return;
 
@@ -386,7 +391,6 @@ function ppsw_custom_query_exclude_taxonomy($q) {
  * Hide / Exclude protected products from search results
  */
 add_action( 'pre_get_posts', 'ppws_modify_search_query' );
-
 function ppws_modify_search_query( $query ) {
     if(is_admin())  return;
 
