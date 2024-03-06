@@ -46,6 +46,7 @@ if ( !class_exists( 'ppws_wp_rest_api_handler' ) ) {
                 $jsonContainsCategory = !empty(array_intersect($data->data['product_cat'], $selected_cat));
                 if( !empty($jsonContainsCategory) ) {
                     if(isset($data->data['content']['rendered']))   $data->data['content']['rendered'] = "";
+                    if(isset($data->data['excerpt']['rendered']))   $data->data['excerpt']['rendered'] = "";
                 }
             }
 
