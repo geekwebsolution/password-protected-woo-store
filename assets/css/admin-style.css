@@ -1,5 +1,4 @@
 /** Tabing **/
-
 .ppws-tabbing-box .nav-tab a {
     text-decoration: none;
     color: #000;
@@ -278,17 +277,17 @@ input.button.button-small.wp-picker-clear {
     color: #fff;
 }
 
-p.ppws-note {
+.ppws-note {
     font-style: italic;
 }
-p.ppws-note-info , .ppws-note.ppws-userrole-error{
+.ppws-note-info , .ppws-note.ppws-userrole-error{
     color: #223a7a;
     font-weight: 500;
     display: flex;
     padding: 4px 0;
     align-items: center;
 }
-p.ppws-note-info svg , .ppws-note.ppws-userrole-error svg{ margin-right: 5px; }
+.ppws-note-info svg , .ppws-note.ppws-userrole-error svg{ margin-right: 5px; }
 .ppws-error-border {
     border: 2px Solid #f31212 !important;
     outline: none !important;

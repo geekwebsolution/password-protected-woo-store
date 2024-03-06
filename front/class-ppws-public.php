@@ -2,7 +2,7 @@
 /**
  * check status of whole site protection
  */
-function is_protected_whole_site() {
+function ppws_is_protected_whole_site() {
     $ppws_whole_site_options = get_option('ppws_general_settings');
 
     // Get the status of password protection for admin users.
@@ -67,7 +67,7 @@ function is_protected_whole_site() {
 /**
  * check status of product categories protection
  */
-function is_protected_product_categories() {
+function ppws_is_protected_product_categories() {
     global $wp_query, $product;
     $ppws_product_categories_options = get_option('ppws_product_categories_settings');
 
@@ -168,7 +168,7 @@ function is_protected_product_categories() {
 /**
  * check status of protected page protection
  */
-function is_protected_page() {
+function ppws_is_protected_page() {
     // Get page options from settings
     $ppws_page_options = get_option('ppws_page_settings');
 
