@@ -3,7 +3,7 @@ Contributors: rajkakadiya, rvadhel
 Donate link: https://paypal.me/rvadhel
 Tags: WooCommerce protected categories, woo protect, product protected, woocommerce store protected
 Requires PHP: 7.4
-Requires at least: 6.4
+Requires at least: 6.3 or higher
 Tested up to: 6.4.3
 WC tested up to: 8.6.1
 Stable tag: 2.3
