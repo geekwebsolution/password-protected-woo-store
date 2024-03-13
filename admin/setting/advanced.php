@@ -63,6 +63,18 @@ if (!class_exists('ppws_advanced_settings')) {
                 ['type' => 'checkbox', 'label_for' => 'enable_isolation_field_checkbox', 'description' => 'Isolation Mode prevents two WordPress hooks from running called wp_head and wp_footer. This will prevent conflicts with your theme or other plugins. While it prevents conflicts, it also means other plugins would not run on the page such as SEO and analytics plugins.']
             );
 
+            add_settings_field(
+                'ppws_enable_rest_api_protection_checkbox',
+                __(
+                    'REST API Protection',
+                    'password-protected-store-for-woocommerce'
+                ),
+                array($this, 'ppws_advanced_settings'),
+                'ppws-general-advanced-settings-section',
+                'ppws_advanced_general_settings_section',
+                ['type' => 'checkbox', 'label_for' => 'enable_rest_api_protection_checkbox', 'description' => 'This option allows users to hide protected data on the REST API. By default, REST API protection will be enabled.']
+            );
+
             /* Scripts Settings Start */
             add_settings_section(
                 'ppws_advanced_scripts_settings_section',
@@ -113,7 +125,8 @@ if (!class_exists('ppws_advanced_settings')) {
 
             if ($args['type'] == 'checkbox') {
                 $value = isset($ppws_advanced_settings[$args['label_for']]) ? $ppws_advanced_settings[$args['label_for']] : '';
-                if(!isset($ppws_advanced_settings[$args['label_for']]) && $args['label_for'] == 'enable_isolation_field_checkbox')   $value = 'on';
+                $default_on_fields = array( "enable_isolation_field_checkbox", "enable_rest_api_protection_checkbox" );
+                if(!isset($ppws_advanced_settings[$args['label_for']]) && in_array( $args['label_for'], $default_on_fields ))   $value = 'on';
                 ?>
                 <!-- Checkbox -->
                 <label class="ppws-switch">
@@ -147,6 +160,12 @@ if (!class_exists('ppws_advanced_settings')) {
                 $new_input['enable_isolation_field_checkbox'] = 'on';
             }else{
                 $new_input['enable_isolation_field_checkbox'] = '';
+            }
+
+            if(isset($input['enable_rest_api_protection_checkbox']) && $input['enable_rest_api_protection_checkbox'] == 'on') {
+                $new_input['enable_rest_api_protection_checkbox'] = 'on';
+            }else{
+                $new_input['enable_rest_api_protection_checkbox'] = '';
             }
 
             if( isset( $input['ppws_header_script_content'] ))

@@ -1,4 +1,9 @@
 <?php
+/** Get options of whole site settings */
+$ppws_advanced_options = get_option('ppws_advanced_settings');
+$rest_api_field_name = 'enable_rest_api_protection_checkbox';
+if(isset($ppws_advanced_options[$rest_api_field_name]) && $ppws_advanced_options[$rest_api_field_name] == '') return;
+
 /* Rest api handler class() for protected data */
 if ( !class_exists( 'ppws_wp_rest_api_handler' ) ) {
     
