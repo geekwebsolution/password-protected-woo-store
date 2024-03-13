@@ -6,7 +6,7 @@ Requires PHP: 7.4
 Requires at least: 6.3
 Tested up to: 6.4.3
 WC tested up to: 8.6.1
-Stable tag: 2.3
+Stable tag: 2.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -77,6 +77,9 @@ After Plugin Active go to Woocommerce-> Password Protected
 
 
 == Changelog ==
+= 2.4 =
+- Added option to manage REST API protection
+
 = 2.3 =
 - Fixed REST API security bugs
 
