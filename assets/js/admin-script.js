@@ -237,6 +237,20 @@ jQuery(document).ready(function ($) {
     });
 
     /** Admin settings on media field on click */
+    jQuery("input[name='ppws_form_desgin_settings[form_page_logo_image_selecter]']").click(function (e) {
+        e.preventDefault();
+        var image = wp.media({
+            title: 'Upload Image',
+            multiple: false
+        }).open()
+            .on('select', function (e) {
+                var uploaded_image = image.state().get('selection').first();
+                var image_url = uploaded_image.toJSON().url;
+                jQuery('#form_page_logo_image_selecter').val(image_url);
+            });
+    });
+
+    /** Admin settings on media field on click */
     jQuery("input[name='ppws_form_desgin_settings[ppws_form_page_background_field_image_selecter]']").click(function (e) {
         e.preventDefault();
         var image = wp.media({
@@ -259,7 +273,6 @@ jQuery(document).ready(function ($) {
         }).open()
             .on('select', function (e) {
                 var uploaded_image = image.state().get('selection').first();
-                console.log(uploaded_image.toJSON());
                 var image_url = uploaded_image.toJSON().url;
                 jQuery('#ppws_form_background_field_image_selecter').val(image_url);
             });
@@ -298,6 +311,14 @@ jQuery(document).ready(function ($) {
     });
     /** Page Setting JS END */
 
+    jQuery("body").on("change", "input[name='ppws_form_desgin_settings[form_logo_link_type_field]']", function () {
+        var this_val = jQuery(this).val();
+        if (this_val == "custom-link") {
+            jQuery(".ppws-form-logo-custom-link-selector").removeClass("ppws-hide-section");
+        } else if (this_val == "none") {
+            jQuery(".ppws-form-logo-custom-link-selector").addClass("ppws-hide-section");
+        } 
+    });
 
     /* Form Background */
     jQuery("body").on("change", "input[name='ppws_form_desgin_settings[ppws_form_background_field_radio]']", function () {

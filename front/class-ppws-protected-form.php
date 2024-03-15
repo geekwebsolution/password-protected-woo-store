@@ -237,7 +237,7 @@ $meta_title = (!empty($site_title) || !empty($site_description)) ? $site_title .
         /* Advanced settings end */
     ?>
     <style>
-        *{margin:0;padding:0;box-sizing:border-box}body{margin:0;overflow-x:hidden}.ppws_modal{width:100%;min-height:100vh;height:100%;display:flex;align-items:center;padding:15px;background-size:cover;background-position:center;background-repeat:no-repeat;overflow-x:auto}.ppws_modal_box{display:flex;justify-content:center;flex-direction:column;max-width:600px;width:100%;padding:30px 30px;margin-inline:auto;font-family:sans-serif;box-shadow:10px 10px 30px rgba(0,0,0,.2);position:relative;isolation:isolate;border-radius:10px;z-index:99999999999}.ppws_modal_box_text{position:relative;z-index:2}.ppws_modal_title{text-transform:capitalize;margin-bottom:15px;font-size:28px;position:relative}.ppws_modal_box p{font-size:15px;line-height:1.5}.ppws_modal_box form{display:flex;margin-block:20px 7px}.ppws_modal_box form .ppws_input{flex:1;height:46px;outline:0!important;border-radius:8px 0 0 8px;padding-inline:20px;font-size:16px;padding-top:3px;border-style:solid;border-width:2px;border-right-width:0}.ppws_modal_box form .ppws_form_button{width:100px;border:1px solid transparent;cursor:pointer;background-color:#000;color:#fff;transition:.3s;border-radius:0 8px 8px 0}.ppws_modal_box form .ppws_form_button:hover{background:#ccc;color:#000}.ppws_error_msg{color:red;font-size:14px}.ppws_modal_bottom_text{margin-top:18px}.ppws_modal_box_bg{position:absolute;top:0;left:0;width:100%;height:100%;background-color:#fff;z-index:-1;border-radius:10px;background-size:cover;background-position:center}.ppws_modal_overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:#000;opacity:.65;z-index:999999999}.ppws_form_overlay{position:absolute;top:0;left:0;width:100%;height:100%;background:#fff;opacity:.65;border-radius:10px}.ppws_input::placeholder{color:#000}@media (max-width:400px){.ppws_modal_box{padding:20px;text-align:center}.ppws_modal_box form{flex-direction:column;align-items:center}.ppws_modal_box form .ppws_input{min-height:38px;width:100%;border-radius:8px;margin-bottom:12px;border-right-width:1px}.ppws_modal_box form .ppws_form_button{border-radius:8px;height:40px}}
+        *{margin:0;padding:0;box-sizing:border-box}body{margin:0;overflow-x:hidden}.ppws_modal{width:100%;min-height:100vh;height:100%;display:flex;align-items:center;padding:15px;background-size:cover;background-position:center;background-repeat:no-repeat;overflow-x:auto}.ppws_modal_box{display:flex;justify-content:center;flex-direction:column;max-width:600px;width:100%;padding:30px 30px;margin-inline:auto;font-family:sans-serif;box-shadow:10px 10px 30px rgba(0,0,0,.2);position:relative;isolation:isolate;border-radius:10px;z-index:99999999999}.ppws_modal_box_text{position:relative;z-index:2}.ppws_modal_title{text-transform:capitalize;margin-bottom:15px;font-size:28px;position:relative}.ppws_modal_box p{font-size:15px;line-height:1.5}.ppws_modal_box form{display:flex;margin-block:20px 7px}.ppws_modal_box form .ppws_input{flex:1;height:46px;outline:0!important;border-radius:8px 0 0 8px;padding-inline:20px;font-size:16px;padding-top:3px;border-style:solid;border-width:2px;border-right-width:0}.ppws_modal_box form .ppws_form_button{width:100px;border:1px solid transparent;cursor:pointer;background-color:#000;color:#fff;transition:.3s;border-radius:0 8px 8px 0}.ppws_modal_box form .ppws_form_button:hover{background:#ccc;color:#000}.ppws_error_msg{color:red;font-size:14px}.ppws_modal_bottom_text{margin-top:18px}.ppws_modal_box_bg{position:absolute;top:0;left:0;width:100%;height:100%;background-color:#fff;z-index:-1;border-radius:10px;background-size:cover;background-position:center}.ppws_modal_overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:#000;opacity:.65;z-index:999999999}.ppws_form_overlay{position:absolute;top:0;left:0;width:100%;height:100%;background:#fff;opacity:.65;border-radius:10px}.ppws_input::placeholder{color:#000}.ppws-modal-logo {margin-bottom:15px;}.ppws_modal_box_text img{width:auto;max-width:300px;height:auto;max-height:100px;object-fit:contain;object-position:center;display:block;margin:0 auto 0 auto;}@media (max-width:400px){.ppws_modal_box{padding:20px;text-align:center}.ppws_modal_box form{flex-direction:column;align-items:center}.ppws_modal_box form .ppws_input{min-height:38px;width:100%;border-radius:8px;margin-bottom:12px;border-right-width:1px}.ppws_modal_box form .ppws_form_button{border-radius:8px;height:40px}}
 
         .ppws_modal_title {
             color: <?php _e($popup_title_color);
@@ -354,6 +354,27 @@ $meta_title = (!empty($site_title) || !empty($site_description)) ? $site_title .
             <div class="ppws_form_overlay"></div>
             <div class="ppws_modal_box_bg"></div>
             <div class="ppws_modal_box_text">
+                <?php
+                $logo_image = $logo_link_type = $logo_link_text = $logo_link_target = $logo_link_nofollow = "";   
+                if(isset($ppws_style_option['form_page_logo_image_selecter'])) $logo_image = $ppws_style_option['form_page_logo_image_selecter'];
+                if(isset($ppws_style_option['form_logo_link_type_field']))     $logo_link_type = $ppws_style_option['form_logo_link_type_field'];
+                if(isset($ppws_style_option['form_logo_link_field_textbox']))  $logo_link_text = $ppws_style_option['form_logo_link_field_textbox'];
+                if(isset($ppws_style_option['form_enable_logo_link_target_checkbox']))  $logo_link_target = $ppws_style_option['form_enable_logo_link_target_checkbox'];
+                if(isset($ppws_style_option['form_enable_logo_link_nofollow_checkbox']))  $logo_link_nofollow = $ppws_style_option['form_enable_logo_link_nofollow_checkbox'];
+                if(!empty($logo_image)) {
+                    if($logo_link_type == "custom-link") {
+                        if($logo_link_nofollow == "on") { $logo_link_nofollow = 'rel="nofollow noopener"'; } ?>
+                        <div class="ppws-modal-logo">
+                            <a href="<?php echo esc_url($logo_link_text); ?>" target="<?php esc_attr_e($logo_link_target == "on" ? "_blank" : "_self" ); ?>" <?php echo $logo_link_nofollow; ?>><img src="<?php echo $logo_image; ?>" alt="<?php echo get_bloginfo('name') . ' Logo'; ?>"></a>
+                        </div>
+                        <?php
+                    }else{ ?>
+                        <div class="ppws-modal-logo">
+                            <img src="<?php echo $logo_image; ?>" alt="<?php echo get_bloginfo('name') . ' Logo'; ?>">
+                        </div>
+                        <?php
+                    }
+                } ?>
                 <?php
                 if(isset($ppws_form_settings_option['ppws_form_mian_title'])){ ?>
                     <h2 class="ppws_modal_title"><?php _e($ppws_form_settings_option['ppws_form_mian_title'],'password-protected-store-for-woocommerce'); ?></h2>

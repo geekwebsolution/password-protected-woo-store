@@ -178,11 +178,16 @@ input.button.button-small.wp-picker-clear {
     font-weight: 500;
 }
 
+.ppws-section .form-table td label:first-child input[type="radio"] {
+    margin-left: 0;
+}
+
 .ppws-section .form-table input[type="radio"] {
     margin-top: 0;
     width: 18px;
     height: 18px;
-    margin-right: 10px;
+    margin-left: 10px;
+    margin-right: 8px;
 }
 
 .ppws_all_user_list_input {
