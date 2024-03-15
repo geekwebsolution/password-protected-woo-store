@@ -17,6 +17,9 @@ if ( !class_exists( 'ppws_form_style_settings' ) ) {
                 echo '</p>';
                 ?>
                 <div class="ppws-section">
+                    <?php do_settings_sections( 'ppws-form-title-logo-settings-section' ); ?>
+                </div>
+                <div class="ppws-section">
                     <?php do_settings_sections( 'ppws-form-title-style-settings-section' ); ?>
                 </div>
                 <div class="ppws-section">
@@ -44,7 +47,24 @@ if ( !class_exists( 'ppws_form_style_settings' ) ) {
         }
 
         public function ppws_form_style_settings_register_settings_init() {
+            global $ppws_form_style_settings_option;
             register_setting( 'ppws-settings-options', 'ppws_form_desgin_settings', array( $this, 'sanitize_settings' ) );
+
+            /* Form logo settings start */
+            add_settings_section( 'ppws_form_logo_style_settings_section', __( 'Logo', 'password-protected-store-for-woocommerce' ), array(), 'ppws-form-title-logo-settings-section' );
+
+            add_settings_field( 'ppws_form_logo_image_selecter', __( 'Logo Image', 'password-protected-store-for-woocommerce' ), array( $this, 'ppws_form_settings_image_selecter' ), 'ppws-form-title-logo-settings-section', 'ppws_form_logo_style_settings_section', [ 'type' => 'image_selecter', 'label_for' => 'form_page_logo_image_selecter', 'placeholder' => 'Select Logo Image', 'class' => "ppws-form-logo-image-selecter", 'description' => 'Select logo image to show in a password-protected form.' ] );
+
+            add_settings_field( 'ppws_form_logo_link_type_radio', __( 'Logo Link Type', 'password-protected-store-for-woocommerce' ), array( $this, 'ppws_form_logo_link_type_radio_field' ), 'ppws-form-title-logo-settings-section', 'ppws_form_logo_style_settings_section', [ 'type' => 'radio', 'label_for' => 'form_logo_link_type_field', 'description' => 'Set link type for logo in password-protected form.' ] );
+
+            $hide_custom_logo_link_class = (isset($ppws_form_style_settings_option['form_logo_link_type_field']) && $ppws_form_style_settings_option['form_logo_link_type_field'] == "custom-link") ? "" : "ppws-hide-section";
+            
+            add_settings_field( 'ppws_form_logo_link_textbox', __( 'Logo URL', 'password-protected-store-for-woocommerce' ), array( $this, 'ppws_form_title_style_settings_fun' ), 'ppws-form-title-logo-settings-section', 'ppws_form_logo_style_settings_section', [ 'type' => 'text', 'label_for' => 'form_logo_link_field_textbox', 'class' => "$hide_custom_logo_link_class ppws-form-logo-custom-link-selector", 'description' => 'Set link for logo in password-protected form.', 'placeholder' => 'Add link here' ]  );
+
+            add_settings_field( 'ppws_form_enable_logo_link_target_checkbox', __( 'Open link in new tab', 'password-protected-store-for-woocommerce' ), array($this, 'ppws_form_title_style_settings_fun'), 'ppws-form-title-logo-settings-section', 'ppws_form_logo_style_settings_section', ['type' => 'checkbox', 'label_for' => 'form_enable_logo_link_target_checkbox', 'class' => "$hide_custom_logo_link_class ppws-form-logo-custom-link-selector", 'description' => 'Enable this to open logo link in new tab.'] );
+            
+            add_settings_field( 'ppws_form_enable_logo_link_nofollow_checkbox', __( 'Set nofollow', 'password-protected-store-for-woocommerce' ), array($this, 'ppws_form_title_style_settings_fun'), 'ppws-form-title-logo-settings-section', 'ppws_form_logo_style_settings_section', ['type' => 'checkbox', 'label_for' => 'form_enable_logo_link_nofollow_checkbox', 'class' => "$hide_custom_logo_link_class ppws-form-logo-custom-link-selector", 'description' => 'Enable this to set nofollow attribute to logo link.'] );
+            /* Form logo settings end */
 
             /* Form title start */
             add_settings_section( 'ppws_form_title_style_settings_section', __( 'Page Title', 'password-protected-store-for-woocommerce' ), array(), 'ppws-form-title-style-settings-section' );
@@ -108,7 +128,6 @@ if ( !class_exists( 'ppws_form_style_settings' ) ) {
             
             add_settings_field( 'ppws_form_page_background_radio', __( 'Page Background', 'password-protected-store-for-woocommerce' ), array( $this, 'ppws_form_settings_radio' ), 'ppws-form-background-settings-section', 'ppws_form_background_settings_section', [ 'type' => 'radio', 'label_for' => 'ppws_form_page_background_field_radio', 'description' => 'Select page background type.' ] );
 
-            global $ppws_form_style_settings_option;
             $ppws_form_page_background_radio = isset($ppws_form_style_settings_option['ppws_form_page_background_field_radio']) ? $ppws_form_style_settings_option['ppws_form_page_background_field_radio'] : "";
             $ppws_form_page_background_image_selecter_class = "";
             if($ppws_form_page_background_radio != 'image') {
@@ -117,7 +136,6 @@ if ( !class_exists( 'ppws_form_style_settings' ) ) {
 
             add_settings_field( 'ppws_form_page_background_image_selecter', __( 'Select Page Background Image', 'password-protected-store-for-woocommerce' ), array( $this, 'ppws_form_settings_image_selecter' ), 'ppws-form-background-settings-section', 'ppws_form_background_settings_section', [ 'type' => 'image_selecter', 'label_for' => 'ppws_form_page_background_field_image_selecter', 'placeholder' => 'Select Image', 'class' => "$ppws_form_page_background_image_selecter_class ppws-form-page-background-image-selecter", 'description' => 'Select page background image for password form shown on frontend .' ] );
 
-            global $ppws_form_style_settings_option;
             $ppws_form_page_background_radio = isset($ppws_form_style_settings_option['ppws_form_page_background_field_radio']) ? $ppws_form_style_settings_option['ppws_form_page_background_field_radio'] : "";
             $ppws_form_page_background_color_selecter_class = "";
             if($ppws_form_page_background_radio != 'solid-color') {
@@ -133,7 +151,6 @@ if ( !class_exists( 'ppws_form_style_settings' ) ) {
 
             add_settings_field( 'ppws_form_background_radio', __( 'Form Background', 'password-protected-store-for-woocommerce' ), array( $this, 'ppws_form_settings_radio' ), 'ppws-form-background-settings-section', 'ppws_form_background_settings_section', [ 'type' => 'radio', 'label_for' => 'ppws_form_background_field_radio', 'description' => 'Select your form background type.' ] );
 
-            global $ppws_form_style_settings_option;
             $ppws_form_background_radio = isset($ppws_form_style_settings_option['ppws_form_background_field_radio']) ? $ppws_form_style_settings_option['ppws_form_background_field_radio'] : "";
             $ppws_form_background_image_selecter_class = "";
             if($ppws_form_background_radio != 'image') {
@@ -142,15 +159,12 @@ if ( !class_exists( 'ppws_form_style_settings' ) ) {
 
             add_settings_field('ppws_form_background_image_selecter', __( 'Select Form Background Image', 'password-protected-store-for-woocommerce' ), array( $this, 'ppws_form_settings_image_selecter' ), 'ppws-form-background-settings-section', 'ppws_form_background_settings_section', [ 'type' => 'image_selecter', 'label_for' => 'ppws_form_background_field_image_selecter', 'placeholder' => 'Select Image', 'description' => 'Select your background image.', 'class' => "$ppws_form_background_image_selecter_class ppws-form-background-image-selecter", 'description' => 'Select your form background image for password form shown on frontend .' ]);
 
-            global $ppws_form_style_settings_option;
             $ppws_form_background_radio = isset($ppws_form_style_settings_option['ppws_form_background_field_radio']) ? $ppws_form_style_settings_option['ppws_form_background_field_radio'] : "";
             $ppws_form_background_color_selecter_class = "";
             if($ppws_form_background_radio != 'solid-color') {
                 $ppws_form_background_color_selecter_class = "ppws-hide-section";
             }
             add_settings_field('ppws_form_background_color_selecter', __('Select Form Background Color', 'password-protected-store-for-woocommerce'), array( $this, 'ppws_form_settings_color_selecter' ), 'ppws-form-background-settings-section', 'ppws_form_background_settings_section', [ 'type' => 'color_selecter', 'label_for' => 'ppws_form_background_field_color_selecter', 'class' => "$ppws_form_background_color_selecter_class ppws-form-background-color-selecter", 'description' => 'Select your form background color for password form shown on frontend .' ] );
-
-            
 
             add_settings_field( 'ppws_form_background_opacity_form_textbox', __( 'Form Background Opacity', 'password-protected-store-for-woocommerce' ), array( $this, 'ppws_form_background_opacity_style_settings_fun' ), 'ppws-form-background-settings-section', 'ppws_form_background_settings_section', [ 'type' => 'number', 'label_for' => 'ppws_form_background_opacity', 'description' => 'Set form background opacity for password form shown on frontend .', 'placeholder' => 'Form background opacity.', 'min' => '0', 'max'=> '1.0' ] );
 
@@ -181,6 +195,24 @@ if ( !class_exists( 'ppws_form_style_settings' ) ) {
                 ) // Additional arguments for the field
             );
 
+        }
+
+        public function ppws_form_logo_link_type_radio_field( $args ) {
+            global $ppws_form_style_settings_option;
+            $value = isset( $ppws_form_style_settings_option[ $args[ 'label_for' ] ] ) ? $ppws_form_style_settings_option[ $args[ 'label_for' ] ]: "none";
+
+            if ( $args[ 'type' ] == 'radio' ) {
+              
+                ?>
+                <label>
+                    <input type="radio" class="<?php esc_attr_e( $args[ 'label_for' ] ) ?>" name="ppws_form_desgin_settings[<?php esc_attr_e( $args[ 'label_for' ] ) ?>]" value="none" <?php checked('none', $value ?? null); ?>><?php _e('None','password-protected-store-for-woocommerce') ?>
+                </label>
+                <label>
+                    <input type="radio" class="<?php esc_attr_e( $args[ 'label_for' ] ) ?>" name="ppws_form_desgin_settings[<?php esc_attr_e( $args[ 'label_for' ] ) ?>]" value="custom-link" <?php checked('custom-link', $value ?? null); ?>><?php _e('Custom Link','password-protected-store-for-woocommerce') ?>
+                </label>
+                <p class="ppws-note"><?php esc_attr_e($args['description']) ?></p>
+                <?php
+            }
         }
 
         public function ppws_form_settings_radio( $args ) {
@@ -229,6 +261,11 @@ if ( !class_exists( 'ppws_form_style_settings' ) ) {
             if ( $args[ 'type' ] == 'number' ) {
                 ?>
                 <input type="number" class="ppws-textbox" name="ppws_form_desgin_settings[<?php esc_attr_e( $args[ 'label_for' ] ) ?>]" id="<?php esc_attr_e( $args[ 'label_for' ] ) ?>" min="0" placeholder="<?php esc_attr_e( $args[ 'placeholder' ] ) ?>" value="<?php esc_attr_e($value); ?>">
+                <p class="ppws-note"><?php esc_attr_e($args['description']) ?></p>
+                <?php
+            } elseif ( $args[ 'type' ] == 'text' ) {
+                ?>
+                <input type="text" class="ppws-textbox" name="ppws_form_desgin_settings[<?php esc_attr_e( $args[ 'label_for' ] ) ?>]" id="<?php esc_attr_e( $args[ 'label_for' ] ) ?>" placeholder="<?php esc_attr_e( $args[ 'placeholder' ] ) ?>" value="<?php esc_attr_e($value); ?>">
                 <p class="ppws-note"><?php esc_attr_e($args['description']) ?></p>
                 <?php
             } elseif ( $args[ 'type' ] == 'checkbox' ) {
@@ -399,6 +436,25 @@ if ( !class_exists( 'ppws_form_style_settings' ) ) {
         public function sanitize_settings( $input ) {
             $new_input = array();
 
+            if( isset( $input[ 'form_page_logo_image_selecter' ] ) ) {
+                $new_input[ 'form_page_logo_image_selecter' ] = sanitize_url( $input[ 'form_page_logo_image_selecter' ] );
+            }
+
+            if( isset( $input[ 'form_logo_link_type_field' ] ) && !empty( $input[ 'form_logo_link_type_field' ] ) ) {
+                $new_input[ 'form_logo_link_type_field' ] = sanitize_text_field( $input[ 'form_logo_link_type_field' ] );
+            }
+
+            if( isset( $input[ 'form_logo_link_field_textbox' ] ) && !empty( $input[ 'form_logo_link_field_textbox' ] ) ) {
+                $new_input[ 'form_logo_link_field_textbox' ] = sanitize_text_field( $input[ 'form_logo_link_field_textbox' ] );
+            }
+            
+            if(isset($input['form_enable_logo_link_target_checkbox']) && !empty( $input['form_enable_logo_link_target_checkbox'] )) {
+                $new_input['form_enable_logo_link_target_checkbox'] = sanitize_text_field( $input['form_enable_logo_link_target_checkbox'] );
+            }
+
+            if(isset($input['form_enable_logo_link_nofollow_checkbox']) && !empty( $input['form_enable_logo_link_nofollow_checkbox'] )) {
+                $new_input['form_enable_logo_link_nofollow_checkbox'] = sanitize_text_field( $input['form_enable_logo_link_nofollow_checkbox'] );
+            }
 
             if( isset( $input[ 'ppws_form_title_color_field_textbox' ] ) && !empty( $input[ 'ppws_form_title_color_field_textbox' ] ) ) {
                 $new_input[ 'ppws_form_title_color_field_textbox' ] = sanitize_text_field( $input[ 'ppws_form_title_color_field_textbox' ] );
@@ -519,7 +575,6 @@ if ( !class_exists( 'ppws_form_style_settings' ) ) {
             if( isset( $input[ 'ppws_form_additional_style_field_textarea' ] ) && !empty( $input[ 'ppws_form_additional_style_field_textarea' ] ) ) {
                 $new_input[ 'ppws_form_additional_style_field_textarea' ] = htmlspecialchars( $input[ 'ppws_form_additional_style_field_textarea' ] );
             }
-
 
             return $new_input;
         }

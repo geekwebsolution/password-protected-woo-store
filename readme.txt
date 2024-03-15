@@ -4,9 +4,9 @@ Donate link: https://paypal.me/rvadhel
 Tags: WooCommerce protected categories, woo protect, product protected, woocommerce store protected
 Requires PHP: 7.4
 Requires at least: 6.3
-Tested up to: 6.4.3
+Tested up to: 6.4
 WC tested up to: 8.6.1
-Stable tag: 2.4
+Stable tag: 2.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -32,6 +32,7 @@ Using Password Protected WooCommerce Store admin can fully customize password pr
 🔹 Customizable form title and form above/below content.
 🔹 Change title color, size, and alignment.
 🔹 Admin can set content color, size, and alignment.
+🔹 Admin can set website logo on password-protected box. also admin can customize logo options like logo link, open link in new tab and set nofollow attribute.
 🔹 Set a custom submit button text, text color, text hover color, font size, button color, button hover color, border color as you like.
 🔹 Customize input box size, color, font size, border color, border color, placeholder text, placeholder text color.
 🔹 Option to customize page background image, color or none with custom opacity and opacity color.
@@ -78,6 +79,9 @@ After Plugin Active go to Woocommerce-> Password Protected
 
 
 == Changelog ==
+= 2.5 =
+- Added option for logo in password-protected box 
+
 = 2.4 =
 - Added option to manage REST API protection
 
