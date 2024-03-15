@@ -10,7 +10,7 @@ Stable tag: 2.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Password Protected WooCommerce Store is an excellent plugin to set Password Protected Woocommerce Store. It allows you to set password in your store. Password can be set on entire site, on category, on pages, and on user role.
+This is a great plugin for securing your WooCommerce store. It enables you to easily set passwords for accessing your store.
 
 == Description ==
 Do you want a password protected page or a woocommerce password protected store? So here all you need is our wordpress password protected page plugin. The Password Protected WooCommerce Store lets you create product categories, pages, or your entire website password protected.
