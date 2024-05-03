@@ -87,11 +87,11 @@ if (!class_exists('ppws_password_protected_store_settings')) {
                                     <a href="?page=ppws-option-page&tab=page-setting" class="nav-tab <?php if ($tab === 'page-setting') : ?>nav-tab-active<?php endif; ?>"><?php _e('Pages', 'password-protected-store-for-woocommerce'); ?></a>
                                 </li>
                                 <li>
-                                    <a href="?page=ppws-option-page&tab=product-setting" class="nav-tab <?php if ($tab === 'product-setting') : ?>nav-tab-active<?php endif; ?>"><?php _e('Products', 'password-protected-store-for-woocommerce'); ?></a>
+                                    <a href="?page=ppws-option-page&tab=product-categories" class="nav-tab <?php if ($tab === 'product-categories') : ?>nav-tab-active<?php endif; ?>"><?php _e('Product Categories', 'password-protected-store-for-woocommerce'); ?></a>
                                 </li>
                                 <li>
-                                    <a href="?page=ppws-option-page&tab=product-categories" class="nav-tab <?php if ($tab === 'product-categories') : ?>nav-tab-active<?php endif; ?>"><?php _e('Product Categories', 'password-protected-store-for-woocommerce'); ?></a>
-                                </li>                                
+                                    <a href="?page=ppws-option-page&tab=product-setting" class="nav-tab <?php if ($tab === 'product-setting') : ?>nav-tab-active<?php endif; ?>"><?php _e('Products', 'password-protected-store-for-woocommerce'); ?></a>
+                                </li>
                                 <li>
                                     <a href="?page=ppws-option-page&tab=form-content" class="nav-tab <?php if ($tab === 'form-content') : ?>nav-tab-active<?php endif; ?>"><?php _e('Form Content', 'password-protected-store-for-woocommerce'); ?></a>
                                 </li>
