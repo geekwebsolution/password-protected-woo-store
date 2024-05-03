@@ -175,6 +175,40 @@ jQuery(document).ready(function ($) {
                 placeholder: "Please select pages"
             });
         }
+
+        /** AJAX for select2 post type product search results */
+        var $seacrh_product = jQuery(".ppws_product_products");
+        if ($seacrh_product.length > 0) {
+
+            $seacrh_product.select2({
+                ajax: {
+                    type: 'POST',
+                    url: ppwsObj.ajaxurl,
+                    dataType: 'json',
+                    delay: 250,
+                    data: (params) => {
+                        return {
+                            'search': params.term,
+                            'action': 'ppws_search_products',
+                        }
+                    },
+                    processResults: (data, params) => {
+                        const results = data.map(item => {
+                            return {
+                                id: item.id,
+                                text: item.title,
+                            };
+                        });
+                        return {
+                            results: results,
+                        }
+                    },
+                },
+                minimumInputLength: 2,
+                escapeMarkup: function (markup) { return markup; },
+                placeholder: "Please select products"
+            });
+        }
     }
 
     /** wp tinymc editior init */
@@ -220,7 +254,7 @@ jQuery(document).ready(function ($) {
     }
 
     /** Admin settings require field validation */
-    jQuery("body").on('submit', '.ppws-procat-setting-form,.ppws-general-setting-form,.ppws-page-setting-form', function () {
+    jQuery("body").on('submit', '.ppws-procat-setting-form,.ppws-general-setting-form,.ppws-page-setting-form,.ppws-product-setting-form', function () {
         if (jQuery("body .ppws_password_checkbox_validation").prop("checked") == true) {
             
             var wp_number = jQuery(".ppws-pwd-input").val();
@@ -278,16 +312,16 @@ jQuery(document).ready(function ($) {
             });
     });
 
-    /** Page Setting JS */
+    /** Page / Product Setting JS */
     jQuery("body").on("change", "#enable_user_role", function () {
         if (jQuery(this).is(":checked")) {
             jQuery(".ppws-section-user").removeClass("none-redio-click");
             if (jQuery(".ppws_user_logged_in_user").is(":checked")) {
-                jQuery(".ppws-page-logged-in-user-section").removeClass("ppws-hide-section");
+                jQuery(".ppws-logged-in-user-section").removeClass("ppws-hide-section");
             }
         } else {
             jQuery(".ppws-section-user").addClass("none-redio-click");
-            jQuery(".ppws-page-logged-in-user-section").addClass("ppws-hide-section");
+            jQuery(".ppws-logged-in-user-section").addClass("ppws-hide-section");
         }
     });
 
@@ -295,22 +329,21 @@ jQuery(document).ready(function ($) {
 
         if (jQuery("#enable_user_role").is(":checked")) {
             jQuery("body .ppws-userrole-error").addClass('ppws-hide-section');
-            jQuery(".ppws-page-logged-in-user-section").removeClass("ppws-hide-section");
+            jQuery(".ppws-logged-in-user-section").removeClass("ppws-hide-section");
         } else {
             jQuery("body .ppws-userrole-error").removeClass('ppws-hide-section');
         }
-
     });
 
     if (jQuery("input[class='ppws_user_non_logged_in_user']").is(":checked")) {
-        jQuery(".ppws-page-logged-in-user-section").addClass("ppws-hide-section");
+        jQuery(".ppws-logged-in-user-section").addClass("ppws-hide-section");
     }
 
     jQuery("body").on("click", ".ppws_user_non_logged_in_user", function () {
-        jQuery(".ppws-page-logged-in-user-section").addClass("ppws-hide-section");
+        jQuery(".ppws-logged-in-user-section").addClass("ppws-hide-section");
     });
-    /** Page Setting JS END */
-
+    /** Page / Product Setting JS END */
+    
     jQuery("body").on("change", "input[name='ppws_form_desgin_settings[form_logo_link_type_field]']", function () {
         var this_val = jQuery(this).val();
         if (this_val == "custom-link") {
@@ -361,12 +394,21 @@ jQuery(document).ready(function ($) {
         }
     });
 
-    /** Admin page settings on Logged in user role radio click */
+    /** Admin page settings on Enable password click */
     jQuery('input[id="ppws_page_enable_password_field_checkbox"]').click(function () {
         if (jQuery(this).prop("checked") == true) {
             jQuery(".ppws-page-enable-password-section,.ppws-section-user,.ppws-note-info").removeClass("ppws-hide-section");
         } else if (jQuery(this).prop("checked") == false) {
             jQuery(".ppws-page-enable-password-section,.ppws-section-user,.ppws-note-info").addClass("ppws-hide-section");
+        }
+    });
+
+    /** Admin product settings on Enable password click */
+    jQuery('input[id="ppws_product_enable_password_field_checkbox"]').click(function () {
+        if (jQuery(this).prop("checked") == true) {
+            jQuery(".ppws-product-enable-password-section,.ppws-section-user,.ppws-note-info").removeClass("ppws-hide-section");
+        } else if (jQuery(this).prop("checked") == false) {
+            jQuery(".ppws-product-enable-password-section,.ppws-section-user,.ppws-note-info").addClass("ppws-hide-section");
         }
     });
 

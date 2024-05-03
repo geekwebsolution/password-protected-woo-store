@@ -4,9 +4,9 @@ Donate link: https://paypal.me/rvadhel
 Tags: WooCommerce protected categories, woo protect, product protected, woocommerce store protected
 Requires PHP: 7.4
 Requires at least: 6.3
-Tested up to: 6.4
-WC tested up to: 8.6.1
-Stable tag: 2.5
+Tested up to: 6.5
+WC tested up to: 8.8.3
+Stable tag: 2.5.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -24,11 +24,11 @@ The Password Protected WooCommerce Store can help you to create your private sto
 Using Password Protected WooCommerce Store admin can fully customize password protected page wordpress like form title, form above/below content, Button color, font size, background, etc.
  
 **Free Features**
-🔹 Enable different passwords for the entire site, pages, and product categories.
-🔹 Set different password expiry time for the entire site, pages, and product categories.
-🔹 User role wise protection for each page, product categories and entire site.
+🔹 Enable different passwords for the entire site, pages, products and product categories.
+🔹 Set different password expiry time for the entire site, pages, products and product categories.
+🔹 User role wise protection for each page, products, product categories and entire site.
 🔹 Option to Protect archive page of password protected categories.
-🔹 Allows to set a password for a specific page, specific product categories and hide product from shop/loop for protected product category.
+🔹 Allows to set a password for a specific page, specific product, product categories And hide product from shop/loop for protected products, product categories.
 🔹 Customizable form title and form above/below content.
 🔹 Change title color, size, and alignment.
 🔹 Admin can set content color, size, and alignment.
@@ -69,16 +69,21 @@ After Plugin Active go to Woocommerce-> Password Protected
 1. General
 2. Page
 3. Product Categories
-4. Form Content
-5. Form design
-6. Advanced
-7. Front side -1
-8. Front side -2
-9. Front side -3
-10. Get Pro
+4. Products
+5. Form Content
+6. Form design
+7. Advanced
+8. Front side -1
+9. Front side -2
+10. Front side -3
+11. Get Pro
 
 
 == Changelog ==
+= 2.5.1 =
+- Added new feature
+  Protect Single Products at once
+
 = 2.5 =
 - Added option for logo in password-protected box 
 
