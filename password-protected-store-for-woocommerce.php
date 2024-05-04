@@ -285,15 +285,7 @@ function ppws_plugin_add_settings_link($links)
     return $links;
 }
 
-add_action('init', 'ppws_cookie_checker');
-function ppws_cookie_checker(){
-
-    $ppws_cookie = ppws_get_cookie('ppws_cookie');
-    if (!isset($ppws_cookie)) {
-        update_option('ppws_password_status', 'on');
-    }
-}
-
+/** Register products settings if not exists */
 add_action('admin_init', 'ppws_admin_init');
 function ppws_admin_init() {
     $product_settings = get_option('ppws_product_settings');
@@ -384,7 +376,6 @@ function ppws_enable_password_start() {
 add_action('end_whole_site_pass', 'ppws_whole_site_disable_password_end');
 function ppws_whole_site_disable_password_end()
 {
-    update_option('ppws_password_status', 'off');
     $redirect_url = home_url();
 
     global $wp;

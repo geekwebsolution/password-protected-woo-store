@@ -261,9 +261,6 @@ if (!class_exists('ppws_whole_site_settings')) {
 
             if (isset($input['ppws_enable_password_field_checkbox']) && !empty($input['ppws_enable_password_field_checkbox'])) {
                 $new_input['ppws_enable_password_field_checkbox'] = sanitize_text_field($input['ppws_enable_password_field_checkbox']);
-                if ($input['ppws_enable_password_field_checkbox'] == 'on') {
-                    update_option('ppws_password_status', 'on');
-                }
             }
             if (isset($input['ppws_enable_password_field_checkbox_for_admin']) && !empty($input['ppws_enable_password_field_checkbox_for_admin'])) {
                 $new_input['ppws_enable_password_field_checkbox_for_admin'] = sanitize_text_field($input['ppws_enable_password_field_checkbox_for_admin']);

@@ -309,6 +309,10 @@ if (!class_exists('ppws_product_settings')) {
                 }
             }
 
+            if (isset($input['ppws_hide_products_checkbox_field_checkbox']) && !empty($input['ppws_hide_products_checkbox_field_checkbox'])) {
+                $new_input['ppws_hide_products_checkbox_field_checkbox'] = sanitize_text_field($input['ppws_hide_products_checkbox_field_checkbox']);
+            }
+
             if (isset($input['product_list_of_product_field_checkbox'])) {
                 $product_list = implode(",", $input['product_list_of_product_field_checkbox']);
                 $new_input['product_list_of_product_field_checkbox'] = $product_list;
