@@ -296,34 +296,10 @@ function ppws_cookie_checker(){
 
 add_action('admin_init', 'ppws_admin_init');
 function ppws_admin_init() {
-    $general_settings = get_option('ppws_general_settings');
-    $page_settings = get_option('ppws_page_settings');
     $product_settings = get_option('ppws_product_settings');
-    $product_categories_settings = get_option('ppws_product_categories_settings');
-    $form_content_option = get_option('ppws_form_content_option');
-    $form_desgin_settings = get_option('ppws_form_desgin_settings');
-    $advanced_settings = get_option('ppws_advanced_settings');
     
-    if(!$general_settings)  {
-        update_option('ppws_general_settings','');
-    }
-    if(!$page_settings)  {
-        update_option('ppws_page_settings','');
-    }
     if(!$product_settings)  {
         update_option('ppws_product_settings','');
-    }
-    if(!$product_categories_settings)  {
-        update_option('ppws_product_categories_settings','');
-    }
-    if(!$form_content_option) {
-        update_option('ppws_form_content_option','');
-    }
-    if(!$form_desgin_settings) {
-        update_option('ppws_form_desgin_settings','');
-    }
-    if(!$advanced_settings)  {
-        update_option('ppws_advanced_settings','');
     }
 }
 
