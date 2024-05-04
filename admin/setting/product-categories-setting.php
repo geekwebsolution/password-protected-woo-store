@@ -4,10 +4,6 @@ if (!class_exists('ppws_product_categories_settings')) {
     $ppws_whole_site_options = get_option('ppws_general_settings');
     class ppws_product_categories_settings
     {
-        public function __construct()
-        {
-            add_action('admin_init', array($this, 'ppws_product_categories_register_settings_init'));
-        }
 
         function ppws_product_categories_callback()
         {
@@ -157,7 +153,7 @@ if (!class_exists('ppws_product_categories_settings')) {
                 array($this, 'ppws_product_categories_logged_in_user_role_settings'),
                 'ppws-product-categories-user-role-section',
                 'ppws_product_categories_user_role_settings_section',
-                ['type' => 'checkbox', 'label_for' => 'ppws_product_categories_logged_in_user_field_checkbox', 'class' => 'ppws-product-categories-select-logged-in-user-section ppws-page-logged-in-user-section', 'description' => 'Selected users get password form at front side.']
+                ['type' => 'checkbox', 'label_for' => 'ppws_product_categories_logged_in_user_field_checkbox', 'class' => 'ppws-product-categories-select-logged-in-user-section ppws-logged-in-user-section', 'description' => 'Selected users get password form at front side.']
             );
             /* User Role End */
         }

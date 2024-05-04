@@ -3,10 +3,6 @@ if (!class_exists('ppws_whole_site_settings')) {
     /* Main key */
     $ppws_whole_site_options = get_option('ppws_general_settings');
     class ppws_whole_site_settings{
-        
-        public function __construct(){
-            add_action('admin_init', array($this, 'ppws_whole_site_register_settings_init'));
-        }
 
         function ppws_whole_site_callback()
         {
@@ -159,7 +155,7 @@ if (!class_exists('ppws_whole_site_settings')) {
                 array($this, 'ppws_logged_in_user_role_settings'),
                 'ppws-user-role-section',
                 'ppws_user_role_settings_section',
-                ['type' => 'checkbox', 'label_for' => 'ppws_logged_in_user_field_checkbox', 'class' => 'ppws-page-logged-in-user-section', 'description' => 'Selected users get password form at front side.']
+                ['type' => 'checkbox', 'label_for' => 'ppws_logged_in_user_field_checkbox', 'class' => 'ppws-logged-in-user-section', 'description' => 'Selected users get password form at front side.']
             );
             /* User Role End */
         }
@@ -265,9 +261,6 @@ if (!class_exists('ppws_whole_site_settings')) {
 
             if (isset($input['ppws_enable_password_field_checkbox']) && !empty($input['ppws_enable_password_field_checkbox'])) {
                 $new_input['ppws_enable_password_field_checkbox'] = sanitize_text_field($input['ppws_enable_password_field_checkbox']);
-                if ($input['ppws_enable_password_field_checkbox'] == 'on') {
-                    update_option('ppws_password_status', 'on');
-                }
             }
             if (isset($input['ppws_enable_password_field_checkbox_for_admin']) && !empty($input['ppws_enable_password_field_checkbox_for_admin'])) {
                 $new_input['ppws_enable_password_field_checkbox_for_admin'] = sanitize_text_field($input['ppws_enable_password_field_checkbox_for_admin']);

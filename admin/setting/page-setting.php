@@ -1,18 +1,12 @@
 <?php
 if (!class_exists('ppws_page_settings')) {
     $ppws_page_options = get_option('ppws_page_settings');
-    $ppws_whole_site_options = get_option('ppws_general_settings');
 
     class ppws_page_settings
     {
-        public function __construct()
-        {
-            add_action('admin_init', array($this, 'ppws_page_register_settings_init'));
-        }
 
         function ppws_page_callback()
         {
-            global $ppws_whole_site_options;
             global $ppws_page_options; ?>
             <form action="options.php?tab=page-setting" method="post" class="ppws-page-setting-form">
                 <?php 
@@ -149,7 +143,7 @@ if (!class_exists('ppws_page_settings')) {
                 array($this, 'ppws_page_logged_in_user_role_settings'),
                 'ppws-page-user-role-section',
                 'ppws_page_user_role_settings_section',
-                ['type' => 'checkbox', 'label_for' => 'ppws_page_logged_in_user_field_checkbox', 'class' => 'ppws-page-logged-in-user-section', 'description' => 'Selected users get password form at front side.']
+                ['type' => 'checkbox', 'label_for' => 'ppws_page_logged_in_user_field_checkbox', 'class' => 'ppws-logged-in-user-section', 'description' => 'Selected users get password form at front side.']
             );
             /* User Role End */
         }
@@ -200,8 +194,7 @@ if (!class_exists('ppws_page_settings')) {
             if ($args['type'] == 'checkbox') {
                 global $wp_roles;
                 $all_roles = $wp_roles->roles;
-                $editable_roles = apply_filters('editable_roles', $all_roles);
-            ?>
+                $editable_roles = apply_filters('editable_roles', $all_roles); ?>
                 <div class="ppws_all_user_list">
                     <?php
                     echo '<div class="ppws_all_user_list_input"><label><input type="checkbox" class="ppws-checkbox editable_roles_all" >All</label></div>';

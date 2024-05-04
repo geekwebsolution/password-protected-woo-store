@@ -3,8 +3,8 @@
 Plugin Name: Password Protected Store for WooCommerce
 Description: Password Protected Store for WooCommerce is an excellent plugin to set Password Protected Store for WooCommerce. It allows you to set password in your store. Password can be set on whole site, on category, on pages, and on user role.
 Author: Geek Code Lab
-Version: 2.5
-WC tested up to: 8.6.1
+Version: 2.5.1
+WC tested up to: 8.8.3
 Author URI: https://geekcodelab.com/
 Text Domain : password-protected-store-for-woocommerce
 */
@@ -18,7 +18,7 @@ if (!defined("WPPS_PLUGIN_URL"))
     define("WPPS_PLUGIN_URL", plugins_url() . '/' . basename(dirname(__FILE__)));
 
 
-define("PPWS_BUILD", '2.5');
+define("PPWS_BUILD", '2.5.1');
 
 /**
  * Plugin active/deactive hook
@@ -59,6 +59,20 @@ function ppws_plugin_active_woocommerce_password_protected_store()
         if(count($page_option) > 0)	update_option('ppws_page_settings', $page_option);
     }
     /** Page Setting End */
+
+    /** Product Setting Start */
+    $product_pwd        = "";
+    $product_expiry_day = "";
+    $product_option     = array();
+    $product_option_settings        = get_option('ppws_product_settings');
+
+    if(!isset($product_option_settings['product_set_password_field_textbox']))           $product_option['product_set_password_field_textbox']            = $product_pwd;
+    if(!isset($product_option_settings['product_set_password_expiry_field_textbox']))    $product_option['product_set_password_expiry_field_textbox']     = $product_expiry_day;
+
+    if(isset($product_option) && !empty($product_option)){
+        if(count($product_option) > 0)	update_option('ppws_product_settings', $product_option);
+    }
+    /** Product Setting End */
 
     /** Product Categories Setting Start */
     $product_cat_pwd        = "";
@@ -183,17 +197,17 @@ function ppws_plugin_active_woocommerce_password_protected_store()
     }
    /** Form Style End */
 
-   /** General Setting Start */
+   /** Advanced Setting Start */
    $isolation_mode      = "on";
    $advanced_option     = array();
    $advanced_option_settings  = get_option('ppws_advanced_settings');
 
    if(!isset($advanced_option_settings['enable_isolation_field_checkbox']))      $advanced_option['enable_isolation_field_checkbox']   = $isolation_mode;
 
-   if(isset($advanced_option) && !empty($advanced_option)){
+   if(isset($advanced_option) && !empty($advanced_option)) {
        if(count($advanced_option) > 0)	update_option('ppws_advanced_settings', $advanced_option);
    }
-   /** General Setting End */
+   /** Advanced Setting End */
 }
 
 /**
@@ -271,12 +285,13 @@ function ppws_plugin_add_settings_link($links)
     return $links;
 }
 
-add_action('init', 'ppws_cookie_checker');
-function ppws_cookie_checker(){
-
-    $ppws_cookie = ppws_get_cookie('ppws_cookie');
-    if (!isset($ppws_cookie)) {
-        update_option('ppws_password_status', 'on');
+/** Register products settings if not exists */
+add_action('admin_init', 'ppws_admin_init');
+function ppws_admin_init() {
+    $product_settings = get_option('ppws_product_settings');
+    
+    if(!$product_settings)  {
+        update_option('ppws_product_settings','');
     }
 }
 
@@ -297,18 +312,30 @@ function ppws_wp() {
 /** Template redirection hook */
 add_action('template_redirect', 'ppws_enable_password_start');
 function ppws_enable_password_start() {
-    if( ppws_is_protected_whole_site() || ppws_is_protected_page() || ppws_is_protected_product_categories() ) {
+    if( ppws_is_protected_whole_site() || ppws_is_protected_page() || ppws_is_protected_product() || ppws_is_protected_product_categories() ) {
         ppws_prevent_indexing();
         ppws_nocache_headers();
     }
 
     $ppws_whole_site_options = get_option('ppws_general_settings');
     $ppws_page_options = get_option('ppws_page_settings');
+    $ppws_product_options = get_option('ppws_product_settings');
     $ppws_product_categories_options = get_option('ppws_product_categories_settings');
         
-
     do {
-        if (ppws_is_protected_page() || ppws_is_protected_product_categories()) {
+        if (ppws_is_protected_product() || ppws_is_protected_page() || ppws_is_protected_product_categories()) {
+            if(ppws_is_protected_product()) {
+                
+                $ppws_product_cookie = (ppws_get_cookie('ppws_product_cookie') != '') ? ppws_get_cookie('ppws_product_cookie') : 'ddd';
+                $ppws_product_main_password = $ppws_product_options['product_set_password_field_textbox'];
+                if(ppws_decrypted_password($ppws_product_cookie) != ppws_decrypted_password($ppws_product_main_password)) {
+                    include_once(WPPS_PLUGIN_DIR_PATH . 'front/class-ppws-protected-form.php');
+                    die;
+                }else{
+                    break;
+                }
+            }
+
             if(ppws_is_protected_page()) {
                 $ppws_page_cookie = (ppws_get_cookie('ppws_page_cookie') != '') ? ppws_get_cookie('ppws_page_cookie') : 'ddd';
                 $ppws_page_main_password = $ppws_page_options['ppws_page_set_password_field_textbox'];
@@ -318,7 +345,7 @@ function ppws_enable_password_start() {
                 }else{
                     break;
                 }
-            }   
+            }
             
             if(ppws_is_protected_product_categories()) {
                 $ppws_categories_cookie = ppws_get_cookie('ppws_categories_cookie');
@@ -349,7 +376,6 @@ function ppws_enable_password_start() {
 add_action('end_whole_site_pass', 'ppws_whole_site_disable_password_end');
 function ppws_whole_site_disable_password_end()
 {
-    update_option('ppws_password_status', 'off');
     $redirect_url = home_url();
 
     global $wp;
@@ -366,24 +392,37 @@ function ppws_whole_site_disable_password_end()
  * Hide / Exclude products from a particular category on the shop page
  */
 add_action( 'woocommerce_product_query', 'ppsw_custom_query_exclude_taxonomy' );
-function ppsw_custom_query_exclude_taxonomy($q) {
+function ppsw_custom_query_exclude_taxonomy($query) {
     if(is_admin())  return;
 
     ppws_nocache_headers();
 
     $protected_categories = ppws_protected_categories();
     if(isset($protected_categories) && !empty($protected_categories)) {
-        $tax_query = (array) $q->get( 'tax_query' );
+        $tax_query = (array) $query->get( 'tax_query' );
 
         $tax_query[] = array(
             'taxonomy' => 'product_cat',
             'field' => 'id',
-            'terms' => explode( ',', $protected_categories ), // Don't display products in the clothing category on the shop page.
+            'terms' => explode( ',', $protected_categories ),
             'operator' => 'NOT IN',
             'include_children' => false
         );
 
-        $q->set( 'tax_query', $tax_query );
+        $query->set( 'tax_query', $tax_query );
+    }
+
+    $protected_products = ppws_protected_products();
+    if(isset($protected_products) && !empty($protected_products)) {
+        $products = explode( ',', $protected_products );
+
+        if(isset($products) && !empty($products)) {
+            $post__not_in = (array) $query->get( 'post__not_in' );
+
+            $post__not_in = array_merge($post__not_in,$products);
+
+            $query->set( 'post__not_in', $post__not_in );
+        }
     }
 }
 
@@ -398,6 +437,15 @@ function ppws_modify_search_query( $query ) {
 
     global $wp_the_query;
     if( $query === $wp_the_query && $query->is_search() ) {
+
+        $tax_query = array(
+            'taxonomy' => 'product_cat',
+            'field' => 'term_id',
+            'terms' => array( 18 ),
+            'operator' => 'NOT IN',
+            'include_children' => false
+        );
+        $query->set( 'tax_query', $tax_query );
         
         $protected_terms = ppws_protected_categories();
         if(isset($protected_terms) && !empty($protected_terms)) {
@@ -413,6 +461,15 @@ function ppws_modify_search_query( $query ) {
             );
             $query->set( 'tax_query', $tax_query );
         }
+
+        $protected_products = ppws_protected_products();
+        if(isset($protected_products) && !empty($protected_products)) {
+            $products = explode( ',', $protected_products );
+            
+            if(isset($products) && !empty($products)) {
+                $query->set( 'post__not_in', $products );
+            }
+        }
     }
 }
 
@@ -427,7 +484,7 @@ add_action( 'before_woocommerce_init', function() {
 } );
 
 /**
- * Select post types to exclude data
+ * Select in product categories
  */
 add_action('wp_ajax_ppws_search_product_categories','ppws_search_product_categories');
 add_action( 'wp_ajax_nopriv_ppws_search_product_categories', 'ppws_search_product_categories' );
@@ -462,7 +519,7 @@ function ppws_search_product_categories() {
 }
 
 /**
- * Select post types to exclude data
+ * Select in post type pages
  */
 add_action('wp_ajax_ppws_search_pages','ppws_search_pages');
 add_action( 'wp_ajax_nopriv_ppws_search_pages', 'ppws_search_pages' );
@@ -479,6 +536,35 @@ function ppws_search_pages() {
 
     if(isset($all_pages) && !empty($all_pages)) {
         foreach ($all_pages as $post) {
+            $result[] = array(
+				'id' => $post->ID,
+				'title' => $post->post_title." (#".$post->ID.")"
+			);
+        }
+    }
+
+    echo json_encode($result);
+	die;
+}
+
+/**
+ * Select in post type products
+ */
+add_action('wp_ajax_ppws_search_products','ppws_search_products');
+add_action( 'wp_ajax_nopriv_ppws_search_products', 'ppws_search_products' );
+function ppws_search_products() {
+    $all_products = $result = [];
+    $search = $_POST['search'];
+
+    $all_products = get_posts(array(
+		's'					=> $search,
+		'post_type'			=> 'product',
+		'post_status'		=> 'publish',
+		'posts_per_product'	=> -1
+	));
+
+    if(isset($all_products) && !empty($all_products)) {
+        foreach ($all_products as $post) {
             $result[] = array(
 				'id' => $post->ID,
 				'title' => $post->post_title." (#".$post->ID.")"

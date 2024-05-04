@@ -2,9 +2,6 @@
 if ( !class_exists( 'ppws_form_style_settings' ) ) {
     $ppws_form_style_settings_option = get_option( 'ppws_form_desgin_settings' );
     class ppws_form_style_settings {
-        public function __construct() {
-            add_action( 'admin_init', array( $this, 'ppws_form_style_settings_register_settings_init' ) );
-        }
 
         function ppws_form_style_settings_callback() {
             ?>

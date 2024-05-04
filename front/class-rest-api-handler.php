@@ -14,6 +14,9 @@ if ( !class_exists( 'ppws_wp_rest_api_handler' ) ) {
     $ppws_page_options = get_option('ppws_page_settings');
 
     /** Get options of product settings */
+    $ppws_product_options = get_option('ppws_product_settings');
+
+    /** Get options of product settings */
     $ppws_product_categories_options = get_option('ppws_product_categories_settings');
 
     class ppws_wp_rest_api_handler {
@@ -39,7 +42,7 @@ if ( !class_exists( 'ppws_wp_rest_api_handler' ) ) {
         }
 
         public function product_content_json( $data, $product, $request ) {
-            global $ppws_product_categories_options;
+            global $ppws_product_options, $ppws_product_categories_options;
 
             $selected_cat = "";
             $cat_field = "ppws_product_categories_all_categories_field_checkbox";
@@ -53,6 +56,14 @@ if ( !class_exists( 'ppws_wp_rest_api_handler' ) ) {
                     if(isset($data->data['content']['rendered']))   $data->data['content']['rendered'] = "";
                     if(isset($data->data['excerpt']['rendered']))   $data->data['excerpt']['rendered'] = "";
                 }
+            }
+
+            $product_field_name = "product_list_of_product_field_checkbox";
+            $selected_product = (isset($ppws_product_options[$product_field_name]) && !empty($ppws_product_options[$product_field_name])) ? explode(",",$ppws_product_options[$product_field_name]) : array();
+            
+            if( in_array($data->data['id'], $selected_product) ) {
+                if(isset($data->data['content']['rendered']))   $data->data['content']['rendered'] = "";
+                if(isset($data->data['excerpt']['rendered']))   $data->data['excerpt']['rendered'] = "";
             }
 
             return $data;

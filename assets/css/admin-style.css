@@ -44,8 +44,8 @@
     position: relative;
     margin-left: 0;
     background: #fff;
-    padding: 10px 30px;
-    font-size: 16px;
+    padding: 10px 25px;
+    font-size: 15px;
     color: #000;
     display: inline-block;
     float: none;
@@ -70,6 +70,10 @@
 .ppws-tab-list {
     position: relative;
     z-index: 2;
+}
+
+.ppws-container .notice {
+    margin: 0px;
 }
 
 .ppws-header .ppws-h1 {
@@ -156,7 +160,7 @@
 }
 
 .ppws-container .ppws-h1 {
-    padding: 20px 0;
+    padding: 20px 0 0 0;
 }
 
 input.wp-color-picker,

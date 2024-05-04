@@ -1,6 +1,7 @@
 <?php
 $ppws_whole_site_options = get_option('ppws_general_settings');
 $ppws_page_options = get_option( 'ppws_page_settings' );
+$ppws_product_options = get_option( 'ppws_product_settings' );
 $ppws_product_categories_options = get_option( 'ppws_product_categories_settings' );
 if (isset($_POST['ppws_submit'])) {
     $referer       = wp_get_referer();
@@ -12,7 +13,7 @@ if (isset($_POST['ppws_submit'])) {
     $ppws_current_pass = sanitize_text_field($_POST['ppws_password']);
 
     do {
-        if (isset($ppws_page_options['ppws_page_enable_password_field_checkbox']) == 'on' || isset($ppws_product_categories_options['ppws_product_categories_enable_password_field_checkbox']) == 'on') {
+        if (isset($ppws_page_options['ppws_page_enable_password_field_checkbox']) == 'on' || isset($ppws_product_options['product_enable_password_field_checkbox']) == 'on' || isset($ppws_product_categories_options['ppws_product_categories_enable_password_field_checkbox']) == 'on') {
             if(is_page() || is_shop() ) {
                 if(isset($ppws_page_options['ppws_page_enable_password_field_checkbox']) && $ppws_page_options['ppws_page_enable_password_field_checkbox'] == 'on') {
                     $selected_pages = (isset($ppws_page_options['ppws_page_list_of_page_field_checkbox']) && !empty($ppws_page_options['ppws_page_list_of_page_field_checkbox'])) ? explode(",", $ppws_page_options['ppws_page_list_of_page_field_checkbox']) : array();
@@ -31,7 +32,30 @@ if (isset($_POST['ppws_submit'])) {
                     }
                 }
             } else {
-                if(is_category() || is_archive() || is_single() ){
+                if(is_product()) {
+                    if(isset($ppws_product_options['product_enable_password_field_checkbox']) && $ppws_product_options['product_enable_password_field_checkbox'] == 'on') {
+                        $selected_products = (isset($ppws_product_options['product_list_of_product_field_checkbox']) && !empty($ppws_product_options['product_list_of_product_field_checkbox'])) ? explode(",", $ppws_product_options['product_list_of_product_field_checkbox']) : array();
+                        if(isset($selected_products) && !empty($selected_products)) {
+                            $product    = wc_get_product();
+                            $product_id = $product->get_id();
+                            if(in_array($product_id,$selected_products)) {
+                                $ppws_main_password = $ppws_product_options['product_set_password_field_textbox'];
+                                $ppws_set_password_expiry = $ppws_product_options['product_set_password_expiry_field_textbox'];
+                                $ppws_expiry = (!empty($ppws_set_password_expiry)) ? ($ppws_set_password_expiry * 60 * 60 * 24) : (10 * 365 * 24 * 60 * 60);
+                                if (ppws_decrypted_password($ppws_main_password) == $ppws_current_pass) {
+                                    setcookie( 'ppws_product_cookie', $ppws_main_password, time() + ($ppws_expiry), COOKIEPATH, COOKIE_DOMAIN, $secure );
+                                    ppws_whole_site_disable_password_end();
+                                    break;
+                                } else {
+                                    $pwd_err = 'password not match';
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if(is_category() || is_archive() || is_product() ){
                     if (isset($ppws_product_categories_options['ppws_product_categories_enable_password_field_checkbox']) && $ppws_product_categories_options['ppws_product_categories_enable_password_field_checkbox'] == 'on') {
                         $all_selected_category = (isset($ppws_product_categories_options['ppws_product_categories_all_categories_field_checkbox']) && !empty($ppws_product_categories_options['ppws_product_categories_all_categories_field_checkbox'])) ? explode(",", $ppws_product_categories_options['ppws_product_categories_all_categories_field_checkbox']) : array();
                         if(isset($all_selected_category) && !empty($all_selected_category)) {

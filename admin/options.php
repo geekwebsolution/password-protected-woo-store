@@ -1,6 +1,7 @@
 <?php
 include(WPPS_PLUGIN_DIR_PATH . 'admin/setting/general-setting.php');
 include(WPPS_PLUGIN_DIR_PATH . 'admin/setting/page-setting.php');
+include(WPPS_PLUGIN_DIR_PATH . 'admin/setting/product-setting.php');
 include(WPPS_PLUGIN_DIR_PATH . 'admin/setting/product-categories-setting.php');
 include(WPPS_PLUGIN_DIR_PATH . 'admin/setting/form-content.php');
 include(WPPS_PLUGIN_DIR_PATH . 'admin/setting/form-desgin.php');
@@ -20,6 +21,11 @@ if (!class_exists('ppws_password_protected_store_settings')) {
     if ($tab == 'page-setting') {
         $ppws_page_class = new ppws_page_settings();
         add_action('admin_init', array($ppws_page_class, 'ppws_page_register_settings_init'));
+    }
+
+    if ($tab == 'product-setting') {
+        $ppws_product_class = new ppws_product_settings();
+        add_action('admin_init', array($ppws_product_class, 'ppws_product_register_settings_init'));
     }
 
     if ($tab == 'product-categories') {
@@ -65,17 +71,27 @@ if (!class_exists('ppws_password_protected_store_settings')) {
                         <h1 class='ppws-h1'> <?php _e('Password Protected Store for WooCommerce', 'password-protected-store-for-woocommerce'); ?> </h1>
                     </div>
                     <div class="ppws-option-section">
+                        <?php
+                        if ( isset( $_GET['settings-updated'] ) ) {
+                            if ( 'true' === $_GET['settings-updated'] ) {
+                                echo sprintf('<div class="notice is-dismissible notice-success"><p>%s</p></div>', esc_html("Settings Saved.","password-protected-store-for-woocommerce"));
+                            }
+                        }
+                        ?>
                         <div class="ppws-tabbing-box">
                             <ul class="ppws-tab-list nav-tab-wrapper">
                                 <li>
                                     <a href="?page=ppws-option-page" class="nav-tab <?php if ($tab === null) :  ?>nav-tab-active <?php endif; ?>"> <?php _e('General', 'password-protected-store-for-woocommerce'); ?> </a>
                                 </li>
                                 <li>
-                                    <a href="?page=ppws-option-page&tab=page-setting" class="nav-tab <?php if ($tab === 'page-setting') : ?>nav-tab-active<?php endif; ?>"><?php _e('Page', 'password-protected-store-for-woocommerce'); ?></a>
+                                    <a href="?page=ppws-option-page&tab=page-setting" class="nav-tab <?php if ($tab === 'page-setting') : ?>nav-tab-active<?php endif; ?>"><?php _e('Pages', 'password-protected-store-for-woocommerce'); ?></a>
                                 </li>
                                 <li>
                                     <a href="?page=ppws-option-page&tab=product-categories" class="nav-tab <?php if ($tab === 'product-categories') : ?>nav-tab-active<?php endif; ?>"><?php _e('Product Categories', 'password-protected-store-for-woocommerce'); ?></a>
-                                </li>                                
+                                </li>
+                                <li>
+                                    <a href="?page=ppws-option-page&tab=product-setting" class="nav-tab <?php if ($tab === 'product-setting') : ?>nav-tab-active<?php endif; ?>"><?php _e('Products', 'password-protected-store-for-woocommerce'); ?></a>
+                                </li>
                                 <li>
                                     <a href="?page=ppws-option-page&tab=form-content" class="nav-tab <?php if ($tab === 'form-content') : ?>nav-tab-active<?php endif; ?>"><?php _e('Form Content', 'password-protected-store-for-woocommerce'); ?></a>
                                 </li>
@@ -106,6 +122,11 @@ if (!class_exists('ppws_password_protected_store_settings')) {
                             if ($tab == 'page-setting') {
                                 $ppws_page_class = new ppws_page_settings();
                                 $ppws_page_class->ppws_page_callback();
+                            }
+
+                            if ($tab == 'product-setting') {
+                                $ppws_product_class = new ppws_product_settings();
+                                $ppws_product_class->ppws_product_callback();
                             }
 
                             if ($tab == 'product-categories') {
