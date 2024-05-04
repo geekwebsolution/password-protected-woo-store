@@ -392,34 +392,37 @@ function ppws_whole_site_disable_password_end()
  * Hide / Exclude products from a particular category on the shop page
  */
 add_action( 'woocommerce_product_query', 'ppsw_custom_query_exclude_taxonomy' );
-function ppsw_custom_query_exclude_taxonomy($q) {
+function ppsw_custom_query_exclude_taxonomy($query) {
     if(is_admin())  return;
 
     ppws_nocache_headers();
 
     $protected_categories = ppws_protected_categories();
     if(isset($protected_categories) && !empty($protected_categories)) {
-        $tax_query = (array) $q->get( 'tax_query' );
+        $tax_query = (array) $query->get( 'tax_query' );
 
         $tax_query[] = array(
             'taxonomy' => 'product_cat',
             'field' => 'id',
-            'terms' => explode( ',', $protected_categories ), // Don't display products in the clothing category on the shop page.
+            'terms' => explode( ',', $protected_categories ),
             'operator' => 'NOT IN',
             'include_children' => false
         );
 
-        $q->set( 'tax_query', $tax_query );
+        $query->set( 'tax_query', $tax_query );
     }
 
     $protected_products = ppws_protected_products();
     if(isset($protected_products) && !empty($protected_products)) {
         $products = explode( ',', $protected_products );
-        $post__not_in = (array) $q->get( 'post__not_in' );
 
-        $post__not_in = array_merge($post__not_in,$products);
+        if(isset($products) && !empty($products)) {
+            $post__not_in = (array) $query->get( 'post__not_in' );
 
-        $q->set( 'post__not_in', $post__not_in );
+            $post__not_in = array_merge($post__not_in,$products);
+
+            $query->set( 'post__not_in', $post__not_in );
+        }
     }
 }
 
@@ -434,6 +437,15 @@ function ppws_modify_search_query( $query ) {
 
     global $wp_the_query;
     if( $query === $wp_the_query && $query->is_search() ) {
+
+        $tax_query = array(
+            'taxonomy' => 'product_cat',
+            'field' => 'term_id',
+            'terms' => array( 18 ),
+            'operator' => 'NOT IN',
+            'include_children' => false
+        );
+        $query->set( 'tax_query', $tax_query );
         
         $protected_terms = ppws_protected_categories();
         if(isset($protected_terms) && !empty($protected_terms)) {
@@ -448,6 +460,15 @@ function ppws_modify_search_query( $query ) {
                 )
             );
             $query->set( 'tax_query', $tax_query );
+        }
+
+        $protected_products = ppws_protected_products();
+        if(isset($protected_products) && !empty($protected_products)) {
+            $products = explode( ',', $protected_products );
+            
+            if(isset($products) && !empty($products)) {
+                $query->set( 'post__not_in', $products );
+            }
         }
     }
 }

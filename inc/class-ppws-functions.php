@@ -98,7 +98,7 @@ function ppws_protected_products() {
     // Check if the product options exist and password protection is enabled.
     if (isset($ppws_product_options['product_enable_password_field_checkbox']) && $ppws_product_options['product_enable_password_field_checkbox'] === 'on') {
 
-        $hide_general_product_from_loop = (isset($ppws_product_options['ppws_hide_products_checkbox_field_checkbox'])) ? $ppws_product_categories_options['ppws_hide_products_checkbox_field_checkbox']: '';
+        $hide_general_product_from_loop = (isset($ppws_product_options['ppws_hide_products_checkbox_field_checkbox'])) ? $ppws_product_options['ppws_hide_products_checkbox_field_checkbox']: '';
 
         if($hide_general_product_from_loop == 'on') {
 
