@@ -6,9 +6,6 @@ if ( !class_exists( 'ppws_form_settings' ) ) {
     /* Main option key for store data for Form Settings */
     $ppws_form_settings_option = get_option( 'ppws_form_content_option' );
     class ppws_form_settings {
-        public function __construct() {
-            add_action( 'admin_init', array( $this, 'ppws_form_settings_register_settings_init' ) );
-        }
 
         /* Form creation class() call back function from options.php */
         function ppws_form_settings_callback() {

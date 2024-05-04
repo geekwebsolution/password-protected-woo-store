@@ -66,8 +66,8 @@ function ppws_plugin_active_woocommerce_password_protected_store()
     $product_option     = array();
     $product_option_settings        = get_option('ppws_product_settings');
 
-    if(!isset($product_option_settings['ppws_product_set_password_field_textbox']))           $product_option['ppws_product_set_password_field_textbox']            = $product_pwd;
-    if(!isset($product_option_settings['ppws_product_set_password_expiry_field_textbox']))    $product_option['ppws_product_set_password_expiry_field_textbox']     = $product_expiry_day;
+    if(!isset($product_option_settings['product_set_password_field_textbox']))           $product_option['product_set_password_field_textbox']            = $product_pwd;
+    if(!isset($product_option_settings['product_set_password_expiry_field_textbox']))    $product_option['product_set_password_expiry_field_textbox']     = $product_expiry_day;
 
     if(isset($product_option) && !empty($product_option)){
         if(count($product_option) > 0)	update_option('ppws_product_settings', $product_option);
@@ -197,17 +197,17 @@ function ppws_plugin_active_woocommerce_password_protected_store()
     }
    /** Form Style End */
 
-   /** General Setting Start */
+   /** Advanced Setting Start */
    $isolation_mode      = "on";
    $advanced_option     = array();
    $advanced_option_settings  = get_option('ppws_advanced_settings');
 
    if(!isset($advanced_option_settings['enable_isolation_field_checkbox']))      $advanced_option['enable_isolation_field_checkbox']   = $isolation_mode;
 
-   if(isset($advanced_option) && !empty($advanced_option)){
+   if(isset($advanced_option) && !empty($advanced_option)) {
        if(count($advanced_option) > 0)	update_option('ppws_advanced_settings', $advanced_option);
    }
-   /** General Setting End */
+   /** Advanced Setting End */
 }
 
 /**
@@ -316,10 +316,10 @@ function ppws_admin_init() {
     if(!$product_categories_settings)  {
         update_option('ppws_product_categories_settings','');
     }
-    if(!$form_content_option)  {
+    if(!$form_content_option) {
         update_option('ppws_form_content_option','');
     }
-    if(!$form_desgin_settings)  {
+    if(!$form_desgin_settings) {
         update_option('ppws_form_desgin_settings','');
     }
     if(!$advanced_settings)  {
@@ -359,7 +359,7 @@ function ppws_enable_password_start() {
             if(ppws_is_protected_product()) {
                 
                 $ppws_product_cookie = (ppws_get_cookie('ppws_product_cookie') != '') ? ppws_get_cookie('ppws_product_cookie') : 'ddd';
-                $ppws_product_main_password = $ppws_product_options['ppws_product_set_password_field_textbox'];
+                $ppws_product_main_password = $ppws_product_options['product_set_password_field_textbox'];
                 if(ppws_decrypted_password($ppws_product_cookie) != ppws_decrypted_password($ppws_product_main_password)) {
                     include_once(WPPS_PLUGIN_DIR_PATH . 'front/class-ppws-protected-form.php');
                     die;

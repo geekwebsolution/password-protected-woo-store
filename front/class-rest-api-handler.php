@@ -58,7 +58,7 @@ if ( !class_exists( 'ppws_wp_rest_api_handler' ) ) {
                 }
             }
 
-            $product_field_name = "ppws_product_list_of_product_field_checkbox";
+            $product_field_name = "product_list_of_product_field_checkbox";
             $selected_product = (isset($ppws_product_options[$product_field_name]) && !empty($ppws_product_options[$product_field_name])) ? explode(",",$ppws_product_options[$product_field_name]) : array();
             
             if( in_array($data->data['id'], $selected_product) ) {

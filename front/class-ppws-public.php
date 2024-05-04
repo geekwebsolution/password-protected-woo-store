@@ -75,7 +75,7 @@ function ppws_is_protected_product() {
     // Get product options from settings
     $ppws_product_options = get_option('ppws_product_settings');
 
-    $dfa_product_protect     = (isset($ppws_product_options['ppws_product_enable_password_field_checkbox_for_admin']) && $ppws_product_options['ppws_product_enable_password_field_checkbox_for_admin'] == 'on') ? true : false;
+    $dfa_product_protect     = (isset($ppws_product_options['product_enable_password_field_checkbox_for_admin']) && $ppws_product_options['product_enable_password_field_checkbox_for_admin'] == 'on') ? true : false;
 
     if(current_user_can( 'administrator' ) && $dfa_product_protect) {
         return false;
@@ -85,33 +85,33 @@ function ppws_is_protected_product() {
     $product_id = $product->get_id();
 
     // Check if the product options exist and password protection is enabled.
-    if (isset($ppws_product_options['ppws_product_enable_password_field_checkbox']) && $ppws_product_options['ppws_product_enable_password_field_checkbox'] === 'on') {
+    if (isset($ppws_product_options['product_enable_password_field_checkbox']) && $ppws_product_options['product_enable_password_field_checkbox'] === 'on') {
 
         // Get selected protected products.
-        $selected_products = (isset($ppws_product_options['ppws_product_list_of_product_field_checkbox']) && !empty($ppws_product_options['ppws_product_list_of_product_field_checkbox'])) ? explode(",", $ppws_product_options['ppws_product_list_of_product_field_checkbox']) : array();
+        $selected_products = (isset($ppws_product_options['product_list_of_product_field_checkbox']) && !empty($ppws_product_options['product_list_of_product_field_checkbox'])) ? explode(",", $ppws_product_options['product_list_of_product_field_checkbox']) : array();
 
         if(isset($selected_products) && !empty($selected_products)) {
 
             // Get the status of password protection for admin users.
-            $ppws_product_status_for_admin = isset($ppws_product_options['ppws_product_enable_password_field_checkbox_for_admin']) ? $ppws_product_options['ppws_product_enable_password_field_checkbox_for_admin'] : 'off';
+            $ppws_product_status_for_admin = isset($ppws_product_options['product_enable_password_field_checkbox_for_admin']) ? $ppws_product_options['product_enable_password_field_checkbox_for_admin'] : 'off';
 
             // Check if the current product ID is in the selected protected products.
             if (in_array($product_id, $selected_products)) {
 
                 if (isset($ppws_product_options['enable_user_role'])) {
 
-                    if (isset($ppws_product_options['ppws_product_select_user_role_field_radio'])) {
+                    if (isset($ppws_product_options['product_select_user_role_field_radio'])) {
 
                         // Check if the product is accessible for non-logged-in users.
-                        if ("non-logged-in-user" === $ppws_product_options['ppws_product_select_user_role_field_radio'] && !is_user_logged_in()) {
+                        if ("non-logged-in-user" === $ppws_product_options['product_select_user_role_field_radio'] && !is_user_logged_in()) {
                             return true;
-                        } elseif ("logged-in-user" === $ppws_product_options['ppws_product_select_user_role_field_radio'] && is_user_logged_in()) {
+                        } elseif ("logged-in-user" === $ppws_product_options['product_select_user_role_field_radio'] && is_user_logged_in()) {
                             // Check if the product is accessible for logged-in users based on their roles.
                             $current_user = wp_get_current_user();
                             $current_user_role = $current_user->roles;
                             $final = ucfirst(str_replace("_", " ", array_shift($current_user_role)));
         
-                            $selected_user = isset($ppws_product_options['ppws_product_logged_in_user_field_checkbox']) ? explode(",", $ppws_product_options['ppws_product_logged_in_user_field_checkbox']) : array();
+                            $selected_user = isset($ppws_product_options['product_logged_in_user_field_checkbox']) ? explode(",", $ppws_product_options['product_logged_in_user_field_checkbox']) : array();
                                 
                             if (current_user_can('administrator') && $ppws_product_status_for_admin != 'on') {
                                 array_push($selected_user, 'Administrator');

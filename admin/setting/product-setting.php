@@ -4,18 +4,13 @@ if (!class_exists('ppws_product_settings')) {
 
     class ppws_product_settings
     {
-        public function __construct()
-        {
-            add_action('admin_init', array($this, 'ppws_product_register_settings_init'));
-        }
 
-        function ppws_product_callback()
-        {
+        function ppws_product_callback() {
             global $ppws_product_options; ?>
             <form action="options.php?tab=product-setting" method="post" class="ppws-product-setting-form">
                 <?php 
                 settings_fields('ppws-settings-options'); 
-                $custom_class =  isset($ppws_product_options['ppws_product_enable_password_field_checkbox']) == 'on' ? ' ' : 'ppws-hide-section' ;
+                $custom_class =  isset($ppws_product_options['product_enable_password_field_checkbox']) == 'on' ? ' ' : 'ppws-hide-section' ;
                 $custom_class2 = isset($ppws_product_options['enable_user_role']) == 'on' ? ' ' : 'none-redio-click' ;
                 echo '<p class="ppws-note ppws-note-info '.$custom_class.'">';
                 echo '<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.com/svgjs" width="18px" height="18px" x="0" y="0" viewBox="0 0 23.625 23.625" style="enable-background:new 0 0 512 512" xml:space="preserve" class="">
@@ -59,11 +54,11 @@ if (!class_exists('ppws_product_settings')) {
                 array($this, 'ppws_product_password_settings'),
                 'ppws-product-password-settings-section',
                 'ppws_product_password_settings_section',
-                ['type' => 'checkbox', 'label_for' => 'ppws_product_enable_password_field_checkbox', 'description' => 'Enable password for products.', 'custom_class' => 'ppws_password_checkbox_validation']
+                ['type' => 'checkbox', 'label_for' => 'product_enable_password_field_checkbox', 'description' => 'Enable password for products.', 'custom_class' => 'ppws_password_checkbox_validation']
             );
 
             global $ppws_product_options;
-            $ppws_product_enable_password_value = isset($ppws_product_options['ppws_product_enable_password_field_checkbox']) ? $ppws_product_options['ppws_product_enable_password_field_checkbox'] : "";
+            $ppws_product_enable_password_value = isset($ppws_product_options['product_enable_password_field_checkbox']) ? $ppws_product_options['product_enable_password_field_checkbox'] : "";
             $ppws_product_enable_password_class = "";
             if ($ppws_product_enable_password_value != 'on') {
                 $ppws_product_enable_password_class = "ppws-hide-section";
@@ -77,7 +72,7 @@ if (!class_exists('ppws_product_settings')) {
                 'ppws_product_password_settings_section',
                 [
                     'type' => 'checkbox', 
-                    'label_for' => 'ppws_product_enable_password_field_checkbox_for_admin', 
+                    'label_for' => 'product_enable_password_field_checkbox_for_admin', 
                     'description' => '', 
                     'class' => "$ppws_product_enable_password_class ppws-product-enable-password-section"
                 ]
@@ -89,7 +84,7 @@ if (!class_exists('ppws_product_settings')) {
                 array($this, 'ppws_product_password_settings'),
                 'ppws-product-password-settings-section',
                 'ppws_product_password_settings_section',
-                ['type' => 'text', 'label_for' => 'ppws_product_set_password_field_textbox', 'description' => 'Set password for products.', 'placeholder' => 'Set password', 'class' => "$ppws_product_enable_password_class ppws-product-enable-password-section"]
+                ['type' => 'text', 'label_for' => 'product_set_password_field_textbox', 'description' => 'Set password for products.', 'placeholder' => 'Set password', 'class' => "$ppws_product_enable_password_class ppws-product-enable-password-section"]
             );
 
             add_settings_field(
@@ -98,7 +93,7 @@ if (!class_exists('ppws_product_settings')) {
                 array($this, 'ppws_product_password_settings'),
                 'ppws-product-password-settings-section',
                 'ppws_product_password_settings_section',
-                ['type' => 'number', 'label_for' => 'ppws_product_set_password_expiry_field_textbox', 'description' => 'Set expiry days for the password of products. **Default: 400 days.**', 'placeholder' => 'Set Password Expiry Day', 'class' => "$ppws_product_enable_password_class ppws-product-enable-password-section"]
+                ['type' => 'number', 'label_for' => 'product_set_password_expiry_field_textbox', 'description' => 'Set expiry days for the password of products. **Default: 400 days.**', 'placeholder' => 'Set Password Expiry Day', 'class' => "$ppws_product_enable_password_class ppws-product-enable-password-section"]
             );
 
             add_settings_field(
@@ -107,7 +102,7 @@ if (!class_exists('ppws_product_settings')) {
                 array($this, 'ppws_product_create_list_settings'),
                 'ppws-product-password-settings-section',
                 'ppws_product_password_settings_section',
-                ['type' => 'select', 'label_for' => 'ppws_product_list_of_product_field_checkbox', 'description' => 'Selected products are protected with password.','class' => "$ppws_product_enable_password_class ppws-product-enable-password-section"]
+                ['type' => 'select', 'label_for' => 'product_list_of_product_field_checkbox', 'description' => 'Selected products are protected with password.','class' => "$ppws_product_enable_password_class ppws-product-enable-password-section"]
             );
 
             add_settings_field(
@@ -146,7 +141,7 @@ if (!class_exists('ppws_product_settings')) {
                 array($this, 'ppws_product_select_user_role_settings'),
                 'ppws-product-user-role-section',
                 'ppws_product_user_role_settings_section',
-                ['type' => 'radio', 'label_for' => 'ppws_product_select_user_role_field_radio', 'description' => '']
+                ['type' => 'radio', 'label_for' => 'product_select_user_role_field_radio', 'description' => '']
             );
 
             add_settings_field(
@@ -155,7 +150,7 @@ if (!class_exists('ppws_product_settings')) {
                 array($this, 'ppws_product_logged_in_user_role_settings'),
                 'ppws-product-user-role-section',
                 'ppws_product_user_role_settings_section',
-                ['type' => 'checkbox', 'label_for' => 'ppws_product_logged_in_user_field_checkbox', 'class' => 'ppws-logged-in-user-section', 'description' => 'Selected users get password form at front side.']
+                ['type' => 'checkbox', 'label_for' => 'product_logged_in_user_field_checkbox', 'class' => 'ppws-logged-in-user-section', 'description' => 'Selected users get password form at front side.']
             );
             /* User Role End */
         }
@@ -273,49 +268,50 @@ if (!class_exists('ppws_product_settings')) {
         {
             $new_input = array();
 
-            if (isset($input['ppws_product_enable_password_field_checkbox']) && !empty($input['ppws_product_enable_password_field_checkbox'])) {
-                $new_input['ppws_product_enable_password_field_checkbox'] = sanitize_text_field($input['ppws_product_enable_password_field_checkbox']);
-            }
-            if (isset($input['ppws_product_enable_password_field_checkbox_for_admin']) && !empty($input['ppws_product_enable_password_field_checkbox_for_admin'])) {
-                $new_input['ppws_product_enable_password_field_checkbox_for_admin'] = sanitize_text_field($input['ppws_product_enable_password_field_checkbox_for_admin']);
+            if (isset($input['product_enable_password_field_checkbox']) && !empty($input['product_enable_password_field_checkbox'])) {
+                $new_input['product_enable_password_field_checkbox'] = sanitize_text_field($input['product_enable_password_field_checkbox']);
             }
 
-            if (isset($input['ppws_product_set_password_field_textbox']) && !empty($input['ppws_product_set_password_field_textbox'])) {
-                $encrypt_new_password = ppws_encrypted_password($input['ppws_product_set_password_field_textbox']);
-                $new_input['ppws_product_set_password_field_textbox'] = sanitize_text_field($encrypt_new_password);
+            if (isset($input['product_enable_password_field_checkbox_for_admin']) && !empty($input['product_enable_password_field_checkbox_for_admin'])) {
+                $new_input['product_enable_password_field_checkbox_for_admin'] = sanitize_text_field($input['product_enable_password_field_checkbox_for_admin']);
             }
 
-            if (isset($input['ppws_product_set_password_expiry_field_textbox']) && !empty($input['ppws_product_set_password_expiry_field_textbox'])) {
-                $new_input['ppws_product_set_password_expiry_field_textbox'] = sanitize_text_field($input['ppws_product_set_password_expiry_field_textbox']);
+            if (isset($input['product_set_password_field_textbox']) && !empty($input['product_set_password_field_textbox'])) {
+                $encrypt_new_password = ppws_encrypted_password($input['product_set_password_field_textbox']);
+                $new_input['product_set_password_field_textbox'] = sanitize_text_field($encrypt_new_password);
+            }
+
+            if (isset($input['product_set_password_expiry_field_textbox']) && !empty($input['product_set_password_expiry_field_textbox'])) {
+                $new_input['product_set_password_expiry_field_textbox'] = sanitize_text_field($input['product_set_password_expiry_field_textbox']);
             } else {
-                $new_input['ppws_product_set_password_expiry_field_textbox'] = "";
+                $new_input['product_set_password_expiry_field_textbox'] = "";
             }
 
-            if (isset($input['ppws_product_select_product_field_checkbox'])) {
-                $new_input['ppws_product_select_product_field_checkbox'] = sanitize_text_field($input['ppws_product_select_product_field_checkbox']);
+            if (isset($input['product_select_product_field_checkbox'])) {
+                $new_input['product_select_product_field_checkbox'] = sanitize_text_field($input['product_select_product_field_checkbox']);
             }
 
             if (isset($input['enable_user_role'])) {
                 $new_input['enable_user_role'] = $input['enable_user_role'];
 
-                if (isset($input['ppws_product_select_user_role_field_radio'])) {
-                    $new_input['ppws_product_select_user_role_field_radio'] = $input['ppws_product_select_user_role_field_radio'];
+                if (isset($input['product_select_user_role_field_radio'])) {
+                    $new_input['product_select_user_role_field_radio'] = $input['product_select_user_role_field_radio'];
                 }
 				
-				if (isset($input['ppws_product_logged_in_user_field_checkbox']) && !empty($input['ppws_product_logged_in_user_field_checkbox'])) {
+				if (isset($input['product_logged_in_user_field_checkbox']) && !empty($input['product_logged_in_user_field_checkbox'])) {
 
-					$user_role_list = implode(",", $input['ppws_product_logged_in_user_field_checkbox']);
-					$new_input['ppws_product_logged_in_user_field_checkbox'] = $user_role_list;
+					$user_role_list = implode(",", $input['product_logged_in_user_field_checkbox']);
+					$new_input['product_logged_in_user_field_checkbox'] = $user_role_list;
 				}else{
-                    if(isset($new_input['ppws_product_select_user_role_field_radio']) && $new_input['ppws_product_select_user_role_field_radio'] == 'logged-in-user') {
-                        $new_input['ppws_product_select_user_role_field_radio'] = 'non-logged-in-user';
+                    if(isset($new_input['product_select_user_role_field_radio']) && $new_input['product_select_user_role_field_radio'] == 'logged-in-user') {
+                        $new_input['product_select_user_role_field_radio'] = 'non-logged-in-user';
                     }
                 }
             }
 
-            if (isset($input['ppws_product_list_of_product_field_checkbox'])) {
-                $product_list = implode(",", $input['ppws_product_list_of_product_field_checkbox']);
-                $new_input['ppws_product_list_of_product_field_checkbox'] = $product_list;
+            if (isset($input['product_list_of_product_field_checkbox'])) {
+                $product_list = implode(",", $input['product_list_of_product_field_checkbox']);
+                $new_input['product_list_of_product_field_checkbox'] = $product_list;
             }
 
             return $new_input;

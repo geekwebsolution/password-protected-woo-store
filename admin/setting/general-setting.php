@@ -3,10 +3,6 @@ if (!class_exists('ppws_whole_site_settings')) {
     /* Main key */
     $ppws_whole_site_options = get_option('ppws_general_settings');
     class ppws_whole_site_settings{
-        
-        public function __construct(){
-            add_action('admin_init', array($this, 'ppws_whole_site_register_settings_init'));
-        }
 
         function ppws_whole_site_callback()
         {

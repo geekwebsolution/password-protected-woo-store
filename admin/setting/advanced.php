@@ -4,10 +4,6 @@ if (!class_exists('ppws_advanced_settings')) {
     $ppws_advanced_settings = get_option('ppws_advanced_settings');
     class ppws_advanced_settings{
 
-        public function __construct(){
-            add_action('admin_init', array($this, 'ppws_advanced_settings_init'));
-        }
-
         function ppws_advanced_settings_callback() {
             global $ppws_advanced_settings; ?>
             <form action="options.php?tab=advanced" class="ppws-advanced-setting-form" method="post">

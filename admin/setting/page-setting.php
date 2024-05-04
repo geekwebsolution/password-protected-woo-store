@@ -4,10 +4,6 @@ if (!class_exists('ppws_page_settings')) {
 
     class ppws_page_settings
     {
-        public function __construct()
-        {
-            add_action('admin_init', array($this, 'ppws_page_register_settings_init'));
-        }
 
         function ppws_page_callback()
         {

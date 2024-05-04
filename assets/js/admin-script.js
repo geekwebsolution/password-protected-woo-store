@@ -404,7 +404,7 @@ jQuery(document).ready(function ($) {
     });
 
     /** Admin product settings on Enable password click */
-    jQuery('input[id="ppws_product_enable_password_field_checkbox"]').click(function () {
+    jQuery('input[id="product_enable_password_field_checkbox"]').click(function () {
         if (jQuery(this).prop("checked") == true) {
             jQuery(".ppws-product-enable-password-section,.ppws-section-user,.ppws-note-info").removeClass("ppws-hide-section");
         } else if (jQuery(this).prop("checked") == false) {

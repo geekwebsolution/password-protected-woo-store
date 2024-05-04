@@ -4,10 +4,6 @@ if (!class_exists('ppws_product_categories_settings')) {
     $ppws_whole_site_options = get_option('ppws_general_settings');
     class ppws_product_categories_settings
     {
-        public function __construct()
-        {
-            add_action('admin_init', array($this, 'ppws_product_categories_register_settings_init'));
-        }
 
         function ppws_product_categories_callback()
         {
