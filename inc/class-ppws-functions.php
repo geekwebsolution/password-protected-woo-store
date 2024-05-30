@@ -13,11 +13,8 @@ function ppws_protected_categories() {
     if(current_user_can( 'administrator' ) && $dfa_product_categories_protect_enable) {
         return $protected_categories;
     }
-    
 
     if(isset($ppws_product_categories_options) && !empty($ppws_product_categories_options)) {
-
-
         $hide_general_product_cat_from_loop = (isset($ppws_product_categories_options['ppws_hide_products_checkbox_field_checkbox'])) ? $ppws_product_categories_options['ppws_hide_products_checkbox_field_checkbox']: '';
 
         if($hide_general_product_cat_from_loop == 'on') {

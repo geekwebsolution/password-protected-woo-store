@@ -1,10 +1,8 @@
 <?php
 if (!class_exists('ppws_page_settings')) {
     $ppws_page_options = get_option('ppws_page_settings');
-
     class ppws_page_settings
     {
-
         function ppws_page_callback()
         {
             global $ppws_page_options; ?>
@@ -27,7 +25,6 @@ if (!class_exists('ppws_page_settings')) {
                     ?>
                 </div>
                 <div class="ppws-submit-btn">
-
                     <?php submit_button('Save Setting'); ?>
                 </div>
             </form>

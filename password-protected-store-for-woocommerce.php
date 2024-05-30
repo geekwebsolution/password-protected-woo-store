@@ -3,8 +3,8 @@
 Plugin Name: Password Protected Store for WooCommerce
 Description: Password Protected Store for WooCommerce is an excellent plugin to set Password Protected Store for WooCommerce. It allows you to set password in your store. Password can be set on whole site, on category, on pages, and on user role.
 Author: Geek Code Lab
-Version: 2.5.1
-WC tested up to: 8.8.3
+Version: 2.5.2
+WC tested up to: 8.9.0
 Author URI: https://geekcodelab.com/
 Text Domain : password-protected-store-for-woocommerce
 */
@@ -18,7 +18,7 @@ if (!defined("WPPS_PLUGIN_URL"))
     define("WPPS_PLUGIN_URL", plugins_url() . '/' . basename(dirname(__FILE__)));
 
 
-define("PPWS_BUILD", '2.5.1');
+define("PPWS_BUILD", '2.5.2');
 
 /**
  * Plugin active/deactive hook
@@ -218,7 +218,7 @@ if ( ! function_exists( 'ppws_install_woocommerce_admin_notice' ) ) {
 	function ppws_install_woocommerce_admin_notice() { ?>
 		<div class="error">
 			<p>
-				<?php echo esc_html__( sprintf( '%s is enabled but not effective. It requires WooCommerce in order to work.', 'Password Protected Store for WooCommerce' ), 'password-protected-store-for-woocommerce' ); ?>
+				<?php esc_html_e( sprintf( '%s is enabled but not effective. It requires WooCommerce in order to work.', 'Password Protected Store for WooCommerce' ), 'password-protected-store-for-woocommerce' ); ?>
 			</p>
 		</div>
 		<?php
@@ -326,7 +326,7 @@ function ppws_enable_password_start() {
         if (ppws_is_protected_product() || ppws_is_protected_page() || ppws_is_protected_product_categories()) {
             if(ppws_is_protected_product()) {
                 
-                $ppws_product_cookie = (ppws_get_cookie('ppws_product_cookie') != '') ? ppws_get_cookie('ppws_product_cookie') : 'ddd';
+                $ppws_product_cookie = (ppws_get_cookie('ppws_product_cookie') != '') ? ppws_get_cookie('ppws_product_cookie') : '';
                 $ppws_product_main_password = $ppws_product_options['product_set_password_field_textbox'];
                 if(ppws_decrypted_password($ppws_product_cookie) != ppws_decrypted_password($ppws_product_main_password)) {
                     include_once(WPPS_PLUGIN_DIR_PATH . 'front/class-ppws-protected-form.php');
@@ -337,7 +337,7 @@ function ppws_enable_password_start() {
             }
 
             if(ppws_is_protected_page()) {
-                $ppws_page_cookie = (ppws_get_cookie('ppws_page_cookie') != '') ? ppws_get_cookie('ppws_page_cookie') : 'ddd';
+                $ppws_page_cookie = (ppws_get_cookie('ppws_page_cookie') != '') ? ppws_get_cookie('ppws_page_cookie') : '';
                 $ppws_page_main_password = $ppws_page_options['ppws_page_set_password_field_textbox'];
                 if(ppws_decrypted_password($ppws_page_cookie) != ppws_decrypted_password($ppws_page_main_password)) {
                     include_once(WPPS_PLUGIN_DIR_PATH . 'front/class-ppws-protected-form.php');
@@ -473,7 +473,6 @@ function ppws_modify_search_query( $query ) {
     }
 }
 
-
 /**
  * Added HPOS support for woocommerce
  */
@@ -514,7 +513,7 @@ function ppws_search_product_categories() {
         }
     }
 
-    echo json_encode($result);
+    _e(json_encode($result));
 	die;
 }
 
@@ -543,7 +542,7 @@ function ppws_search_pages() {
         }
     }
 
-    echo json_encode($result);
+    _e(json_encode($result));
 	die;
 }
 
@@ -572,6 +571,6 @@ function ppws_search_products() {
         }
     }
 
-    echo json_encode($result);
+    _e(json_encode($result));
 	die;
 }

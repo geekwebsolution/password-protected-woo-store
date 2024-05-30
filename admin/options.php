@@ -68,7 +68,7 @@ if (!class_exists('ppws_password_protected_store_settings')) {
             <div class='ppws-main-box'>
                 <div class='ppws-container'>
                     <div class='ppws-header'>
-                        <h1 class='ppws-h1'> <?php _e('Password Protected Store for WooCommerce', 'password-protected-store-for-woocommerce'); ?> </h1>
+                        <h1 class='ppws-h1'><?php _e('Password Protected Store for WooCommerce', 'password-protected-store-for-woocommerce'); ?> </h1>
                     </div>
                     <div class="ppws-option-section">
                         <?php
