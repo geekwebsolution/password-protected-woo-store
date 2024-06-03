@@ -250,27 +250,24 @@ function ppws_is_protected_product_categories() {
  * check status of protected page protection
  */
 function ppws_is_protected_page() {
-    if(!is_page()) {
-        return false;
-    }
 
     // Get page options from settings
     $ppws_page_options = get_option('ppws_page_settings');
-
+    
     $dfa_page_protect     = (isset($ppws_page_options['ppws_page_enable_password_field_checkbox_for_admin']) && $ppws_page_options['ppws_page_enable_password_field_checkbox_for_admin'] == 'on') ? true : false;
-
+    
     if(current_user_can( 'administrator' ) && $dfa_page_protect) {
         return false;
     }
     
     // Check if the page options exist and password protection is enabled.
     if (isset($ppws_page_options['ppws_page_enable_password_field_checkbox']) && $ppws_page_options['ppws_page_enable_password_field_checkbox'] === 'on') {
-
+        
         // Get selected protected pages.
         $selected_pages = (isset($ppws_page_options['ppws_page_list_of_page_field_checkbox']) && !empty($ppws_page_options['ppws_page_list_of_page_field_checkbox'])) ? explode(",", $ppws_page_options['ppws_page_list_of_page_field_checkbox']) : array();
-
-        if(isset($selected_pages) && !empty($selected_pages)) {
         
+        if(isset($selected_pages) && !empty($selected_pages)) {
+            
             // Get the status of password protection for admin users.
             $ppws_page_status_for_admin = isset($ppws_page_options['ppws_page_enable_password_field_checkbox_for_admin']) ? $ppws_page_options['ppws_page_enable_password_field_checkbox_for_admin'] : 'off';
             
@@ -323,7 +320,6 @@ function ppws_is_protected_page() {
                         return true;
                     } 
                 }
-
             }
         }
     }
