@@ -207,13 +207,13 @@ if (!class_exists('ppws_whole_site_settings')) {
                 <div class="ppws_all_user_list">
                     <?php
                     $counter = 1;
-                    echo '<div class="ppws_all_user_list_input"><label><input type="checkbox" class="ppws-checkbox editable_roles_all" >All</label></div>';
+                    echo '<div class="ppws_all_user_list_input"><label><input type="checkbox" class="ppws-checkbox ppws_editable_roles_all" >All</label></div>';
                     foreach ($editable_roles as $role) { 
                         if($role['name'] != 'Administrator'){
                         ?>
                         <div class="ppws_all_user_list_input">                            
                             <label>
-                                <input type="checkbox" class="ppws-checkbox editable_roles_single" name="ppws_general_settings[<?php esc_attr_e( $args[ 'label_for' ] ) ?>][]" id="<?php esc_attr_e( $args[ 'label_for' ] ) ?>" value="<?php esc_attr_e($role['name']); ?>"  <?php if(in_array($role['name'],$value)){ esc_attr_e('checked'); } ?> ><?php esc_attr_e($role['name']) ?>
+                                <input type="checkbox" class="ppws-checkbox ppws_editable_roles_single" name="ppws_general_settings[<?php esc_attr_e( $args[ 'label_for' ] ) ?>][]" id="<?php esc_attr_e( $args[ 'label_for' ] ) ?>" value="<?php esc_attr_e($role['name']); ?>"  <?php if(in_array($role['name'],$value)){ esc_attr_e('checked'); } ?> ><?php esc_attr_e($role['name']) ?>
                             </label>
                         </div>
                         <?php

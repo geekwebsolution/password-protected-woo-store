@@ -453,3 +453,13 @@ input.button.button-small.wp-picker-clear {
     color: #ffffff;
     border: 0;
 }
+
+.ppws-remove-btn {
+    background: #223a7a;
+    color: #fff;
+    padding: 10px 10px;
+    margin-left: 10px;
+    border: 1px #223a7a;
+    border-radius: 5px;
+    cursor: pointer;
+}

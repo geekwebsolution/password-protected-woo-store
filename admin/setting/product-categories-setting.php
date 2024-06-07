@@ -231,14 +231,14 @@ if (!class_exists('ppws_product_categories_settings')) {
                 $editable_roles = apply_filters('editable_roles', $all_roles); ?>
                 <div class="ppws_all_user_list"> 
                     <?php
-                    echo '<div class="ppws_all_user_list_input"><label><input type="checkbox" class="ppws-checkbox editable_roles_all" >All</label></div>';
+                    echo '<div class="ppws_all_user_list_input"><label><input type="checkbox" class="ppws-checkbox ppws_editable_roles_all" >All</label></div>';
                     foreach ($editable_roles as $role) { 
                         if($role['name'] != 'Administrator'){
                         ?>
                         <div class="ppws_all_user_list_input">
 
                             <label>
-                                <input type="checkbox" class="ppws-checkbox editable_roles_single" name="ppws_product_categories_settings[<?php esc_attr_e($args['label_for']) ?>][]" value="<?php esc_attr_e($role['name']); ?>" <?php if (in_array($role['name'], $select_value)) {
+                                <input type="checkbox" class="ppws-checkbox ppws_editable_roles_single" name="ppws_product_categories_settings[<?php esc_attr_e($args['label_for']) ?>][]" value="<?php esc_attr_e($role['name']); ?>" <?php if (in_array($role['name'], $select_value)) {
                                                                                                                                                                                                                     esc_attr_e('checked');
                                                                                                                                                                                                                 } ?>><?php esc_attr_e($role['name']); ?>
                             </label>

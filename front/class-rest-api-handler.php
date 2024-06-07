@@ -70,14 +70,15 @@ if ( !class_exists( 'ppws_wp_rest_api_handler' ) ) {
         }
 
         public function global_protection_wp_rest_api( $access ) {
-            global $ppws_whole_site_options;
-            $global_protect_status =  isset($ppws_whole_site_options['ppws_enable_password_field_checkbox']) == 'on' ? 'on' : '' ;
-            
-            if($global_protect_status != 'on' ) {
-                return $access;
+            if(ppws_is_protected_whole_site()) {
+                $ppws_cookie = ppws_get_cookie('ppws_cookie');
+                $ppws_main_password = $ppws_whole_site_options['ppws_set_password_field_textbox'];
+                if(ppws_decrypted_password($ppws_cookie) != ppws_decrypted_password($ppws_main_password)) {
+                    return new WP_Error( 'rest_cannot_access', __( 'Whole site is password protected so REST API can not be accessible.', 'password-protected-store-for-woocommerce' ), array( 'status' => rest_authorization_required_code() ) );
+                }else{
+                    return $access;
+                }
             }
-            
-            return new WP_Error( 'rest_cannot_access', __( 'Whole site is password protected so REST API can not be accessible.', 'password-protected-store-for-woocommerce' ), array( 'status' => rest_authorization_required_code() ) );
         }
     }
     new ppws_wp_rest_api_handler();

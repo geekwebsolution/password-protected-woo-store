@@ -80,13 +80,16 @@ body {
     cursor: pointer;
     background-color: #000;
     color: #fff;
-    transition: 0.3s;
+    transition: 0.1s;
     border-radius: 0 8px 8px 0;
 }
 
 .ppws_modal_box form .ppws_form_button:hover {
     background: #ccc;
     color: #000;
+    border-color: #000;
+    border-width: 2px;
+    border-left: 0px;
 }
 
 .ppws_error_msg {

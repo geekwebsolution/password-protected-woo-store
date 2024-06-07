@@ -281,6 +281,9 @@ jQuery(document).ready(function ($) {
                 var uploaded_image = image.state().get('selection').first();
                 var image_url = uploaded_image.toJSON().url;
                 jQuery('#form_page_logo_image_selecter').val(image_url);
+                if(jQuery('#form_page_logo_image_selecter').parents('td').find('.ppws-remove-btn').length == 0){
+                    jQuery('#form_page_logo_image_selecter').after('<button class="ppws-remove-btn" type="button">Remove</button>');
+                }
             });
     });
 
@@ -295,6 +298,9 @@ jQuery(document).ready(function ($) {
                 var uploaded_image = image.state().get('selection').first();
                 var image_url = uploaded_image.toJSON().url;
                 jQuery('#ppws_form_page_background_field_image_selecter').val(image_url);
+                if(jQuery('#ppws_form_page_background_field_image_selecter').parents('td').find('.ppws-remove-btn').length == 0){
+                    jQuery('#ppws_form_page_background_field_image_selecter').after('<button class="ppws-remove-btn" type="button">Remove</button>');
+                }
             });
     });
 
@@ -309,7 +315,18 @@ jQuery(document).ready(function ($) {
                 var uploaded_image = image.state().get('selection').first();
                 var image_url = uploaded_image.toJSON().url;
                 jQuery('#ppws_form_background_field_image_selecter').val(image_url);
+                if(jQuery('#ppws_form_background_field_image_selecter').parents('td').find('.ppws-remove-btn').length == 0){
+                    jQuery('#ppws_form_background_field_image_selecter').after('<button class="ppws-remove-btn" type="button">Remove</button>');
+                }
             });
+    });
+
+    /** Remove image on click JS */
+    jQuery("body").on('click','.ppws-remove-btn',function (e) {
+        if (window.confirm("Are you sure?")) {
+            jQuery(this).parents('td').find('input[type="text"]').val('');
+            jQuery(this).remove();
+        }
     });
 
     /** Page / Product Setting JS */
@@ -422,37 +439,37 @@ jQuery(document).ready(function ($) {
     
     setInterval(function () {
         var isAllChecked = 0;
-        jQuery(".editable_roles_single").each(function(){
+        jQuery(".ppws_editable_roles_single").each(function(){
         if(!this.checked)
             isAllChecked = 1;
         })              
-        if(isAllChecked == 0){ jQuery(".editable_roles_all").prop("checked", true); }  
+        if(isAllChecked == 0){ jQuery(".ppws_editable_roles_all").prop("checked", true); }  
     }, 500);
 
     /** Admin settings check all user roles */
-    jQuery(".editable_roles_all").change(function(){
+    jQuery(".ppws_editable_roles_all").change(function(){
         if(this.checked){
-          jQuery(".editable_roles_single").each(function(){
+          jQuery(".ppws_editable_roles_single").each(function(){
             this.checked=true;
           })              
         }else{
-          jQuery(".editable_roles_single").each(function(){
+          jQuery(".ppws_editable_roles_single").each(function(){
             this.checked=false;
           })              
         }
       });
 
     /** Admin settings check user role */
-    jQuery(".editable_roles_single").click(function () {
+    jQuery(".ppws_editable_roles_single").click(function () {
         if (jQuery(this).is(":checked")){
           var isAllChecked = 0;
-          jQuery(".editable_roles_single").each(function(){
+          jQuery(".ppws_editable_roles_single").each(function(){
             if(!this.checked)
                isAllChecked = 1;
           })          
-        if(isAllChecked == 0){ jQuery(".editable_roles_all").prop("checked", true); }
+        if(isAllChecked == 0){ jQuery(".ppws_editable_roles_all").prop("checked", true); }
         }else {
-          jQuery(".editable_roles_all").prop("checked", false);
+          jQuery(".ppws_editable_roles_all").prop("checked", false);
         }
       });
 
