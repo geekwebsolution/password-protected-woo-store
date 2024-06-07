@@ -31,10 +31,8 @@ if ( !class_exists( 'ppws_form_style_settings' ) ) {
                 <div class="ppws-section">
                     <?php do_settings_sections( 'ppws-form-additional-style-settings-section' ); ?>
                 </div>
-                <div class="ppws-submit-btn">
-                    
-                    <?php submit_button( 'Save Setting' ); 
-                    ?>
+                <div class="ppws-submit-btn">                    
+                    <?php submit_button( 'Save Setting' ); ?>
                 </div>
             </form>
             <?php
@@ -234,6 +232,11 @@ if ( !class_exists( 'ppws_form_style_settings' ) ) {
             $value = isset( $ppws_form_style_settings_option[ $args[ 'label_for' ] ] ) ? $ppws_form_style_settings_option[ $args[ 'label_for' ] ] : '';
             ?>
                 <input type="text" class="ppws-textbox" readonly name="ppws_form_desgin_settings[<?php esc_attr_e( $args[ 'label_for' ] ) ?>]" id="<?php esc_attr_e( $args[ 'label_for' ] ) ?>" placeholder="<?php esc_attr_e( $args[ 'placeholder' ] ) ?>" value="<?php esc_attr_e($value); ?>">
+                <?php
+                if(isset($value) && !empty($value)) { ?>
+                    <button class="ppws-remove-btn" type="button"><?php esc_html_e( 'Remove', 'password-protected-store-for-woocommerce' ) ?></button>
+                    <?php
+                } ?>
                 <p class="ppws-note"><?php esc_attr_e($args['description']) ?></p>
                 <?php
         }
