@@ -149,7 +149,7 @@ function ppws_is_protected_product() {
  * check status of product categories protection
  */
 function ppws_is_protected_product_categories() {
-    global $wp_query, $product;
+    global $wp_query;
     $ppws_product_categories_options = get_option('ppws_product_categories_settings');
 
     $dfa_product_categories_protect     = (isset($ppws_product_categories_options['ppws_product_categories_enable_password_field_checkbox_for_admin']) && $ppws_product_categories_options['ppws_product_categories_enable_password_field_checkbox_for_admin'] == 'on') ? true : false;
@@ -176,8 +176,8 @@ function ppws_is_protected_product_categories() {
                 $flag_single_product = 0;
                 if (is_product()) {
                     // Get the product object
-                    $product_obj = get_page_by_path($product, OBJECT, 'product');
-                    $product_id = $product_obj->ID;
+                    $product    = wc_get_product();
+                    $product_id = $product->get_id();
                     
                     $all_cat_id = array();
                     if (isset($all_selected_category) && !empty($all_selected_category)) {
