@@ -48,7 +48,7 @@ if (!class_exists('ppws_advanced_settings')) {
                     'Isolation Mode',
                     'password-protected-store-for-woocommerce'
                 ),
-                array($this, 'ppws_advanced_settings'),
+                array($this, 'ppws_fields_settings'),
                 'ppws-general-advanced-settings-section',
                 'ppws_advanced_general_settings_section',
                 ['type' => 'checkbox', 'label_for' => 'enable_isolation_field_checkbox', 'description' => 'Isolation Mode prevents two WordPress hooks from running called wp_head and wp_footer. This will prevent conflicts with your theme or other plugins. While it prevents conflicts, it also means other plugins would not run on the page such as SEO and analytics plugins.']
@@ -60,7 +60,7 @@ if (!class_exists('ppws_advanced_settings')) {
                     'REST API Protection',
                     'password-protected-store-for-woocommerce'
                 ),
-                array($this, 'ppws_advanced_settings'),
+                array($this, 'ppws_fields_settings'),
                 'ppws-general-advanced-settings-section',
                 'ppws_advanced_general_settings_section',
                 ['type' => 'checkbox', 'label_for' => 'enable_rest_api_protection_checkbox', 'description' => 'This option allows users to hide protected data on the REST API. By default, REST API protection will be enabled.']
@@ -80,7 +80,7 @@ if (!class_exists('ppws_advanced_settings')) {
                     'Header Scripts',
                     'password-protected-store-for-woocommerce'
                 ),
-                array($this, 'ppws_advanced_settings'),
+                array($this, 'ppws_fields_settings'),
                 'ppws-advanced-scripts-settings-section',
                 'ppws_advanced_scripts_settings_section',
                 ['type' => 'textarea', 'label_for' => 'ppws_header_script_content', 'description' => 'This code will be rendered before the closing </head> tag.', 'extra_label' => 'Scripts in Header']
@@ -92,7 +92,7 @@ if (!class_exists('ppws_advanced_settings')) {
                     'Body Scripts',
                     'password-protected-store-for-woocommerce'
                 ),
-                array($this, 'ppws_advanced_settings'),
+                array($this, 'ppws_fields_settings'),
                 'ppws-advanced-scripts-settings-section',
                 'ppws_advanced_scripts_settings_section',
                 ['type' => 'textarea', 'label_for' => 'ppws_body_scripts_content', 'description' => 'The code will be rendered after the <body> tag.', 'extra_label' => 'Scripts in Body']
@@ -104,14 +104,14 @@ if (!class_exists('ppws_advanced_settings')) {
                     'Footer Scripts',
                     'password-protected-store-for-woocommerce'
                 ),
-                array($this, 'ppws_advanced_settings'),
+                array($this, 'ppws_fields_settings'),
                 'ppws-advanced-scripts-settings-section',
                 'ppws_advanced_scripts_settings_section',
                 ['type' => 'textarea', 'label_for' => 'ppws_footer_scripts_content', 'description' => 'The code will be rendered before the closing </body> tag.', 'extra_label' => 'Scripts in Footer']
             );
         }
 
-        public function ppws_advanced_settings($args) {
+        public function ppws_fields_settings($args) {
             global $ppws_advanced_settings;
 
             if ($args['type'] == 'checkbox') {
