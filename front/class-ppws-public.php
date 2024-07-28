@@ -1,6 +1,6 @@
 <?php
 /**
- * check status of whole site protection
+ * Check status of whole site protection
  */
 function ppws_is_protected_whole_site() {
     $ppws_whole_site_options = get_option('ppws_general_settings');
@@ -10,47 +10,55 @@ function ppws_is_protected_whole_site() {
 
     if(current_user_can( 'administrator' ) && $dfa_general_settings_protection) {
         return false;
-    }    
+    }
 
     // Check if the site options exist and are not empty.
     if (isset($ppws_whole_site_options) && !empty($ppws_whole_site_options)) {
-
         // Check if password protection is enabled for the whole site.
         if (isset($ppws_whole_site_options['ppws_enable_password_field_checkbox']) && 'on' === $ppws_whole_site_options['ppws_enable_password_field_checkbox']) {
-
+            
             // Check if user roles are enabled.
             $enable_user_role = (isset($ppws_whole_site_options['enable_user_role']) && 'on' === $ppws_whole_site_options['enable_user_role']) ? true : false;
             $general_setting_user_type = (isset($ppws_whole_site_options['ppws_select_user_role_field_radio']) && !empty($ppws_whole_site_options['ppws_select_user_role_field_radio'])) ? $ppws_whole_site_options['ppws_select_user_role_field_radio'] : false;
-
+            
             if ($enable_user_role) {
                 if($general_setting_user_type) {
                     // Check if the site is accessible for non-logged-in users.
-                    if ("non-logged-in-user" === $general_setting_user_type && !is_user_logged_in()) {
-                        return true;
-                    } else {
+                    if (in_array('non-logged-in-user', $general_setting_user_type)) {
+                        // Check if Disable For Administrator is enable and current user is admin
+                        if (!$dfa_general_settings_protection && current_user_can('administrator')) {
+                            return true;
+                        }else{
+                            // Check when user is not logged in
+                            if(!is_user_logged_in()) {
+                                return true;
+                            }
+                        }
+                        
+                    }
+                    if(in_array('logged-in-user', $general_setting_user_type) && is_user_logged_in()) {
+        
                         // Check if the site is accessible for logged-in users based on their roles.
-                        if ("logged-in-user" === $general_setting_user_type && is_user_logged_in()) {
-                            $current_user = wp_get_current_user();
-                            $current_user_role = $current_user->roles;
-                            $final = ucfirst(str_replace("_", " ", array_shift($current_user_role)));
+                        $current_user = wp_get_current_user();
+                        $current_user_role = $current_user->roles;
+                        $final = ucfirst(str_replace("_", " ", array_shift($current_user_role)));
 
-                            $selected_user_roles = (isset($ppws_whole_site_options['ppws_logged_in_user_field_checkbox']) && !empty($ppws_whole_site_options['ppws_logged_in_user_field_checkbox'])) ? $ppws_whole_site_options['ppws_logged_in_user_field_checkbox'] : false;
+                        $selected_user_roles = (isset($ppws_whole_site_options['ppws_logged_in_user_field_checkbox']) && !empty($ppws_whole_site_options['ppws_logged_in_user_field_checkbox'])) ? $ppws_whole_site_options['ppws_logged_in_user_field_checkbox'] : false;
+                        
+                        // Check if the user roles is selected or not.
+                        if($selected_user_roles){
+                            $selected_user     = $selected_user_roles ? explode(",", $selected_user_roles) : array();
                             
-                            // Check if the user roles is selected or not.
-                            if($selected_user_roles){
-                                $selected_user     = $selected_user_roles ? explode(",", $selected_user_roles) : array();
-                                
-                                
-                                // Add "Administrator" role to the selected user roles if admin bypass is disabled.
-                                if (!$dfa_general_settings_protection && current_user_can('administrator')) {
-                                    array_push($selected_user, 'Administrator');
-                                }
-                                
-                                // Check if the current user role is allowed to access the product or the user is not logged in.
-                                if (in_array(ucfirst($final), $selected_user) || !is_user_logged_in()) {      
-                                    // Product is accessible for logged-in users based on their roles.
-                                    return true;
-                                }
+                            
+                            // Add "Administrator" role to the selected user roles if admin bypass is disabled.
+                            if (!$dfa_general_settings_protection && current_user_can('administrator')) {
+                                array_push($selected_user, 'Administrator');
+                            }
+                            
+                            // Check if the current user role is allowed to access the product or the user is not logged in.
+                            if (in_array(ucfirst($final), $selected_user) || !is_user_logged_in()) {      
+                                // Product is accessible for logged-in users based on their roles.
+                                return true;
                             }
                         }
                     }
@@ -60,7 +68,6 @@ function ppws_is_protected_whole_site() {
             }
         }
     }
-
     return false;
 }
 
@@ -103,9 +110,18 @@ function ppws_is_protected_product() {
                     if (isset($ppws_product_options['product_select_user_role_field_radio'])) {
 
                         // Check if the product is accessible for non-logged-in users.
-                        if ("non-logged-in-user" === $ppws_product_options['product_select_user_role_field_radio'] && !is_user_logged_in()) {
-                            return true;
-                        } elseif ("logged-in-user" === $ppws_product_options['product_select_user_role_field_radio'] && is_user_logged_in()) {
+                        if (in_array('non-logged-in-user',$ppws_product_options['product_select_user_role_field_radio'])) {
+                            if (current_user_can('administrator') && $ppws_product_status_for_admin != 'on') {
+                                return true;
+                            }else{
+                                // Check when user is not logged in
+                                if(!is_user_logged_in()) {
+                                    return true;
+                                }
+                            }
+                        }
+
+                        if (in_array('logged-in-user',$ppws_product_options['product_select_user_role_field_radio']) && is_user_logged_in()) {
                             // Check if the product is accessible for logged-in users based on their roles.
                             $current_user = wp_get_current_user();
                             $current_user_role = $current_user->roles;
@@ -201,10 +217,21 @@ function ppws_is_protected_product_categories() {
 
                 if ($flag_single_product == 1) {
                     if (isset($ppws_product_categories_options['enable_user_role']) && !empty($ppws_product_categories_options['enable_user_role'])) {
-                        if (isset($ppws_product_categories_options['ppws_product_categories_select_user_role_field_radio']) && "non-logged-in-user" === $ppws_product_categories_options['ppws_product_categories_select_user_role_field_radio'] 
-                        && !is_user_logged_in()) {
-                            return true;
-                        } elseif (isset($ppws_product_categories_options['ppws_product_categories_select_user_role_field_radio']) && "logged-in-user" === $ppws_product_categories_options['ppws_product_categories_select_user_role_field_radio'] && is_user_logged_in()) {
+                        if (isset($ppws_product_categories_options['ppws_product_categories_select_user_role_field_radio']) && in_array("non-logged-in-user",$ppws_product_categories_options['ppws_product_categories_select_user_role_field_radio'])) {
+                            // Check if Disable For Administrator is enable and current user is admin
+                            if (current_user_can('administrator') && $ppws_password_status_for_admin != 'on') {
+                                return true;
+                            }else{
+                                // Check when user is not logged in
+                                if(!is_user_logged_in()) {
+                                    return true;
+                                }
+                            }
+
+                            
+                        }
+                        
+                        if (isset($ppws_product_categories_options['ppws_product_categories_select_user_role_field_radio']) && in_array("logged-in-user",$ppws_product_categories_options['ppws_product_categories_select_user_role_field_radio']) && is_user_logged_in()) {
 
                             if (isset($ppws_product_categories_options['ppws_product_categories_logged_in_user_field_checkbox'])) {
                                 $current_user = wp_get_current_user();
@@ -285,9 +312,19 @@ function ppws_is_protected_page() {
                 if (isset($ppws_page_options['enable_user_role'])) {
                     if (isset($ppws_page_options['ppws_page_select_user_role_field_radio'])) {
                         // Check if the page is accessible for non-logged-in users.
-                        if ("non-logged-in-user" === $ppws_page_options['ppws_page_select_user_role_field_radio'] && !is_user_logged_in()) {
-                            return true;
-                        } elseif ("logged-in-user" === $ppws_page_options['ppws_page_select_user_role_field_radio'] && is_user_logged_in()) {
+                        if (in_array("non-logged-in-user",$ppws_page_options['ppws_page_select_user_role_field_radio'])) {
+
+                            if (current_user_can('administrator') && $ppws_page_status_for_admin != 'on') {
+                                return true;
+                            }else{
+                                // Check when user is not logged in
+                                if(!is_user_logged_in()) {
+                                    return true;
+                                }
+                            }
+                        }
+                        
+                        if (in_array("logged-in-user",$ppws_page_options['ppws_page_select_user_role_field_radio']) && is_user_logged_in()) {
                             // Check if the page is accessible for logged-in users based on their roles.
                             $current_user = wp_get_current_user();
                             $current_user_role = $current_user->roles;
