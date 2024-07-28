@@ -5,9 +5,9 @@ Tags: WooCommerce protected categories, woo protect, product protected, woocomme
 Requires PHP: 7.4
 Requires at least: 6.3
 Tested up to: 6.5
-WC tested up to: 8.9.0
+WC tested up to: 9.1.2
 Requires Plugins: woocommerce
-Stable tag: 2.5.7
+Stable tag: 2.5.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -28,6 +28,7 @@ Using Password Protected WooCommerce Store admin can fully customize password pr
 🔹 Enable different passwords for the entire site, pages, products and product categories.
 🔹 Set different password expiry time for the entire site, pages, products and product categories.
 🔹 User role wise protection for each page, products, product categories and entire site.
+🔹 Option for Reverse protection with Logged in user roles.
 🔹 Option to Protect archive page of password protected categories.
 🔹 Allows to set a password for a specific page, specific product, product categories And hide product from shop/loop for protected products, product categories.
 🔹 Customizable form title and form above/below content.
@@ -81,6 +82,9 @@ After Plugin Active go to Woocommerce-> Password Protected
 
 
 == Changelog ==
+= 2.5.8 =
+  Added option - Reverse Protection of Logged in users
+
 = 2.5.7 =
   Fixed PHP version bug
 

@@ -230,14 +230,22 @@ if (!class_exists('ppws_whole_site_settings')) {
         public function ppws_select_user_role_settings($args)
         {
             global $ppws_whole_site_options;
-            if ($args['type'] == 'radio') {
-            ?>
+            $user_role = [ 'non-logged-in-user' ];
+            if(isset($ppws_whole_site_options[$args['label_for']])) {
+                if(is_array($ppws_whole_site_options[$args['label_for']])) {
+                    $user_role = $ppws_whole_site_options[$args['label_for']];
+                }else{
+                    $user_role = array($ppws_whole_site_options[$args['label_for']]);
+                }
+            }
+
+            if ($args['type'] == 'radio') { ?>
                 <label class="ppws-label">
-                    <input type="radio" class="<?php esc_attr_e('ppws_user_non_logged_in_user'); ?>" id="<?php esc_attr_e($args['label_for']); ?>_non_logged_in_user" name="ppws_general_settings[<?php esc_attr_e($args['label_for']); ?>]" value="non-logged-in-user" <?php checked('non-logged-in-user', $ppws_whole_site_options[$args['label_for']] ?? 'non-logged-in-user'); ?>><?php _e('Non Logged In User','password-protected-store-for-woocommerce') ?>
+                    <input type="checkbox" class="<?php esc_attr_e('ppws_user_non_logged_in_user'); ?>" id="<?php esc_attr_e($args['label_for']); ?>_non_logged_in_user" name="ppws_general_settings[<?php esc_attr_e($args['label_for']); ?>][]" value="non-logged-in-user" <?php if(in_array('non-logged-in-user', $user_role)) echo 'checked="checked"'; ?>><?php _e('Non Logged In User','password-protected-store-for-woocommerce') ?>
                 </label>
 
                 <label class="ppws-label">
-                    <input type="radio" class="<?php esc_attr_e('ppws_user_logged_in_user'); ?>" id="<?php esc_attr_e($args['label_for']); ?>_logged_in_user" name="ppws_general_settings[<?php esc_attr_e($args['label_for']); ?>]" value="logged-in-user" <?php checked('logged-in-user', $ppws_whole_site_options[$args['label_for']] ?? null); ?>><?php _e('Logged In User','password-protected-store-for-woocommerce') ?>
+                    <input type="checkbox" class="<?php esc_attr_e('ppws_user_logged_in_user'); ?>" id="<?php esc_attr_e($args['label_for']); ?>_logged_in_user" name="ppws_general_settings[<?php esc_attr_e($args['label_for']); ?>][]" value="logged-in-user" <?php if(in_array('logged-in-user', $user_role)) echo 'checked="checked"'; ?>><?php _e('Logged In User','password-protected-store-for-woocommerce') ?>
                 </label>
 				  <p class="ppws-note ppws-userrole-error ppws-hide-section">
                     <svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.com/svgjs" width="18px" height="18px" x="0" y="0" viewBox="0 0 23.625 23.625" style="enable-background:new 0 0 512 512" xml:space="preserve" class="">
@@ -277,16 +285,16 @@ if (!class_exists('ppws_whole_site_settings')) {
                 $new_input['enable_user_role'] = sanitize_text_field($input['enable_user_role']);
 				
 				if (isset($input['ppws_select_user_role_field_radio'])) {
-					$new_input['ppws_select_user_role_field_radio'] = sanitize_text_field($input['ppws_select_user_role_field_radio']);
+					$new_input['ppws_select_user_role_field_radio'] = array_map( 'sanitize_text_field', $input['ppws_select_user_role_field_radio'] );
 				}
 
 				if (isset($input['ppws_logged_in_user_field_checkbox']) && !empty($input['ppws_logged_in_user_field_checkbox'])) {
 					$user_role_list = implode(",", $input['ppws_logged_in_user_field_checkbox']);
 					$new_input['ppws_logged_in_user_field_checkbox'] = sanitize_text_field($user_role_list);
 				}else{
-                    if(isset($new_input['ppws_select_user_role_field_radio']) && $new_input['ppws_select_user_role_field_radio'] == 'logged-in-user') {
-                        $new_input['ppws_select_user_role_field_radio'] = 'non-logged-in-user';
-                    }
+                    // if(isset($new_input['ppws_select_user_role_field_radio']) && $new_input['ppws_select_user_role_field_radio'] == 'logged-in-user') {
+                    //     $new_input['ppws_select_user_role_field_radio'] = 'non-logged-in-user';
+                    // }
                 }
             }
 			

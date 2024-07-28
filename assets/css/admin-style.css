@@ -215,7 +215,6 @@ input.button.button-small.wp-picker-clear {
 }
 
 .ppws-section .form-table input[type="checkbox"]:checked::before {
-    background: #000;
     width: 100%;
     height: 100%;
     margin: 0;

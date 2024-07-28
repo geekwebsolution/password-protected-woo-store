@@ -333,32 +333,44 @@ jQuery(document).ready(function ($) {
     jQuery("body").on("change", "#enable_user_role", function () {
         if (jQuery(this).is(":checked")) {
             jQuery(".ppws-section-user").removeClass("none-redio-click");
-            if (jQuery(".ppws_user_logged_in_user").is(":checked")) {
+            if (jQuery(".ppws_user_logged_in_user").prop('checked') == true) {
                 jQuery(".ppws-logged-in-user-section").removeClass("ppws-hide-section");
             }
         } else {
             jQuery(".ppws-section-user").addClass("none-redio-click");
+            // if (jQuery(".ppws_user_logged_in_user").prop('checked') == false) {
+                
+            // }
             jQuery(".ppws-logged-in-user-section").addClass("ppws-hide-section");
         }
     });
 
-    jQuery("body").on("click", ".ppws_user_logged_in_user, input[class='ppws_user_non_logged_in_user']", function () {
+    jQuery("body").on("click", ".ppws_user_logged_in_user, .ppws_user_non_logged_in_user", function () {
+        // console.log("Non logged in user checkbox");
+        // console.log(jQuery(".ppws_user_non_logged_in_user").prop('checked'));
 
+        // console.log("Logged in user checkbox");
+        // console.log(jQuery(".ppws_user_logged_in_user").prop('checked'));
         if (jQuery("#enable_user_role").is(":checked")) {
             jQuery("body .ppws-userrole-error").addClass('ppws-hide-section');
-            jQuery(".ppws-logged-in-user-section").removeClass("ppws-hide-section");
+            if(jQuery(".ppws_user_logged_in_user").prop('checked') == true) {
+                jQuery(".ppws-logged-in-user-section").removeClass("ppws-hide-section");
+                // console.log("trrr");
+            }else{
+                if (jQuery(".ppws_user_logged_in_user").prop('checked') == false) {
+                    jQuery(".ppws-logged-in-user-section").addClass("ppws-hide-section");
+                }
+                // console.log("falll");
+            }
         } else {
             jQuery("body .ppws-userrole-error").removeClass('ppws-hide-section');
         }
     });
 
-    if (jQuery("input[class='ppws_user_non_logged_in_user']").is(":checked")) {
+    if (jQuery(".ppws_user_logged_in_user").prop('checked') == false) {
         jQuery(".ppws-logged-in-user-section").addClass("ppws-hide-section");
     }
 
-    jQuery("body").on("click", ".ppws_user_non_logged_in_user", function () {
-        jQuery(".ppws-logged-in-user-section").addClass("ppws-hide-section");
-    });
     /** Page / Product Setting JS END */
     
     jQuery("body").on("change", "input[name='ppws_form_desgin_settings[form_logo_link_type_field]']", function () {

@@ -22,10 +22,19 @@ function ppws_protected_categories() {
             if($enable_categories_password == 'on') {
 
                 if (isset($ppws_product_categories_options['enable_user_role']) && !empty($ppws_product_categories_options['enable_user_role'])) {
-                    if (isset($ppws_product_categories_options['ppws_product_categories_select_user_role_field_radio']) && "non-logged-in-user" === $ppws_product_categories_options['ppws_product_categories_select_user_role_field_radio'] 
-                    && !is_user_logged_in()) {
-                        $hide_protected_cat_products = true;
-                    } elseif (isset($ppws_product_categories_options['ppws_product_categories_select_user_role_field_radio']) && "logged-in-user" === $ppws_product_categories_options['ppws_product_categories_select_user_role_field_radio'] && is_user_logged_in()) {
+                    if (isset($ppws_product_categories_options['ppws_product_categories_select_user_role_field_radio']) && in_array("non-logged-in-user",$ppws_product_categories_options['ppws_product_categories_select_user_role_field_radio'])) {
+                        // Check if Disable For Administrator is enable and current user is admin
+                        if (current_user_can('administrator') && $dfa_product_categories_protect_enable) {
+                            $hide_protected_cat_products = true;
+                        }else{
+                            // Check when user is not logged in
+                            if(!is_user_logged_in()) {
+                                $hide_protected_cat_products = true;
+                            }
+                        }
+                    }
+                    
+                    if (isset($ppws_product_categories_options['ppws_product_categories_select_user_role_field_radio']) && in_array("logged-in-user",$ppws_product_categories_options['ppws_product_categories_select_user_role_field_radio']) && is_user_logged_in()) {
 
                         if (isset($ppws_product_categories_options['ppws_product_categories_logged_in_user_field_checkbox'])) {
                             $current_user = wp_get_current_user();
@@ -105,10 +114,19 @@ function ppws_protected_products() {
             if(isset($selected_products) && !empty($selected_products)) {
 
                 if (isset($ppws_product_options['enable_user_role']) && !empty($ppws_product_options['enable_user_role'])) {
-                    if (isset($ppws_product_options['product_select_user_role_field_radio']) && "non-logged-in-user" === $ppws_product_options['product_select_user_role_field_radio'] 
-                    && !is_user_logged_in()) {
-                        $hide_protected_products = true;
-                    } elseif (isset($ppws_product_options['product_select_user_role_field_radio']) && "logged-in-user" === $ppws_product_options['product_select_user_role_field_radio'] && is_user_logged_in()) {
+                    if (isset($ppws_product_options['product_select_user_role_field_radio']) && in_array("non-logged-in-user",$ppws_product_options['product_select_user_role_field_radio'])) {
+                        if (current_user_can('administrator') && $dfa_product_protect) {
+                            $hide_protected_products = true;
+                        }else{
+                            // Check when user is not logged in
+                            if(!is_user_logged_in()) {
+                                $hide_protected_products = true;
+                            }
+                        }
+
+                    }
+                    
+                    if (isset($ppws_product_options['product_select_user_role_field_radio']) && in_array("logged-in-user",$ppws_product_options['product_select_user_role_field_radio']) && is_user_logged_in()) {
 
                         if (isset($ppws_product_options['product_logged_in_user_field_checkbox'])) {
                             $current_user = wp_get_current_user();
