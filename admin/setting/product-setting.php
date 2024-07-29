@@ -152,6 +152,18 @@ if (!class_exists('ppws_product_settings')) {
                 'ppws_product_user_role_settings_section',
                 ['type' => 'checkbox', 'label_for' => 'product_logged_in_user_field_checkbox', 'class' => 'ppws-logged-in-user-section', 'description' => 'Selected users get password form at front side.']
             );
+
+            add_settings_field(
+                'enable_reverse_protection',
+                __(
+                    'Enable Reverse Protection',
+                    'password-protected-store-for-woocommerce'
+                ),
+                array($this, 'ppws_product_password_settings'),
+                'ppws-product-user-role-section',
+                'ppws_product_user_role_settings_section',
+                ['type' => 'checkbox', 'label_for' => 'reverse_protection', 'class' => 'ppws-logged-in-user-section', 'description' => 'By enabling this option, you will be able to protect roles other than the ones mentioned above. <br> Please make sure this feature available in <a href="https://geekcodelab.com/wordpress-plugins/password-protected-store-for-woocommerce-pro/" target="_blank">PRO</a> version.']
+            );
             /* User Role End */
         }
 
@@ -169,11 +181,17 @@ if (!class_exists('ppws_product_settings')) {
                     name="ppws_product_settings[<?php esc_attr_e($args['label_for']) ?>]" 
                     id="<?php esc_attr_e($args['label_for']) ?>" 
                     value="on" 
-                    <?php if ($value == "on") { esc_attr_e('checked'); } ?>>
+                    <?php if ($value == "on") { esc_attr_e('checked'); } ?> <?php if($args['label_for'] == "reverse_protection"){ esc_attr_e('disabled'); } ?>>
                     <span class="ppws-slider ppws-round"></span>
                 </label>
+                <?php
+                if($args['label_for'] == "reverse_protection"){ ?>
+                        <a class="ppws-pro" target="_blank" href="https://geekcodelab.com/wordpress-plugins/password-protected-store-for-woocommerce-pro/">PRO</a>
+                    <?php
+                }
+                ?>
                 <p class="ppws-note"> <?php
-                                        $allowed_html = array('br'     => array(),);
+                                        $allowed_html = array('br' => array(),'a' => array( 'href' => array(), 'target' => array() ));
                                         echo wp_kses($args['description'], $allowed_html); ?> </p>
             <?php
             } elseif ($args['type'] == 'text') {
@@ -309,11 +327,7 @@ if (!class_exists('ppws_product_settings')) {
 
 					$user_role_list = implode(",", $input['product_logged_in_user_field_checkbox']);
 					$new_input['product_logged_in_user_field_checkbox'] = $user_role_list;
-				}else{
-                    // if(isset($new_input['product_select_user_role_field_radio']) && $new_input['product_select_user_role_field_radio'] == 'logged-in-user') {
-                    //     $new_input['product_select_user_role_field_radio'] = 'non-logged-in-user';
-                    // }
-                }
+				}
             }
 
             if (isset($input['ppws_hide_products_checkbox_field_checkbox']) && !empty($input['ppws_hide_products_checkbox_field_checkbox'])) {
