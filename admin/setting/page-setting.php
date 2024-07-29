@@ -152,7 +152,7 @@ if (!class_exists('ppws_page_settings')) {
                 array($this, 'ppws_page_password_settings'),
                 'ppws-page-user-role-section',
                 'ppws_page_user_role_settings_section',
-                ['type' => 'checkbox', 'label_for' => 'reverse_protection', 'class' => 'ppws-logged-in-user-section', 'description' => 'By enabling this option, you will be able to protect roles other than the ones mentioned above. <br> Please make sure this feature available in <a href="https://geekcodelab.com/wordpress-plugins/password-protected-store-for-woocommerce-pro/" target="_blank">PRO</a> version.']
+                ['type' => 'checkbox', 'label_for' => 'reverse_protection', 'class' => 'ppws-logged-in-user-section', 'description' => 'By enabling this option, You can protect roles that are not selected from the list above. <br> Please make sure this feature available in <a href="https://geekcodelab.com/wordpress-plugins/password-protected-store-for-woocommerce-pro/" target="_blank">PRO</a> version.']
             );
             /* User Role End */
         }
