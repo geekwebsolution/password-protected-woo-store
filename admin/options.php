@@ -170,6 +170,12 @@ if (!class_exists('ppws_password_protected_store_settings')) {
                             <li>
                                 <div class="ppws-check-title">
                                     <span class="ppws-check-icon">✓</span> 
+                                    <h4><?php _e( 'Option for Reverse Protection with Logged in user roles', 'password-protected-store-for-woocommerce' ); ?></h4>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="ppws-check-title">
+                                    <span class="ppws-check-icon">✓</span> 
                                     <h4><?php _e( 'Protect Single Category', 'password-protected-store-for-woocommerce' ); ?></h4>
                                 </div>
                                 <div class="ppws-check-description-wrap">

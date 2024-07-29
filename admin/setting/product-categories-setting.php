@@ -153,7 +153,19 @@ if (!class_exists('ppws_product_categories_settings')) {
                 array($this, 'ppws_product_categories_logged_in_user_role_settings'),
                 'ppws-product-categories-user-role-section',
                 'ppws_product_categories_user_role_settings_section',
-                ['type' => 'checkbox', 'label_for' => 'ppws_product_categories_logged_in_user_field_checkbox', 'class' => 'ppws-product-categories-select-logged-in-user-section ppws-logged-in-user-section', 'description' => 'Selected users get password form at front side.']
+                ['type' => 'checkbox', 'label_for' => 'ppws_product_categories_logged_in_user_field_checkbox', 'class' => 'ppws-logged-in-user-section', 'description' => 'Selected users get password form at front side.']
+            );
+            
+            add_settings_field(
+                'enable_reverse_protection',
+                __(
+                    'Enable Reverse Protection',
+                    'password-protected-store-for-woocommerce'
+                ),
+                array($this, 'ppws_product_categories_password_settings'),
+                'ppws-product-categories-user-role-section',
+                'ppws_product_categories_user_role_settings_section',
+                ['type' => 'checkbox', 'label_for' => 'reverse_protection', 'class' => 'ppws-logged-in-user-section', 'description' => 'By enabling this option, you will be able to protect roles other than the ones mentioned above. <br> Please make sure this feature available in <a href="https://geekcodelab.com/wordpress-plugins/password-protected-store-for-woocommerce-pro/" target="_blank">PRO</a> version.']
             );
             /* User Role End */
         }
@@ -172,12 +184,18 @@ if (!class_exists('ppws_product_categories_settings')) {
                     name="ppws_product_categories_settings[<?php esc_attr_e($args['label_for']) ?>]" 
                     id="<?php esc_attr_e($args['label_for']) ?>" 
                     value="on" 
-                    <?php if ($value == "on") {   esc_attr_e('checked');  } ?>>
+                    <?php if ($value == "on") {   esc_attr_e('checked');  } ?> <?php if($args['label_for'] == "reverse_protection"){ esc_attr_e('disabled'); } ?>>
                     <span class="ppws-slider ppws-round"></span>
                 </label>
+                <?php
+                if($args['label_for'] == "reverse_protection"){ ?>
+                        <a class="ppws-pro" target="_blank" href="https://geekcodelab.com/wordpress-plugins/password-protected-store-for-woocommerce-pro/">PRO</a>
+                    <?php
+                }
+                ?>
                 <p class="ppws-note">
                     <?php
-                    $allowed_html = array('br'     => array(),);
+                    $allowed_html = array('br' => array(), 'a' => array( 'href' => array(), 'target' => array() ));
                     echo wp_kses($args['description'], $allowed_html); ?>
                 </p>
             <?php
@@ -321,11 +339,7 @@ if (!class_exists('ppws_product_categories_settings')) {
 				if (isset($input['ppws_product_categories_logged_in_user_field_checkbox']) && !empty($input['ppws_product_categories_logged_in_user_field_checkbox'])) {
 					$user_role_list = implode(",", $input['ppws_product_categories_logged_in_user_field_checkbox']);
 					$new_input['ppws_product_categories_logged_in_user_field_checkbox'] = sanitize_text_field($user_role_list);
-				}else{
-                    // if(isset($new_input['ppws_product_categories_select_user_role_field_radio']) && $new_input['ppws_product_categories_select_user_role_field_radio'] == 'logged-in-user') {
-                    //     $new_input['ppws_product_categories_select_user_role_field_radio'] = 'non-logged-in-user';
-                    // }
-                }
+				}
             }
 
             if (isset($input['ppws_product_categories_all_categories_field_checkbox'])) {
