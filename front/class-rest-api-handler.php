@@ -28,6 +28,9 @@ if ( !class_exists( 'ppws_wp_rest_api_handler' ) ) {
         }
 
         public function page_content_json( $data, $page, $request ) {
+            if(is_admin())
+                return $data;
+
             global $ppws_page_options;
 
             $page_field_name = "ppws_page_list_of_page_field_checkbox";
@@ -42,6 +45,9 @@ if ( !class_exists( 'ppws_wp_rest_api_handler' ) ) {
         }
 
         public function product_content_json( $data, $product, $request ) {
+            if(is_admin())
+                return $data;
+
             global $ppws_product_options, $ppws_product_categories_options;
 
             $selected_cat = "";
@@ -70,6 +76,9 @@ if ( !class_exists( 'ppws_wp_rest_api_handler' ) ) {
         }
 
         public function global_protection_wp_rest_api( $access ) {
+            if(is_admin())
+                return $access;
+
             if(ppws_is_protected_whole_site()) {
                 $ppws_cookie = ppws_get_cookie('ppws_cookie');
                 $ppws_main_password = $ppws_whole_site_options['ppws_set_password_field_textbox'];
