@@ -4,10 +4,10 @@ Donate link: https://paypal.me/rvadhel
 Tags: WooCommerce protected categories, woo protect, product protected, woocommerce store protected
 Requires PHP: 7.4
 Requires at least: 6.3
-Tested up to: 6.5
+Tested up to: 6.6
 WC tested up to: 9.1.2
 Requires Plugins: woocommerce
-Stable tag: 2.5.8
+Stable tag: 2.5.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -82,6 +82,9 @@ After Plugin Active go to Woocommerce-> Password Protected
 
 
 == Changelog ==
+= 2.5.9 =
+  Fixed rest api handler on admin
+
 = 2.5.8 =
   Added option - Reverse Protection of Logged in users
 
