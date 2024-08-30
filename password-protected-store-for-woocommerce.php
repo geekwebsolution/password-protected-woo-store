@@ -3,8 +3,8 @@
 Plugin Name: Password Protected Store for WooCommerce
 Description: Password Protected Store for WooCommerce is an excellent plugin to set Password Protected Store for WooCommerce. It allows you to set password in your store. Password can be set on whole site, on category, on pages, and on user role.
 Author: Geek Code Lab
-Version: 2.5.9
-WC tested up to: 9.1.2
+Version: 2.6.0
+WC tested up to: 9.2.3
 Requires Plugins: woocommerce
 Author URI: https://geekcodelab.com/
 Text Domain : password-protected-store-for-woocommerce
@@ -19,7 +19,7 @@ if (!defined("WPPS_PLUGIN_URL"))
     define("WPPS_PLUGIN_URL", plugins_url() . '/' . basename(dirname(__FILE__)));
 
 
-define("PPWS_BUILD", '2.5.9');
+define("PPWS_BUILD", '2.6.0');
 
 /**
  * Plugin active/deactive hook
