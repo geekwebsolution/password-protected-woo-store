@@ -30,15 +30,20 @@ if ( !class_exists( 'ppws_wp_rest_api_handler' ) ) {
         public function page_content_json( $data, $page, $request ) {
             if(is_admin())
                 return $data;
-
-            global $ppws_page_options;
-
-            $page_field_name = "ppws_page_list_of_page_field_checkbox";
-            $selected_page = (isset($ppws_page_options[$page_field_name]) && !empty($ppws_page_options[$page_field_name])) ? explode(",",$ppws_page_options[$page_field_name]) : array();
+            ppws_nocache_headers();
             
-            if( in_array($data->data['id'], $selected_page) ) {
-                if(isset($data->data['content']['rendered']))   $data->data['content']['rendered'] = "";
-                if(isset($data->data['excerpt']['rendered']))   $data->data['excerpt']['rendered'] = "";
+            global $ppws_page_options;
+            $ppws_page_cookie = (ppws_get_cookie('ppws_page_cookie') != '') ? ppws_get_cookie('ppws_page_cookie') : '';
+            $ppws_page_main_password = $ppws_page_options['ppws_page_set_password_field_textbox'];
+
+            if(ppws_decrypted_password($ppws_page_cookie) != ppws_decrypted_password($ppws_page_main_password)) {
+                $page_field_name = "ppws_page_list_of_page_field_checkbox";
+                $selected_page = (isset($ppws_page_options[$page_field_name]) && !empty($ppws_page_options[$page_field_name])) ? explode(",",$ppws_page_options[$page_field_name]) : array();
+                
+                if( in_array($data->data['id'], $selected_page) ) {
+                    if(isset($data->data['content']['rendered']))   $data->data['content']['rendered'] = "";
+                    if(isset($data->data['excerpt']['rendered']))   $data->data['excerpt']['rendered'] = "";
+                }
             }
 
             return $data;
@@ -47,29 +52,39 @@ if ( !class_exists( 'ppws_wp_rest_api_handler' ) ) {
         public function product_content_json( $data, $product, $request ) {
             if(is_admin())
                 return $data;
+            ppws_nocache_headers();
 
             global $ppws_product_options, $ppws_product_categories_options;
+            $ppws_categories_cookie = ppws_get_cookie('ppws_categories_cookie');
+            $ppws_categories_main_password = $ppws_product_categories_options['ppws_product_categories_password'];
 
-            $selected_cat = "";
-            $cat_field = "ppws_product_categories_all_categories_field_checkbox";
+            if(ppws_decrypted_password($ppws_categories_cookie) != ppws_decrypted_password($ppws_categories_main_password)) {
+                $selected_cat = "";
+                $cat_field = "ppws_product_categories_all_categories_field_checkbox";
 
-            $selected_cat = (isset($ppws_product_categories_options[$cat_field]) && !empty($ppws_product_categories_options[$cat_field])) ? $ppws_product_categories_options[$cat_field] : array();
-            if (isset($ppws_product_categories_options[$cat_field]) && !empty($ppws_product_categories_options[$cat_field]))     $selected_cat = explode(",", $ppws_product_categories_options[$cat_field]);
+                $selected_cat = (isset($ppws_product_categories_options[$cat_field]) && !empty($ppws_product_categories_options[$cat_field])) ? $ppws_product_categories_options[$cat_field] : array();
+                if (isset($ppws_product_categories_options[$cat_field]) && !empty($ppws_product_categories_options[$cat_field]))     $selected_cat = explode(",", $ppws_product_categories_options[$cat_field]);
 
-            if( isset($data->data['product_cat']) && !empty($data->data['product_cat']) ) {
-                $jsonContainsCategory = !empty(array_intersect($data->data['product_cat'], $selected_cat));
-                if( !empty($jsonContainsCategory) ) {
-                    if(isset($data->data['content']['rendered']))   $data->data['content']['rendered'] = "";
-                    if(isset($data->data['excerpt']['rendered']))   $data->data['excerpt']['rendered'] = "";
+                if( isset($data->data['product_cat']) && !empty($data->data['product_cat']) ) {
+                    $jsonContainsCategory = !empty(array_intersect($data->data['product_cat'], $selected_cat));
+                    if( !empty($jsonContainsCategory) ) {
+                        if(isset($data->data['content']['rendered']))   $data->data['content']['rendered'] = "";
+                        if(isset($data->data['excerpt']['rendered']))   $data->data['excerpt']['rendered'] = "";
+                    }
                 }
             }
 
-            $product_field_name = "product_list_of_product_field_checkbox";
-            $selected_product = (isset($ppws_product_options[$product_field_name]) && !empty($ppws_product_options[$product_field_name])) ? explode(",",$ppws_product_options[$product_field_name]) : array();
-            
-            if( in_array($data->data['id'], $selected_product) ) {
-                if(isset($data->data['content']['rendered']))   $data->data['content']['rendered'] = "";
-                if(isset($data->data['excerpt']['rendered']))   $data->data['excerpt']['rendered'] = "";
+            $ppws_product_cookie = (ppws_get_cookie('ppws_product_cookie') != '') ? ppws_get_cookie('ppws_product_cookie') : '';
+            $ppws_product_main_password = $ppws_product_options['product_set_password_field_textbox'];
+
+            if(ppws_decrypted_password($ppws_product_cookie) != ppws_decrypted_password($ppws_product_main_password)) {
+                $product_field_name = "product_list_of_product_field_checkbox";
+                $selected_product = (isset($ppws_product_options[$product_field_name]) && !empty($ppws_product_options[$product_field_name])) ? explode(",",$ppws_product_options[$product_field_name]) : array();
+                
+                if( in_array($data->data['id'], $selected_product) ) {
+                    if(isset($data->data['content']['rendered']))   $data->data['content']['rendered'] = "";
+                    if(isset($data->data['excerpt']['rendered']))   $data->data['excerpt']['rendered'] = "";
+                }
             }
 
             return $data;
@@ -78,6 +93,9 @@ if ( !class_exists( 'ppws_wp_rest_api_handler' ) ) {
         public function global_protection_wp_rest_api( $access ) {
             if(is_admin())
                 return $access;
+            ppws_nocache_headers();
+
+            global $ppws_whole_site_options;
 
             if(ppws_is_protected_whole_site()) {
                 $ppws_cookie = ppws_get_cookie('ppws_cookie');

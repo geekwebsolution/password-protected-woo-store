@@ -302,8 +302,8 @@ function ppws_enable_password_start() {
         
     do {
         if (ppws_is_protected_product() || ppws_is_protected_page() || ppws_is_protected_product_categories()) {
+            
             if(ppws_is_protected_product()) {
-                
                 $ppws_product_cookie = (ppws_get_cookie('ppws_product_cookie') != '') ? ppws_get_cookie('ppws_product_cookie') : '';
                 $ppws_product_main_password = $ppws_product_options['product_set_password_field_textbox'];
                 if(ppws_decrypted_password($ppws_product_cookie) != ppws_decrypted_password($ppws_product_main_password)) {
