@@ -22,14 +22,14 @@ if ( !class_exists( 'ppws_wp_rest_api_handler' ) ) {
     class ppws_wp_rest_api_handler {
 
         public function __construct() {
-            add_filter( 'rest_prepare_page', array( $this, 'page_content_json' ), 10, 3 );
-            add_filter( 'rest_prepare_product', array( $this, 'product_content_json' ), 10, 3 );
-            add_filter( 'rest_authentication_errors', array( $this, 'global_protection_wp_rest_api' ) );
+            if(!is_admin()) {
+                add_filter( 'rest_prepare_page', array( $this, 'page_content_json' ), 10, 3 );
+                add_filter( 'rest_prepare_product', array( $this, 'product_content_json' ), 10, 3 );
+                add_filter( 'rest_authentication_errors', array( $this, 'global_protection_wp_rest_api' ) );
+            }
         }
 
         public function page_content_json( $data, $page, $request ) {
-            if(is_admin())
-                return $data;
             ppws_nocache_headers();
             
             global $ppws_page_options;
@@ -50,8 +50,6 @@ if ( !class_exists( 'ppws_wp_rest_api_handler' ) ) {
         }
 
         public function product_content_json( $data, $product, $request ) {
-            if(is_admin())
-                return $data;
             ppws_nocache_headers();
 
             global $ppws_product_options, $ppws_product_categories_options;
@@ -91,8 +89,6 @@ if ( !class_exists( 'ppws_wp_rest_api_handler' ) ) {
         }
 
         public function global_protection_wp_rest_api( $access ) {
-            if(is_admin())
-                return $access;
             ppws_nocache_headers();
 
             global $ppws_whole_site_options;

@@ -200,10 +200,12 @@ function ppws_plugin_active_woocommerce_password_protected_store()
 
    /** Advanced Setting Start */
    $isolation_mode      = "on";
+   $rest_api_protection = "on";
    $advanced_option     = array();
    $advanced_option_settings  = get_option('ppws_advanced_settings');
 
    if(!isset($advanced_option_settings['enable_isolation_field_checkbox']))      $advanced_option['enable_isolation_field_checkbox']   = $isolation_mode;
+   if(!isset($advanced_option_settings['enable_rest_api_protection_checkbox']))  $advanced_option['enable_rest_api_protection_checkbox']   = $rest_api_protection;
 
    if(isset($advanced_option) && !empty($advanced_option)) {
        if(count($advanced_option) > 0)	update_option('ppws_advanced_settings', $advanced_option);
