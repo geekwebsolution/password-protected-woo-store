@@ -200,10 +200,12 @@ function ppws_plugin_active_woocommerce_password_protected_store()
 
    /** Advanced Setting Start */
    $isolation_mode      = "on";
+   $rest_api_protection = "on";
    $advanced_option     = array();
    $advanced_option_settings  = get_option('ppws_advanced_settings');
 
    if(!isset($advanced_option_settings['enable_isolation_field_checkbox']))      $advanced_option['enable_isolation_field_checkbox']   = $isolation_mode;
+   if(!isset($advanced_option_settings['enable_rest_api_protection_checkbox']))  $advanced_option['enable_rest_api_protection_checkbox']   = $rest_api_protection;
 
    if(isset($advanced_option) && !empty($advanced_option)) {
        if(count($advanced_option) > 0)	update_option('ppws_advanced_settings', $advanced_option);
@@ -302,8 +304,8 @@ function ppws_enable_password_start() {
         
     do {
         if (ppws_is_protected_product() || ppws_is_protected_page() || ppws_is_protected_product_categories()) {
+            
             if(ppws_is_protected_product()) {
-                
                 $ppws_product_cookie = (ppws_get_cookie('ppws_product_cookie') != '') ? ppws_get_cookie('ppws_product_cookie') : '';
                 $ppws_product_main_password = $ppws_product_options['product_set_password_field_textbox'];
                 if(ppws_decrypted_password($ppws_product_cookie) != ppws_decrypted_password($ppws_product_main_password)) {
