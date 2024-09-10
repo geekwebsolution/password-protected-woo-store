@@ -346,7 +346,7 @@ $meta_title = (!empty($site_title) || !empty($site_description)) ? $site_title .
 
         <?php
         if(isset($popup_additional_style)) {
-            _e($popup_additional_style); 
+            echo htmlspecialchars_decode($popup_additional_style); 
         } ?>
     </style>
 
