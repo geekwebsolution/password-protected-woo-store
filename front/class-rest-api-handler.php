@@ -1,5 +1,4 @@
 <?php
-
 /** Get options of whole site settings */
 $ppws_advanced_options = get_option('ppws_advanced_settings');
 $rest_api_field_name = 'enable_rest_api_protection_checkbox';
@@ -35,7 +34,7 @@ if (!class_exists('ppws_wp_rest_api_handler')) {
 
             global $ppws_page_options;
             $ppws_page_cookie = (ppws_get_cookie('ppws_page_cookie') != '') ? ppws_get_cookie('ppws_page_cookie') : '';
-            $ppws_page_main_password = $ppws_page_options['ppws_page_set_password_field_textbox'];
+            $ppws_page_main_password = (isset($ppws_page_options['ppws_page_set_password_field_textbox'])) ? $ppws_page_options['ppws_page_set_password_field_textbox'] : '';
 
             // Allow access if the user is authenticated
             if (is_user_logged_in()) {
@@ -60,7 +59,7 @@ if (!class_exists('ppws_wp_rest_api_handler')) {
 
             global $ppws_product_options, $ppws_product_categories_options;
             $ppws_categories_cookie = ppws_get_cookie('ppws_categories_cookie');
-            $ppws_categories_main_password = $ppws_product_categories_options['ppws_product_categories_password'];
+            $ppws_categories_main_password = (isset($ppws_product_categories_options['ppws_product_categories_password'])) ? $ppws_product_categories_options['ppws_product_categories_password'] : '';
 
             // Allow access if the user is authenticated
             if (is_user_logged_in()) {
@@ -84,7 +83,7 @@ if (!class_exists('ppws_wp_rest_api_handler')) {
             }
 
             $ppws_product_cookie = (ppws_get_cookie('ppws_product_cookie') != '') ? ppws_get_cookie('ppws_product_cookie') : '';
-            $ppws_product_main_password = (is_array($ppws_product_options) && isset($ppws_product_options['product_set_password_field_textbox'])) ? $ppws_product_options['product_set_password_field_textbox'] : '';
+            $ppws_product_main_password = (isset($ppws_product_options['product_set_password_field_textbox'])) ? $ppws_product_options['product_set_password_field_textbox'] : '';
 
             if (ppws_decrypted_password($ppws_product_cookie) != ppws_decrypted_password($ppws_product_main_password)) {
                 $product_field_name = "product_list_of_product_field_checkbox";
@@ -108,7 +107,7 @@ if (!class_exists('ppws_wp_rest_api_handler')) {
             // Check if the site is protected
             if (ppws_is_protected_whole_site()) {
                 $ppws_cookie = ppws_get_cookie('ppws_cookie');
-                $ppws_main_password = $ppws_whole_site_options['ppws_set_password_field_textbox'];
+                $ppws_main_password = (isset($ppws_whole_site_options['ppws_set_password_field_textbox'])) ? $ppws_whole_site_options['ppws_set_password_field_textbox'] : '';
 
                 // Allow access if the user is authenticated
                 if (is_user_logged_in()) {
