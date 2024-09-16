@@ -84,7 +84,7 @@ if (!class_exists('ppws_wp_rest_api_handler')) {
             }
 
             $ppws_product_cookie = (ppws_get_cookie('ppws_product_cookie') != '') ? ppws_get_cookie('ppws_product_cookie') : '';
-            $ppws_product_main_password = $ppws_product_options['product_set_password_field_textbox'];
+            $ppws_product_main_password = (is_array($ppws_product_options) && isset($ppws_product_options['product_set_password_field_textbox'])) ? $ppws_product_options['product_set_password_field_textbox'] : '';
 
             if (ppws_decrypted_password($ppws_product_cookie) != ppws_decrypted_password($ppws_product_main_password)) {
                 $product_field_name = "product_list_of_product_field_checkbox";
