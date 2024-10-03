@@ -449,19 +449,18 @@ $meta_title = (!empty($site_title) || !empty($site_description)) ? $site_title .
     <script>
         function logSubmit(event) {
             let x = document.forms["ppws_protected_form"]["ppws_password"].value;
-            if (x == "") {
-                const form = document.getElementById('ppws_protected_form');
-                const insertAfter = (el, htmlString) => el.insertAdjacentHTML('afterend', htmlString);
-                const errorelem = document.getElementById('ppws_error_msg');
-                
-                if (typeof(errorelem) == 'undefined' || errorelem == null) {
-                    insertAfter(form, '<span class="ppws_error_msg" id="ppws_error_msg"><?php esc_html_e("Please enter password","password-protected-store-for-woocommerce") ?></span>');
-                }
-                
+            const form = document.getElementById('ppws_protected_form');
+            const insertAfter = (el, htmlString) => el.insertAdjacentHTML('afterend', htmlString);
+            const errorElem = document.querySelector('.ppws_error_msg');
+            // Clear previous error message if it exists
+            if (errorElem) {
+            errorElem.remove();
+            }
+            if (x === "") {
                 event.preventDefault();
+                insertAfter(form, '<span class="ppws_error_msg" id="ppws_error_msg"><?php esc_html_e("Please enter password","password-protected-store-for-woocommerce") ?></span>');
             }
         }
-
         const form = document.getElementById("ppws_protected_form");
         form.addEventListener("submit", logSubmit);
     </script>
