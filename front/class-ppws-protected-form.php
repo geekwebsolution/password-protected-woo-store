@@ -389,7 +389,14 @@ $meta_title = (!empty($site_title) || !empty($site_description)) ? $site_title .
                     if($logo_link_type == "custom-link") {
                         if($logo_link_nofollow == "on") { $logo_link_nofollow = 'rel="nofollow noopener"'; } ?>
                         <div class="ppws-modal-logo">
-                            <a href="<?php echo esc_url($logo_link_text); ?>" target="<?php esc_attr_e($logo_link_target == "on" ? "_blank" : "_self" ); ?>" <?php echo $logo_link_nofollow; ?>><img src="<?php echo $logo_image; ?>" alt="<?php echo get_bloginfo('name') . ' Logo'; ?>"></a>
+                            <?php 
+                            $target = ($logo_link_target == "on") ? "_blank" : "_self";
+                            if(!empty($logo_link_text)){
+                                echo '<a href="'.$logo_link_text.'" target="'.$target.'" '.$logo_link_nofollow.'>';
+                            } ?>
+                                <img src="<?php echo $logo_image; ?>" alt="<?php echo get_bloginfo('name') . ' Logo'; ?>">
+                            <?php
+                            if(!empty($logo_link_text))echo '</a>';?>
                         </div>
                         <?php
                     }else{ ?>
