@@ -201,7 +201,7 @@ if (!class_exists('ppws_whole_site_settings')) {
                 
             ?>
                 <!-- Numberbox -->
-                <input type="number" class="ppws-numberbox" max="400" name="ppws_general_settings[<?php esc_attr_e($args['label_for']); ?>]" id="<?php esc_attr_e($args['label_for']) ?>" value="<?php esc_attr_e($value) ?>" placeholder="<?php esc_attr_e($args['placeholder']) ?>">
+                <input type="number" class="ppws-numberbox" max="400" name="ppws_general_settings[<?php esc_attr_e($args['label_for']); ?>]" id="<?php esc_attr_e($args['label_for']) ?>" value="<?php esc_attr_e($value) ?>" placeholder="<?php esc_attr_e($args['placeholder']) ?>" min=0.01>
                 <p class="ppws-note"><?php esc_attr_e($args['description'],'password-protected-store-for-woocommerce') ?></p>
             <?php
             }

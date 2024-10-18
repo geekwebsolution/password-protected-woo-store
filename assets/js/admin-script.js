@@ -256,16 +256,13 @@ jQuery(document).ready(function ($) {
     /** Admin settings require field validation */
     jQuery("body").on('submit', '.ppws-procat-setting-form,.ppws-general-setting-form,.ppws-page-setting-form,.ppws-product-setting-form', function () {
         if (jQuery("body .ppws_password_checkbox_validation").prop("checked") == true) {
-            
             var wp_number = jQuery(".ppws-pwd-input").val();
-
             if (wp_number == '') {
                 jQuery(".ppws-pwd-input").addClass('ppws-error-border');
                 window.scrollTo({top: 0, behavior: 'smooth'});
                 return false;
             } else {
                 jQuery(".ppws-pwd-input").removeClass('ppws-error-border');
-                return true;
             }
         }
     });
