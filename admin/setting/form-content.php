@@ -99,7 +99,10 @@ if ( !class_exists( 'ppws_form_settings' ) ) {
             }
 
             if( isset( $input[ 'ppws_form_submit_btn_text' ] ) && !empty( $input[ 'ppws_form_submit_btn_text' ] ) ) {
+
                 $new_input[ 'ppws_form_submit_btn_text' ] = sanitize_text_field( $input[ 'ppws_form_submit_btn_text' ] );
+            }else{
+                $new_input[ 'ppws_form_submit_btn_text' ] = 'Submit';
             }
 
             if( isset( $input[ 'ppws_form_pwd_placeholder' ] ) && !empty( $input[ 'ppws_form_pwd_placeholder' ] ) ) {
