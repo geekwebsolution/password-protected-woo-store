@@ -18,8 +18,15 @@ if (!defined("WPPS_PLUGIN_DIR_PATH"))
 if (!defined("WPPS_PLUGIN_URL"))
     define("WPPS_PLUGIN_URL", plugins_url() . '/' . basename(dirname(__FILE__)));
 
+if (!defined("WPPS_PLUGIN_DIR"))
+	define("WPPS_PLUGIN_DIR", plugin_basename(__DIR__));
 
-define("PPWS_BUILD", '2.6.2');
+if (!defined("WPPS_PLUGIN_BASENAME"))
+	define("WPPS_PLUGIN_BASENAME", plugin_basename(__FILE__));
+
+define("WPPS_BUILD", '2.6.2');
+
+require (WPPS_PLUGIN_DIR_PATH .'updater/updater.php');
 
 /**
  * Plugin active/deactive hook
@@ -27,6 +34,7 @@ define("PPWS_BUILD", '2.6.2');
 register_activation_hook(__FILE__, 'ppws_plugin_active_woocommerce_password_protected_store');
 function ppws_plugin_active_woocommerce_password_protected_store()
 {
+    ppws_updater_activate();
     /** Deactivate Pro Plugin if active */
     if (is_plugin_active( 'password-protected-woo-store-pro/password-protected-store-for-woocommerce-pro.php' ) ) {
 		deactivate_plugins('password-protected-woo-store-pro/password-protected-store-for-woocommerce-pro.php');
@@ -89,7 +97,7 @@ function ppws_plugin_active_woocommerce_password_protected_store()
     if(isset($product_cat_option) && !empty($product_cat_option)){
         if(count($product_cat_option) > 0)	update_option('ppws_product_categories_settings', $product_cat_option);
     }
-    /** Product Categories Setting End */    
+    /** Product Categories Setting End */
 
 
     /** Content Setting Start */
@@ -145,11 +153,11 @@ function ppws_plugin_active_woocommerce_password_protected_store()
     $ppws_page_background_opacity   = "0.65";
     $ppws_page_bg_opacity_color     = "#000";
 
-    
+
     $page_background_radio          = 'none';
     $form_background_radio          = 'none';
 
-    
+
     $ppws_form_option               = array();
     $form_settings_option           = get_option('ppws_form_desgin_settings');
 
@@ -172,7 +180,7 @@ function ppws_plugin_active_woocommerce_password_protected_store()
     if(!isset($form_settings_option['ppws_form_inputbox_border_width']))            $ppws_form_option['ppws_form_inputbox_border_width']			    = $popup_inputbox_border_width;
     if(!isset($form_settings_option['ppws_form_inputbox_border_color']))            $ppws_form_option['ppws_form_inputbox_border_color']	            = $popup_inputbox_border_color;
     if(!isset($form_settings_option['ppws_form_placeholder_text_color']))           $ppws_form_option['ppws_form_placeholder_text_color']	            = $popup_placeholder_text_color;
-    if(!isset($form_settings_option['ppws_form_inputbox_text_size_field_textbox'])) $ppws_form_option['ppws_form_inputbox_text_size_field_textbox']		= $popup_inputbox_font_text_size; 
+    if(!isset($form_settings_option['ppws_form_inputbox_text_size_field_textbox'])) $ppws_form_option['ppws_form_inputbox_text_size_field_textbox']		= $popup_inputbox_font_text_size;
     /** Form Inputbox End */
 
     /** Button Style Start */
@@ -213,6 +221,8 @@ function ppws_plugin_active_woocommerce_password_protected_store()
    /** Advanced Setting End */
 }
 
+add_action('upgrader_process_complete', 'ppws_updater_activate'); // remove  transient  on plugin  update
+
 /* Required files */
 require_once(WPPS_PLUGIN_DIR_PATH . 'admin/options.php');
 require_once(WPPS_PLUGIN_DIR_PATH . 'admin/functions.php');
@@ -233,7 +243,7 @@ function ppws_add_scripts_enqueue_script( $hook ) {
     if($hook == 'woocommerce_page_ppws-option-page') {
         wp_enqueue_style('wp-color-picker');
         wp_enqueue_script('wp-color-picker');
-        
+
         wp_enqueue_editor();
         wp_enqueue_media();
     }
@@ -259,9 +269,9 @@ function ppws_plugin_add_settings_link($links)
         array_unshift($links, $settings_link);
     }
 
-    $pro_link = '<a href="https://geekcodelab.com/wordpress-plugins/password-protected-store-for-woocommerce-pro/"  target="_blank" style="color:#46b450;font-weight: 600;">' . __( 'Premium Upgrade', 'password-protected-store-for-woocommerce' ) . '</a>'; 
+    $pro_link = '<a href="https://geekcodelab.com/wordpress-plugins/password-protected-store-for-woocommerce-pro/"  target="_blank" style="color:#46b450;font-weight: 600;">' . __( 'Premium Upgrade', 'password-protected-store-for-woocommerce' ) . '</a>';
 	array_unshift( $links, $pro_link );
-    
+
     return $links;
 }
 
@@ -269,7 +279,7 @@ function ppws_plugin_add_settings_link($links)
 add_action('admin_init', 'ppws_admin_init');
 function ppws_admin_init() {
     $product_settings = get_option('ppws_product_settings');
-    
+
     if(!$product_settings)  {
         update_option('ppws_product_settings','');
     }
@@ -301,10 +311,10 @@ function ppws_enable_password_start() {
     $ppws_page_options = get_option('ppws_page_settings');
     $ppws_product_options = get_option('ppws_product_settings');
     $ppws_product_categories_options = get_option('ppws_product_categories_settings');
-        
+
     do {
         if (ppws_is_protected_product() || ppws_is_protected_page() || ppws_is_protected_product_categories()) {
-            
+
             if(ppws_is_protected_product()) {
                 $ppws_product_cookie = (ppws_get_cookie('ppws_product_cookie') != '') ? ppws_get_cookie('ppws_product_cookie') : '';
                 $ppws_product_main_password = $ppws_product_options['product_set_password_field_textbox'];
@@ -326,7 +336,7 @@ function ppws_enable_password_start() {
                     break;
                 }
             }
-            
+
             if(ppws_is_protected_product_categories()) {
                 $ppws_categories_cookie = ppws_get_cookie('ppws_categories_cookie');
                 $ppws_categories_main_password = $ppws_product_categories_options['ppws_product_categories_password'];
@@ -379,7 +389,7 @@ function ppws_filterProductVisibility($visible, $productId) {
 
     if(isset($protected_categories) && !empty($protected_categories)) {
         $categories = explode( ',', $protected_categories );
-        
+
         foreach ($categories as $key => $term_id) {
             if( has_term($term_id, 'product_cat', $productId) ) {
                 $visible = false;
@@ -448,10 +458,10 @@ function ppws_modify_search_query( $query ) {
             'include_children' => false
         );
         $query->set( 'tax_query', $tax_query );
-        
+
         $protected_terms = ppws_protected_categories();
         if(isset($protected_terms) && !empty($protected_terms)) {
-            
+
             $tax_query = array(
                 array(
                     'taxonomy' => 'product_cat',
@@ -467,7 +477,7 @@ function ppws_modify_search_query( $query ) {
         $protected_products = ppws_protected_products();
         if(isset($protected_products) && !empty($protected_products)) {
             $products = explode( ',', $protected_products );
-            
+
             if(isset($products) && !empty($products)) {
                 $query->set( 'post__not_in', $products );
             }
