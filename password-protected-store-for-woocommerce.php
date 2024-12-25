@@ -235,8 +235,8 @@ require_once(WPPS_PLUGIN_DIR_PATH . 'front/class-rest-api-handler.php');
  */
 add_action( 'admin_enqueue_scripts', 'ppws_add_scripts_enqueue_script');
 function ppws_add_scripts_enqueue_script( $hook ) {
-    wp_enqueue_style('ppws-select2-css', WPPS_PLUGIN_URL . '/assets/css/select2.min.css', array(), PPWS_BUILD );
-    wp_enqueue_style('ppws-admin-style', WPPS_PLUGIN_URL . '/assets/css/admin-style.css', PPWS_BUILD );
+    wp_enqueue_style('ppws-select2-css', WPPS_PLUGIN_URL . '/assets/css/select2.min.css', array(), WPPS_BUILD );
+    wp_enqueue_style('ppws-admin-style', WPPS_PLUGIN_URL . '/assets/css/admin-style.css', WPPS_BUILD );
 
     wp_enqueue_script('jquery');
 
@@ -249,9 +249,9 @@ function ppws_add_scripts_enqueue_script( $hook ) {
     }
 
     wp_enqueue_code_editor( array( 'type' => 'text/html' ) );
-    wp_enqueue_script( 'ppws-select2-js', WPPS_PLUGIN_URL . '/assets/js/select2.min.js', array( 'jquery' ), PPWS_BUILD, true );
+    wp_enqueue_script( 'ppws-select2-js', WPPS_PLUGIN_URL . '/assets/js/select2.min.js', array( 'jquery' ), WPPS_BUILD, true );
     $js = WPPS_PLUGIN_URL . '/assets/js/admin-script.js';
-    wp_enqueue_script('ppws-admin-js', $js,  array('jquery','media-upload'), PPWS_BUILD);
+    wp_enqueue_script('ppws-admin-js', $js,  array('jquery','media-upload'), WPPS_BUILD);
     wp_localize_script('ppws-admin-js', 'ppwsObj', [ 'ajaxurl' => admin_url('admin-ajax.php') ] );
 }
 /* Front side css file */
